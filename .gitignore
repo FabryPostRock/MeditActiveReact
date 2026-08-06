@@ -1,0 +1,60 @@
+# Logs
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+**/.vscode
+**/.codex
+!.vscode/extensions.json
+**/*.code-workspace
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+**/*.log
+**/*.pyc
+**/*.tar
+**/*.env
+**/*.csv
+**/*.txt
+**/*.xlsx
+**/*.css.map
+
+
+
+# Folders
+/_pycache__/
+**/node_modules/
+**/bootstrap/
+
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Firebase
+src/config/firebase.ts
+**/.firebase
+
+# React
+/dist
+
+#WSL
+**/*:mshield
+**/*.Identifier

@@ -1,0 +1,4 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+# force every shell script to use LF in the working tree and in the repo
+**/*.sh            text eol=lf
