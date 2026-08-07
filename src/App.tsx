@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import './App.css';
 import './assets/fonts/fonts.css';
+import './App.css';
+
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Home from './pages/home';
@@ -11,6 +12,7 @@ import Error from './pages/error';
 function App() {
   return (
     <>
+      <div className="container nav-mt"></div>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

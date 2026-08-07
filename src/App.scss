@@ -5,30 +5,31 @@ Il namespace si applica solo alle variabili/funzioni/mixin Sass del file.
 Usare '*' evita di inserire un prefisso alle variabili Sass '$'
 */
 @use './Colors.scss' as colors;
-@use '../node_modules/bootstrap/scss/bootstrap' as * with (
-  $primary: colors.$primary,
-  $secondary: colors.$secondary
-);
+@use './BootstrapVars' as *;
 @use './components/Navbar.scss';
 @import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
 :root {
   /* Le variabili CSS Custom qui sotto aggiornano anche i componenti scss importati sopra*/
   --bs-body-font-family: 'Nunito', sans-serif;
   --bs-border-radius: 0.375rem;
   --bs-border-width: 2px;
-  --bs-btn-disabled-bg: colors.$btn-disabled-bg;
+  --bs-btn-disabled-bg: #{colors.$btn-disabled-bg};
 
   /* PRIMARY COLOR: */
   --bs-primary: #ffffff;
   --bs-primary-rgb: 255, 255, 255;
 
   /* SECONDARY COLOR: */
-  --bs-secondary: $secondary;
+  --bs-secondary: #{colors.$secondary};
   --bs-secondary-rgb: 226, 106, 8;
   --bs-gray-900-rgb: 33, 37, 41;
 }
 
+body {
+  position: relative;
+}
 .progress {
   /*
 Bootstrap definisce --bs-progress-height direttamente sul componente '.progress'.
@@ -73,12 +74,19 @@ strong {
   color: colors.$bs-black-0x241d18 !important;
 }
 
+.primary-color {
+  color: colors.$primary;
+}
+
 .secondary-color {
   color: colors.$secondary;
 }
 
 .navbar.navbar-dark {
-  /*Le sovrascrivo nella navbar perchè li sovrascrive se li metto nella root*/
+  /*
+  Override the navbar text colors. They had to be overridden here because in the
+  root they will be overriden by Bootstrap.
+  */
   --bs-navbar-color: rgba(255, 255, 255, 0.8);
   --bs-navbar-toggler-border-color: rgba(255, 255, 255, 0.6);
 }
@@ -96,7 +104,6 @@ strong {
   --bs-btn-active-border-color: colors.$secondary;
   --bs-btn-active-shadow: 4px 4px 3px 3px rgba(#{colors.$secondary}, 0.5); //inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
-  //--bs-btn-disabled-bg: #{$btn-disabled-bg};
   --bs-btn-disabled-border-color: #fff;
 }
 
@@ -190,6 +197,10 @@ ul {
 }
 .material-symbols-outlined.g-icon-7em {
   font-size: 7rem;
+}
+
+.material-symbols-outlined.g-icon-primary {
+  color: colors.$primary;
 }
 
 /* Mobile Styles */

@@ -1,5 +1,83 @@
-@use '../Colors.scss' as colors;
+@use '../BootstrapVars' as *;
 
 .navbar {
-  background-color: colors.$secondary;
+  /* 
+  Usando '--bs-secondary' uso il valore post compilazione e non il '$' che deve
+  essere sovrascritto prima dell'import di Boostrap
+  */
+  background-color: var(--bs-secondary);
+}
+.navbar.navbar-dark {
+  /*Le sovrascrivo nella navbar perchè li sovrascrive se li metto nella root*/
+  --bs-navbar-color: rgba(255, 255, 255, 0.8);
+  --bs-navbar-toggler-border-color: rgba(255, 255, 255, 0.6);
+}
+
+// sm-md
+@media only screen and (max-width: 578px) {
+  .nav-wrapper {
+    position: fixed !important;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1030;
+  }
+
+  /*Nasconde testo brand*/
+  .brand-text {
+    display: none !important;
+  }
+  /* Nasconde Home / Exercises */
+  .nav-label {
+    display: none;
+  }
+
+  /* Mostra le icone */
+  .nav-icon {
+    display: inline-block;
+    //font-size: 1.5rem;
+  }
+
+  .nav-mt {
+    display: none;
+  }
+
+  .nav-mb {
+    display: block;
+    height: ($spacer * 1);
+    background-color: var(--bs-body-bg);
+    box-shadow: 0px -10px 10px 0px rgba(255, 255, 255, 0.8);
+  }
+
+  img {
+    width: 2rem;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+// sm-xxl
+@media only screen and (min-width: 579px) and (max-width: 2048px) {
+  .nav-wrapper {
+    top: 0;
+  }
+
+  .nav-icon {
+    display: none;
+  }
+
+  .nav-mt {
+    display: block;
+    height: ($spacer * 9);
+  }
+
+  .nav-mb {
+    display: none;
+  }
+
+  img {
+    width: 3rem;
+    aspect-ratio: 1 / 1;
+  }
 }

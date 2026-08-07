@@ -1,0 +1,11 @@
+@use './Colors.scss' as colors;
+
+/*
+Questo file ha due compiti:
+- configura Bootstrap una sola volta;
+- rende disponibili all'esterno le sue variabili, incluso $spacer.
+*/
+@forward '../node_modules/bootstrap/scss/bootstrap' with (
+  $primary: colors.$primary,
+  $secondary: colors.$secondary
+);
