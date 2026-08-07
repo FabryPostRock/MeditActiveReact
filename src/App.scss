@@ -1,0 +1,235 @@
+/* 
+Con @use, ogni file ha il proprio namespace. Si controlla meglio la nomenclatura 
+delle variabili.
+Il namespace si applica solo alle variabili/funzioni/mixin Sass del file.
+Usare '*' evita di inserire un prefisso alle variabili Sass '$'
+*/
+@use './Colors.scss' as colors;
+@use '../node_modules/bootstrap/scss/bootstrap' as * with (
+  $primary: colors.$primary,
+  $secondary: colors.$secondary
+);
+@use './components/Navbar.scss';
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+:root {
+  /* Le variabili CSS Custom qui sotto aggiornano anche i componenti scss importati sopra*/
+  --bs-body-font-family: 'Nunito', sans-serif;
+  --bs-border-radius: 0.375rem;
+  --bs-border-width: 2px;
+  --bs-btn-disabled-bg: colors.$btn-disabled-bg;
+
+  /* PRIMARY COLOR: */
+  --bs-primary: #ffffff;
+  --bs-primary-rgb: 255, 255, 255;
+
+  /* SECONDARY COLOR: */
+  --bs-secondary: $secondary;
+  --bs-secondary-rgb: 226, 106, 8;
+  --bs-gray-900-rgb: 33, 37, 41;
+}
+
+.progress {
+  /*
+Bootstrap definisce --bs-progress-height direttamente sul componente '.progress'.
+'.progress' ha precedenza rispetto a quella ereditata da ':root'.
+*/
+  --bs-progress-height: 0.2rem;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+strong {
+  font-weight: 900;
+}
+
+.first-letter::first-letter {
+  font-size: 200%;
+  font-weight: 400;
+  color: colors.$secondary;
+}
+
+.space-divider-rect {
+  height: 2rem;
+}
+
+/* ---------------------------------COLORS-------------------------------------------*/
+
+.shadow-orange {
+  box-shadow: 0 1.5rem 3rem rgba(var(--bs-secondary-rgb), 0.6) !important;
+}
+
+.shadow-gray-900 {
+  box-shadow: 0 1.5rem 3rem rgba(var(--bs-gray-900-rgb), 0.6) !important;
+}
+
+.bg-black-0x241d18 {
+  background-color: rgba(colors.$bs-black-0x241d18, 1) !important;
+}
+
+.black-0x241d18 {
+  color: colors.$bs-black-0x241d18 !important;
+}
+
+.secondary-color {
+  color: colors.$secondary;
+}
+
+.navbar.navbar-dark {
+  /*Le sovrascrivo nella navbar perchè li sovrascrive se li metto nella root*/
+  --bs-navbar-color: rgba(255, 255, 255, 0.8);
+  --bs-navbar-toggler-border-color: rgba(255, 255, 255, 0.6);
+}
+
+.btn-secondary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #{colors.$secondary};
+  --bs-btn-border-color: #fff;
+  --bs-btn-hover-color: #{colors.$secondary};
+  --bs-btn-hover-bg: #fff;
+  --bs-btn-hover-border-color: #{colors.$secondary};
+  --bs-btn-focus-shadow-rgb: #{colors.$bs-black-0x241d18-rgb};
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #{colors.$bs-black-0x241d18};
+  --bs-btn-active-border-color: colors.$secondary;
+  --bs-btn-active-shadow: 4px 4px 3px 3px rgba(#{colors.$secondary}, 0.5); //inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  //--bs-btn-disabled-bg: #{$btn-disabled-bg};
+  --bs-btn-disabled-border-color: #fff;
+}
+
+.form-control {
+  --bs-body-color: #{colors.$bs-black-0x241d18};
+  --bs-border-color: #{colors.$bs-black-0x241d18};
+  color: colors.$secondary;
+}
+
+.form-control:focus {
+  border-color: colors.$secondary;
+  box-shadow: 4px 4px 3px 3px rgba(colors.$secondary, 0.5);
+}
+
+.form-select {
+  --bs-body-color: #{colors.$bs-black-0x241d18};
+  --bs-border-color: #{colors.$bs-black-0x241d18};
+  color: var(--bs-body-color);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+}
+
+/* ------------------------------------------------ SPACING ----------------------------------------------------*/
+.mt-6 {
+  margin-top: ($spacer * 6);
+}
+.mt-7 {
+  margin-top: ($spacer * 9);
+}
+.mt-8 {
+  margin-top: ($spacer * 12);
+}
+.mt-9 {
+  margin-top: ($spacer * 15);
+}
+.mb-6 {
+  margin-bottom: ($spacer * 6);
+}
+.mb-7 {
+  margin-bottom: ($spacer * 9);
+}
+.mb-8 {
+  margin-bottom: ($spacer * 12);
+}
+.mb-9 {
+  margin-bottom: ($spacer * 15);
+}
+.mb-10 {
+  margin-bottom: ($spacer * 18);
+}
+.h-0 {
+  height: 0px !important;
+}
+.h-1 {
+  height: ($spacer * 0.25);
+}
+.h-6 {
+  height: ($spacer * 6) !important;
+}
+
+.nav-icons > ol,
+ul {
+  padding-left: 0.5rem;
+}
+/*----------------------------------------CUSTOM SIZING----------------------------*/
+
+/*---------------------------------------- FONT ICONS------------------------------*/
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 40;
+  color: colors.$secondary;
+}
+
+.material-symbols-outlined.g-icon-1em {
+  font-size: 1rem;
+}
+.material-symbols-outlined.g-icon-2em {
+  font-size: 2rem;
+}
+.material-symbols-outlined.g-icon-3em {
+  font-size: 3rem;
+}
+.material-symbols-outlined.g-icon-4em {
+  font-size: 4rem;
+}
+.material-symbols-outlined.g-icon-6em {
+  font-size: 6rem;
+}
+.material-symbols-outlined.g-icon-7em {
+  font-size: 7rem;
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 578px) {
+  .mt-sm-md-9 {
+    margin-top: ($spacer * 15);
+  }
+
+  .w-80-md {
+    width: 80% !important;
+  }
+}
+
+// sm-md
+@media only screen and (min-width: 579px) and (max-width: 992px) {
+  .mt-md-lg-9 {
+    margin-top: ($spacer * 15);
+  }
+
+  .mt-md-lg-8 {
+    margin-top: ($spacer * 12);
+  }
+}
+
+// lg-xxl
+@media only screen and (min-width: 993px) and (max-width: 2048px) {
+  .ms-lg-xl-9 {
+    margin-left: ($spacer * 15) !important;
+  }
+  .ms-lg-xl-8 {
+    margin-left: ($spacer * 12) !important;
+  }
+  .ms-lg-xl-7 {
+    margin-left: ($spacer * 9) !important;
+  }
+}
+
+// sm-xxl
+@media only screen and (min-width: 579px) and (max-width: 2048px) {
+  .w-25-lg {
+    width: 25% !important;
+  }
+}

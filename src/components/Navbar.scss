@@ -1,0 +1,5 @@
+@use '../Colors.scss' as colors;
+
+.navbar {
+  background-color: colors.$secondary;
+}
