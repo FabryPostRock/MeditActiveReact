@@ -13,8 +13,6 @@ dist-ssr
 
 # Editor directories and files
 **/.vscode
-**/.codex
-**/.agents
 !.vscode/extensions.json
 **/*.code-workspace
 .idea

@@ -1,0 +1,21 @@
+approval_policy = "on-request"
+default_permissions = "project-only"
+
+[permissions.project-only]
+description = "Accesso limitato al repository Node corrente."
+
+[permissions.project-only.filesystem]
+":minimal" = "read"
+"/home/codex_user/.vscode-server/extensions/openai.chatgpt-26.825.31414-linux-x64/bin/linux-x86_64" = "read"
+glob_scan_max_depth = 4
+
+[permissions.project-only.filesystem.":workspace_roots"]
+"." = "write"
+
+".env" = "deny"
+".env.*" = "deny"
+"**/.env" = "deny"
+"**/.env.*" = "deny"
+
+[permissions.project-only.network]
+enabled = false
