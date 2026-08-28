@@ -40,6 +40,7 @@ jobs:
         # run : serve per lanciare comandi direttamente nel terminale del runner.
         # | : indica che stai scrivendo un blocco multilinea.
         # ls -la: mostra il contenuto della directory corrente.
+        # l'echo si vede cliccando sul job dalla pull request e andando sullo step indicato dal 'name'
         run: |
           echo "Repository checked out correctly"
           ls -la
