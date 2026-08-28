@@ -1,0 +1,45 @@
+# nome del workflow
+name: PR Checks
+
+# on: indica quando deve partire il workflow.
+on:
+  # parti automaticamente quando c’è una Pull Request verso main
+  pull_request:
+    branches:
+      # qui si riferisce al branch di destinazione, non al branch sorgente.
+      - main
+  # Parte manualmente su GitHub potrai andare in: Repository → Actions → PR Checks → Run workflow
+  workflow_dispatch:
+
+# Questa sezione definisce i permessi concessi al token automatico di GitHub Actions, chiamato GITHUB_TOKEN.
+# Nel tuo caso basta contents: read perché il workflow deve solo fare checkout del codice e leggere i file.
+# Non gli stai dando permessi di: scrittura sul repository, creazione issue, creazione pull request,
+# push di commit, modifica release
+permissions:
+  contents: read
+
+# Un workflow GitHub Actions è composto da uno o più job. In questo caso il job è uno solo
+# smoke-test.
+jobs:
+  # Job semplice che verifica che il progetto venga scaricato correttamente e che il workflow funzioni.
+  # smoke-test rest un identificativo interno.
+  smoke-test:
+    # nome che vedi nell’interfaccia GitHub
+    name: Basic project check
+    # Esegui questo job su una macchina virtuale Linux Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        # Usa l’action ufficiale actions/checkout, versione 4.
+        # Le action sono blocchi riutilizzabili. Invece di scrivere manualmente tutti i comandi
+        # git clone, usi questa action pronta.
+        uses: actions/checkout@v4
+
+      - name: Show repository files
+        # run : serve per lanciare comandi direttamente nel terminale del runner.
+        # | : indica che stai scrivendo un blocco multilinea.
+        # ls -la: mostra il contenuto della directory corrente.
+        run: |
+          echo "Repository checked out correctly"
+          ls -la
