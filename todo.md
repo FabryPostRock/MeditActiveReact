@@ -1,2 +1,0 @@
-- Gestione messaggi errore : le stringhe degli errori è meglio gestirle in un file apposito
-- Gestione eccezioni dati : null, dati inconsistenti.
