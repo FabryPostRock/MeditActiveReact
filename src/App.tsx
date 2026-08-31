@@ -18,7 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/exercises" element={<Exercises />} />
         {/*:slug : è una variabile che permette di aprire un path diverso */}
-        <Route path="/exercise/:slug" element={<Exercise />} />
+        <Route path="/exercise/:sectionId" element={<Exercise />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </>

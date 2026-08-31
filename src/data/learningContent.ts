@@ -15,7 +15,8 @@ export const exerciseSectionsData = [
     title: 'Respirazione da sdraiato con mani sulla pancia',
     description:
       'Sdraiati comodamente e appoggia le mani sulla pancia. Porta l’attenzione al movimento dell’addome mentre respiri, senza forzare: senti le mani sollevarsi durante l’inspirazione e abbassarsi durante l’espirazione. L’obiettivo è prendere consapevolezza del respiro e imparare a lasciarlo fluire in modo naturale.',
-    videoUrl: 'https://drive.google.com/file/d/1lgwG7ahY_p7nKvU8mMgIshINSTvhyEjI/view?usp=sharing',
+    videoUrl: 'https://drive.google.com/file/d/1lgwG7ahY_p7nKvU8mMgIshINSTvhyEjI/preview',
+    thumbnailUrl: '',
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: 'breathing-section-2',
   },
@@ -25,7 +26,8 @@ export const exerciseSectionsData = [
     title: 'Respirazione da sdraiato con libro sulla pancia',
     description:
       'Sdraiati e appoggia un libro leggero sulla pancia. Osserva come il respiro lo fa salire durante l’inspirazione e scendere durante l’espirazione. Il piccolo peso offre un riferimento visivo e tattile che aiuta a percepire meglio il movimento addominale e a rendere il respiro più consapevole e regolare.',
-    videoUrl: 'https://drive.google.com/file/d/13_yGzu8adWE0XhyHk-EdsWeMwhOcmu8d/view?usp=sharing',
+    videoUrl: 'https://drive.google.com/file/d/13_yGzu8adWE0XhyHk-EdsWeMwhOcmu8d/preview',
+    thumbnailUrl: '',
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: 'breathing-section-3',
   },
@@ -35,7 +37,8 @@ export const exerciseSectionsData = [
     title: 'Respirazione da in piedi',
     description:
       'Porta ora la respirazione appresa da sdraiato nella posizione eretta. Mantieni il corpo rilassato, le ginocchia morbide e il busto naturale. Respira osservando il movimento dell’addome senza irrigidirti. L’obiettivo è mantenere un respiro calmo e consapevole anche quando il corpo deve sostenersi contro la gravità.',
-    videoUrl: 'https://drive.google.com/file/d/1ZN5h9CgS6zGQuislM2BXK2r11XfDvQwm/view?usp=sharing',
+    videoUrl: 'https://drive.google.com/file/d/1ZN5h9CgS6zGQuislM2BXK2r11XfDvQwm/preview',
+    thumbnailUrl: '',
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: 'feet-position-section-1',
   },
@@ -45,7 +48,8 @@ export const exerciseSectionsData = [
     title: 'Respirare con la terra',
     description:
       'In piedi, porta l’attenzione contemporaneamente al respiro e al contatto dei piedi con il terreno. Durante ogni ciclo respiratorio percepisci il corpo che si rilassa e il peso che scende verso la terra. Non cercare di spingere: lascia che respiro, postura e appoggio dei piedi inizino gradualmente a lavorare insieme.',
-    videoUrl: 'https://drive.google.com/file/d/1tP593Qof6sJmn9PpLf-qzwIkDho1arx8/view?usp=sharing',
+    videoUrl: 'https://drive.google.com/file/d/1tP593Qof6sJmn9PpLf-qzwIkDho1arx8/preview',
+    thumbnailUrl: '',
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: 'feet-position-section-2',
   },
@@ -55,7 +59,8 @@ export const exerciseSectionsData = [
     title: 'Sentire la distribuzione del peso sulla terra',
     description:
       'Porta l’attenzione sotto i piedi e osserva dove senti maggiormente il peso: tallone, avampiede, lato interno o esterno. Spostalo lentamente per esplorare le diverse sensazioni, poi cerca una posizione stabile e centrale. Respira senza tensioni e percepisci come piccoli cambiamenti dell’appoggio modificano l’equilibrio di tutto il corpo.',
-    videoUrl: 'https://drive.google.com/file/d/1L0h5SXlXIaROXI8k0hWlh7fkEqht5jTH/view?usp=sharing',
+    videoUrl: 'https://drive.google.com/file/d/1L0h5SXlXIaROXI8k0hWlh7fkEqht5jTH/preview',
+    thumbnailUrl: '',
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: null,
   },
@@ -69,12 +74,13 @@ export const exerciseSectionsData = [
 
 export type SectionId = (typeof exerciseSectionsData)[number]['id'];
 
-export interface ExerciseSection {
+export default interface ExerciseSection {
   readonly id: SectionId;
   readonly exerciseId: string;
   readonly title: string;
   readonly description: string;
   readonly videoUrl: string;
+  readonly thumbnailUrl: string;
   readonly requiredTrainingMs: number;
   readonly nextSectionId: SectionId | null;
 }
