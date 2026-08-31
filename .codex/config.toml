@@ -6,7 +6,7 @@ description = "Accesso limitato al repository Node corrente."
 
 [permissions.project-only.filesystem]
 ":minimal" = "read"
-"/home/codex_user/.vscode-server/extensions/openai.chatgpt-26.825.32147-linux-x64/bin/linux-x86_64" = "read"
+"/home/codex_user/.vscode-server/extensions/**" = "read"
 glob_scan_max_depth = 4
 
 [permissions.project-only.filesystem.":workspace_roots"]

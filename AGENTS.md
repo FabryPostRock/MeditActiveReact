@@ -8,6 +8,17 @@ The agent must help with development, refactoring, debugging, documentation, and
 
 Redux must be used as the default state-management solution for shared application state. Do not introduce alternative state-management libraries such as Zustand, MobX, Jotai, Recoil, or TanStack Query unless explicitly approved by the user.
 
+## Project Goals
+
+Here’s what the website should include:
+
+- A timer that can be configured by the user
+- The timer can be paused and resumed
+- References to meditation (images, text, etc.)
+- A simple and easy-to-use UI and UX
+- A well-organized and easy-to-understand app structure
+- Responsive design
+
 ## Working Agreement
 
 Before making any code change, explain the proposed modification in detail.
