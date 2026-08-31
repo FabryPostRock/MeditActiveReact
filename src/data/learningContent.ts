@@ -96,3 +96,7 @@ export const exerciseSections: readonly ExerciseSection[] = exerciseSectionsData
 export const exerciseSectionById: Readonly<Record<string, ExerciseSection>> = Object.fromEntries(
   exerciseSections.map((section) => [section.id, section]),
 );
+
+export function isSectionId(value: string): value is SectionId {
+  return Object.prototype.hasOwnProperty.call(exerciseSectionById, value);
+}
