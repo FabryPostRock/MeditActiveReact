@@ -2,7 +2,6 @@ import Title from './title';
 import { Link } from 'react-router-dom';
 import type ExerciseSection from '../../data/learningContent';
 import { useAppSelector } from '../../store/hooks';
-import { selectTrainingProgressBySectionId } from '../../store/trainingProgressSlice';
 
 /**
  * Definizione props con le caratteristiche statiche passate dal padre
@@ -12,7 +11,7 @@ interface ExerciseCardProps {
 }
 
 export default function ExerciseCard({ section }: ExerciseCardProps) {
-  const progress = useAppSelector((state) => selectTrainingProgressBySectionId(state, section.id));
+  const progress = useAppSelector((state) => state.trainingProgress.progressBySectionId[section.id]);
 
   const status = progress?.status ?? 'idle';
   const videoCompleted = progress?.videoCompleted ?? false;

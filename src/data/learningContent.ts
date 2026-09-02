@@ -97,6 +97,13 @@ export const exerciseSectionById: Readonly<Record<string, ExerciseSection>> = Ob
   exerciseSections.map((section) => [section.id, section]),
 );
 
+/**
+ * The function controls 'value'. ': value is SectionId' is a type predicate to specify to Typescript
+ * what 'true' means. The true or false result is not determined by ': value is SectionId' but from the returned result.
+ *
+ * @param value
+ * @returns  if it returns true, TypeScript can treat 'value' as type SectionId.
+ */
 export function isSectionId(value: string): value is SectionId {
   return Object.prototype.hasOwnProperty.call(exerciseSectionById, value);
 }
