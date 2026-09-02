@@ -1,11 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { initialState } from './trainingProgressSlice';
+import trainingProgressReducer from './trainingProgressSlice';
 
-const rootReducer = (state = initialState) => state;
+/**
+ * The inital state is managed inside trainingProgressSlice.ts
+ */
 
 export const store = configureStore({
   reducer: {
-    trainingProgress: rootReducer,
+    trainingProgress: trainingProgressReducer,
   },
 });
 

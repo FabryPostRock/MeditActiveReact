@@ -13,7 +13,7 @@ interface SectionTrainingProgress {
   status: TrainingStatus;
 }
 
-export default interface TrainingProgressState {
+export interface TrainingProgressState {
   progressBySectionId: Record<SectionId, SectionTrainingProgress>;
   activeSectionId: SectionId | null;
 }
@@ -39,7 +39,7 @@ export const initialState: TrainingProgressState = {
   activeSectionId: null,
 };
 
-export const trainingProgressSlice = createSlice({
+const progressSlice = createSlice({
   name: 'trainingProgress',
   initialState,
 
@@ -159,3 +159,8 @@ export const trainingProgressSlice = createSlice({
     },
   },
 });
+
+export const { setVideoCompleted, startTraining, pauseTraining, setReadyToBeCompleted, completeTraining } =
+  progressSlice.actions;
+
+export default progressSlice.reducer;
