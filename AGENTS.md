@@ -75,6 +75,8 @@ Avoid deeply nested logic when early returns make the code clearer.
 
 Do not introduce unused variables, unused imports, dead code, or commented-out code.
 
+Before answering any question verify the latest version of the project by scanning all the files involved in the project.
+
 ## React Guidelines
 
 Use functional components.
