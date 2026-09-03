@@ -1,5 +1,3 @@
-import type { RootState } from './store';
-import { store } from './store';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { exerciseSections, type SectionId } from '../data/learningContent';
 
@@ -39,6 +37,22 @@ export const initialState: TrainingProgressState = {
   activeSectionId: null,
 };
 
+/**
+ * 'createSlice' dosen't return directly a reducer but an object like:
+ *
+ * {
+ * name: 'trainingProgress',
+ * reducer: <funzione reducer >,
+ * actions: {
+ *   startTraining: < action creator >,
+ *   pauseTraining: < action creator >,
+ * },
+ * caseReducers: {
+ *   // ...
+ * },
+ * getInitialState: < funzione >,
+ *  }
+ */
 const progressSlice = createSlice({
   name: 'trainingProgress',
   initialState,
@@ -74,12 +88,13 @@ const progressSlice = createSlice({
     ) => {
       // action contains what and how i want to change values.
       const { sectionId, startedAtMs } = action.payload;
+      if (!startedAtMs) return;
       // state contains the actual state that has to be updated.
       const progress = state.progressBySectionId[sectionId];
-
-      if (!progress.videoCompleted) {
+      console.log('startTraining launched!');
+      /*if (!progress.videoCompleted) {
         return;
-      }
+      }*/
 
       // Start and pause are binded to the same button
       if (progress.status === 'readyToComplete' || progress.status === 'completed') {
@@ -98,18 +113,19 @@ const progressSlice = createSlice({
       state,
       action: PayloadAction<{
         sectionId: SectionId;
-        startedAtMs: number;
         elapsedTrainingMs: number;
       }>,
     ) => {
-      const { sectionId, startedAtMs, elapsedTrainingMs } = action.payload;
-
+      const { sectionId, elapsedTrainingMs } = action.payload;
+      console.log('pauseTraining launched!');
       const progress = state.progressBySectionId[sectionId];
 
       if (progress.status !== 'running' || progress.elapsedTrainingMs === null) {
         return;
       }
-
+      // At this point progress.startedAtMs is for sure not null or undefined
+      progress.elapsedTrainingMs = elapsedTrainingMs - progress.startedAtMs!;
+      console.log(`pauseTraining ${progress.elapsedTrainingMs}`);
       progress.status = progress.elapsedTrainingMs >= progress.requiredTrainingMs ? 'readyToComplete' : 'paused';
 
       // If the training is not running no active Section is valid

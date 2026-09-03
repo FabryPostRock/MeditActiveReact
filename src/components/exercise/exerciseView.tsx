@@ -20,18 +20,21 @@ interface ExerciseCardProps {
 
 function formatDuration(durationMs: number) {
   const totalSeconds = Math.ceil(durationMs / 1000);
-
+  //
   const minutes = Math.floor(totalSeconds / 60);
 
   const seconds = totalSeconds % 60;
-
+  /**
+   * Returned object:
+   * - [minutes, seconds].map((value) =>: 'value' returns the single array element for each cycle -> [2, 3]
+   * - String(value).padStart(2, '0') : 'value' converted to string and than leading '0' added -> ['02', '03']
+   */
   return [minutes, seconds].map((value) => String(value).padStart(2, '0')).join(':');
 }
 
 export default function ExerciseView({ section }: ExerciseCardProps) {
   const dispatch = useAppDispatch();
-  //const progress = useAppSelector((state) => state.trainingProgress.progressBySectionId[section.id]);
-  const { progress, remainingTrainingMs } = useTrainingTimer(section);
+  const { progress, currentSessionMs } = useTrainingTimer(section);
 
   const status = progress?.status ?? 'idle';
   const videoCompleted = progress?.videoCompleted ?? false;
@@ -60,7 +63,7 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
           </p>
         </div>
         <div>
-          <p>${progress.elapsedTrainingMs}</p>
+          <p>{formatDuration(progress.status === 'running' ? currentSessionMs : progress.elapsedTrainingMs)}</p>
           <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
             <button
               className="btn-big btn btn-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5"
@@ -70,8 +73,7 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
                       dispatch(
                         pauseTraining({
                           sectionId: section.id,
-                          startedAtMs: Date.now(),
-                          elapsedTrainingMs: progress.elapsedTrainingMs!,
+                          elapsedTrainingMs: Date.now(),
                         }),
                       )
                   : () => dispatch(startTraining({ sectionId: section.id, startedAtMs: Date.now() }))

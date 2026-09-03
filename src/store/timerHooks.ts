@@ -83,6 +83,6 @@ export default function useTrainingTimer(section: ExerciseSection) {
   return {
     progress,
     totalElapsedMs,
-    remainingTrainingMs,
+    currentSessionMs,
   };
 }
