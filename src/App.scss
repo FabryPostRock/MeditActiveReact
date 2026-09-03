@@ -177,7 +177,7 @@ ul {
     'wght' 400,
     'GRAD' 0,
     'opsz' 40;
-  color: colors.$secondary;
+  color: colors.$primary;
 }
 
 .material-symbols-outlined.g-icon-1em {
@@ -199,8 +199,8 @@ ul {
   font-size: 7rem;
 }
 
-.material-symbols-outlined.g-icon-primary {
-  color: colors.$primary;
+.btn-icons-secondary:hover .material-symbols-outlined.g-icon-color {
+  color: colors.$secondary;
 }
 
 /* Mobile Styles */
