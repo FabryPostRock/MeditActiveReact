@@ -12,15 +12,19 @@ import Error from './pages/error';
 function App() {
   return (
     <>
-      <div className="container nav-mt"></div>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/exercises" element={<Exercises />} />
-        {/*:slug : è una variabile che permette di aprire un path diverso */}
-        <Route path="/exercise/:sectionId" element={<Exercise />} />
-        <Route path="*" element={<Error />} />
-      </Routes>
+      <div className="app-shell">
+        <div className="container nav-mt" />
+        <Navbar />
+        <div className="page-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/exercises" element={<Exercises />} />
+            {/*:slug : è una variabile che permette di aprire un path diverso */}
+            <Route path="/exercise/:sectionId" element={<Exercise />} />
+            <Route path="*" element={<Error />} />
+          </Routes>
+        </div>
+      </div>
     </>
   );
 }

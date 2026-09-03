@@ -15,12 +15,36 @@
 
 // sm-md
 @media only screen and (max-width: 578px) {
+  .navbar {
+    --bs-navbar-padding-y: 0rem;
+  }
+
   .nav-wrapper {
-    position: fixed !important;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    /**
+    With :
+    
+    position: fixed 
+    bottom: 0
+    
+    when the page content doesn't overflow the page viewport, the content is clipped and it doesn't
+    scroll. A solution could be add a bottom empty space equivalent to the nav height but it's not very
+    a clean solution.
+    
+    Using position static the nav take space in the viewport. The navbar stays fixed because of the 
+    app-shell that desn't move. The only element that moves is .page-content.
+
+    */
+    position: static !important;
+    /* 
+    order: 2 -> modifica l'ordine visivo. a '.page-content' è assegnato order:1. 
+    Di conseguenza la nav finisce sotto il contenuto della pagina nella view.
+    */
+    order: 2;
+    /*
+    Impedisce alla nav di comprimersi quando lo spazio verticale è insufficiente.
+    'auto' invece serve a usare l'altezza naturale della navbar
+    */
+    flex: 0 0 auto;
     width: 100%;
     z-index: 1030;
   }

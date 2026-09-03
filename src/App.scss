@@ -212,6 +212,25 @@ ul {
   .w-80-md {
     width: 80% !important;
   }
+
+  body {
+    overflow: hidden;
+  }
+
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .page-content {
+    order: 1;
+    // si espande il più possibile
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
 }
 
 // sm-md
