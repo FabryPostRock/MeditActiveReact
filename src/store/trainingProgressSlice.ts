@@ -5,6 +5,10 @@ type TrainingStatus = 'idle' | 'running' | 'paused' | 'readyToComplete' | 'compl
 
 interface SectionTrainingProgress {
   videoCompleted: boolean;
+  videoCurrentSecond: number;
+  videoWatchedSeconds: number;
+  videoDurationSeconds: number | null;
+
   elapsedTrainingMs: number;
   requiredTrainingMs: number;
   startedAtMs: number | null;
@@ -24,6 +28,9 @@ const initialProgressBySectionId = Object.fromEntries(
     section.id,
     {
       videoCompleted: false,
+      videoCurrentSecond: 0,
+      videoWatchedSeconds: 0,
+      videoDurationSeconds: null,
       elapsedTrainingMs: 0,
       requiredTrainingMs: section.requiredTrainingMs,
       startedAtMs: null,
@@ -58,6 +65,25 @@ const progressSlice = createSlice({
   initialState,
 
   reducers: {
+    setVideoProgress: (
+      state,
+      action: PayloadAction<{
+        sectionId: SectionId;
+        currentSecond: number;
+        watchedSeconds: number;
+        durationSeconds: number;
+      }>,
+    ) => {
+      const { sectionId, currentSecond, watchedSeconds, durationSeconds } = action.payload;
+
+      const progress = state.progressBySectionId[sectionId];
+
+      progress.videoCurrentSecond = currentSecond;
+
+      progress.videoWatchedSeconds = watchedSeconds;
+
+      progress.videoDurationSeconds = durationSeconds;
+    },
     setVideoCompleted: (
       state,
       /**
@@ -72,10 +98,23 @@ const progressSlice = createSlice({
        */
       action: PayloadAction<{
         sectionId: SectionId;
+        watchedSeconds: number;
+        durationSeconds: number;
       }>,
     ) => {
-      const progress = state.progressBySectionId[action.payload.sectionId];
+      const { sectionId, watchedSeconds, durationSeconds } = action.payload;
+      const progress = state.progressBySectionId[sectionId];
+      const completionToleranceSeconds = 1;
+      const videoWasFullyWatched =
+        durationSeconds > 0 && watchedSeconds >= durationSeconds - completionToleranceSeconds;
 
+      if (!videoWasFullyWatched) {
+        return;
+      }
+
+      progress.videoCurrentSecond = Math.floor(durationSeconds);
+      progress.videoWatchedSeconds = watchedSeconds;
+      progress.videoDurationSeconds = durationSeconds;
       progress.videoCompleted = true;
     },
 
@@ -92,9 +131,9 @@ const progressSlice = createSlice({
       // state contains the actual state that has to be updated.
       const progress = state.progressBySectionId[sectionId];
       console.log('startTraining launched!');
-      /*if (!progress.videoCompleted) {
+      if (!progress.videoCompleted) {
         return;
-      }*/
+      }
 
       // Start and pause are binded to the same button
       if (progress.status === 'readyToComplete' || progress.status === 'completed') {
@@ -176,7 +215,13 @@ const progressSlice = createSlice({
   },
 });
 
-export const { setVideoCompleted, startTraining, pauseTraining, setReadyToBeCompleted, completeTraining } =
-  progressSlice.actions;
+export const {
+  setVideoProgress,
+  setVideoCompleted,
+  startTraining,
+  pauseTraining,
+  setReadyToBeCompleted,
+  completeTraining,
+} = progressSlice.actions;
 
 export default progressSlice.reducer;

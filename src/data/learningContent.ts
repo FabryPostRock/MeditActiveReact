@@ -1,3 +1,9 @@
+import imgRespSdraiato1 from '../assets/img/resp-sdraiato-1.png';
+import imgRespSdraiato2 from '../assets/img/resp-sdraiato-2.png';
+import imgRespInpiedi3 from '../assets/img/resp-inpiedi-3.png';
+import imgMovPiedi1 from '../assets/img/mov-piedi-1.png';
+import imgMovPiedi2 from '../assets/img/mov-piedi-2.png';
+
 /*
  * LEARNING CONTENTS DATA
  * The data that concerns a specific video lesson are static and will not be
@@ -15,8 +21,8 @@ export const exerciseSectionsData = [
     title: 'Respirazione da sdraiato con mani sulla pancia',
     description:
       'Sdraiati comodamente e appoggia le mani sulla pancia. Porta l’attenzione al movimento dell’addome mentre respiri, senza forzare: senti le mani sollevarsi durante l’inspirazione e abbassarsi durante l’espirazione. L’obiettivo è prendere consapevolezza del respiro e imparare a lasciarlo fluire in modo naturale.',
-    videoUrl: 'https://drive.google.com/file/d/1lgwG7ahY_p7nKvU8mMgIshINSTvhyEjI/preview',
-    thumbnailUrl: '',
+    videoUrl: '/videos/resp-sdraiato-1.mp4',
+    thumbnailUrl: imgRespSdraiato1,
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: 'breathing-section-2',
   },
@@ -26,8 +32,8 @@ export const exerciseSectionsData = [
     title: 'Respirazione da sdraiato con libro sulla pancia',
     description:
       'Sdraiati e appoggia un libro leggero sulla pancia. Osserva come il respiro lo fa salire durante l’inspirazione e scendere durante l’espirazione. Il piccolo peso offre un riferimento visivo e tattile che aiuta a percepire meglio il movimento addominale e a rendere il respiro più consapevole e regolare.',
-    videoUrl: 'https://drive.google.com/file/d/13_yGzu8adWE0XhyHk-EdsWeMwhOcmu8d/preview',
-    thumbnailUrl: '',
+    videoUrl: '/videos/resp-sdraiato-2.mp4',
+    thumbnailUrl: imgRespSdraiato2,
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: 'breathing-section-3',
   },
@@ -37,8 +43,8 @@ export const exerciseSectionsData = [
     title: 'Respirazione da in piedi',
     description:
       'Porta ora la respirazione appresa da sdraiato nella posizione eretta. Mantieni il corpo rilassato, le ginocchia morbide e il busto naturale. Respira osservando il movimento dell’addome senza irrigidirti. L’obiettivo è mantenere un respiro calmo e consapevole anche quando il corpo deve sostenersi contro la gravità.',
-    videoUrl: 'https://drive.google.com/file/d/1ZN5h9CgS6zGQuislM2BXK2r11XfDvQwm/preview',
-    thumbnailUrl: '',
+    videoUrl: '/videos/resp-inpiedi-3.mp4',
+    thumbnailUrl: imgRespInpiedi3,
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: 'feet-position-section-1',
   },
@@ -48,8 +54,8 @@ export const exerciseSectionsData = [
     title: 'Respirare con la terra',
     description:
       'In piedi, porta l’attenzione contemporaneamente al respiro e al contatto dei piedi con il terreno. Durante ogni ciclo respiratorio percepisci il corpo che si rilassa e il peso che scende verso la terra. Non cercare di spingere: lascia che respiro, postura e appoggio dei piedi inizino gradualmente a lavorare insieme.',
-    videoUrl: 'https://drive.google.com/file/d/1tP593Qof6sJmn9PpLf-qzwIkDho1arx8/preview',
-    thumbnailUrl: '',
+    videoUrl: '/videos/mov-piedi-1.mp4',
+    thumbnailUrl: imgMovPiedi1,
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: 'feet-position-section-2',
   },
@@ -59,8 +65,8 @@ export const exerciseSectionsData = [
     title: 'Sentire la distribuzione del peso sulla terra',
     description:
       'Porta l’attenzione sotto i piedi e osserva dove senti maggiormente il peso: tallone, avampiede, lato interno o esterno. Spostalo lentamente per esplorare le diverse sensazioni, poi cerca una posizione stabile e centrale. Respira senza tensioni e percepisci come piccoli cambiamenti dell’appoggio modificano l’equilibrio di tutto il corpo.',
-    videoUrl: 'https://drive.google.com/file/d/1L0h5SXlXIaROXI8k0hWlh7fkEqht5jTH/preview',
-    thumbnailUrl: '',
+    videoUrl: '/videos/mov-piedi-2.mp4',
+    thumbnailUrl: imgMovPiedi2,
     requiredTrainingMs: TIME_REQUIRED_TRAINING_SECONDS * 1000,
     nextSectionId: null,
   },

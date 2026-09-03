@@ -4,12 +4,15 @@ import type ExerciseSection from '../../data/learningContent';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import useTrainingTimer from '../../store/timerHooks';
 import {
+  setVideoProgress,
   setVideoCompleted,
   startTraining,
   pauseTraining,
   setReadyToBeCompleted,
   completeTraining,
 } from '../../store/trainingProgressSlice';
+
+import { useRef, type SyntheticEvent } from 'react';
 
 /**
  * Definizione props con le caratteristiche statiche passate dal padre
@@ -32,8 +35,60 @@ function formatDuration(durationMs: number) {
   return [minutes, seconds].map((value) => String(value).padStart(2, '0')).join(':');
 }
 
+function getPlayedSeconds(video: HTMLVideoElement) {
+  let playedSeconds = 0;
+
+  for (let index = 0; index < video.played.length; index += 1) {
+    playedSeconds += video.played.end(index) - video.played.start(index);
+  }
+
+  return playedSeconds;
+}
+
 export default function ExerciseView({ section }: ExerciseCardProps) {
   const dispatch = useAppDispatch();
+  const VIDEO_PROGRESS_INTERVAL_SECONDS = 2;
+  /**
+   * useRef saves the last recorded interval
+   * -1 → no interval yet registered
+      0 → interval 0–1 seconds
+      1 → interval 2–3 seconds
+      2 → interval 4–5 seconds
+      3 → interval 6–7 seconds
+   */
+  const lastRecordedInterval = useRef(-1);
+
+  const handleVideoTimeUpdate = (event: SyntheticEvent<HTMLVideoElement>) => {
+    const video = event.currentTarget;
+    const currentSecond = Math.floor(video.currentTime);
+    const currentInterval = Math.floor(currentSecond / VIDEO_PROGRESS_INTERVAL_SECONDS);
+    if (currentInterval === lastRecordedInterval.current) {
+      return;
+    }
+
+    lastRecordedInterval.current = currentInterval;
+
+    dispatch(
+      setVideoProgress({
+        sectionId: section.id,
+        currentSecond,
+        watchedSeconds: Math.floor(getPlayedSeconds(video)),
+        durationSeconds: video.duration,
+      }),
+    );
+  };
+
+  const handleVideoEnded = (event: SyntheticEvent<HTMLVideoElement>) => {
+    const video = event.currentTarget;
+    dispatch(
+      setVideoCompleted({
+        sectionId: section.id,
+        watchedSeconds: Math.floor(getPlayedSeconds(video)),
+        durationSeconds: video.duration,
+      }),
+    );
+  };
+
   const { progress, currentSessionMs } = useTrainingTimer(section);
 
   const status = progress?.status ?? 'idle';
@@ -44,14 +99,16 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
       <div>
         <Title title={section.title} />
         <div>
-          <iframe
+          {/**<iframe> doesn't not allow any video control. With <video> you can but
+           * you must use a real video format not an html page that wraps a video.
+           */}
+          <video
             src={section.videoUrl}
-            width="100%"
-            height="100%"
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            aria-label={`Anteprima di ${section.title}`}
-          ></iframe>
+            controls
+            onTimeUpdate={handleVideoTimeUpdate}
+            onEnded={handleVideoEnded}
+            aria-label={`Video: ${section.title}`}
+          />
           <p>{section.description}</p>
         </div>
         <div>
