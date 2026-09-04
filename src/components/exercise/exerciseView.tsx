@@ -124,6 +124,7 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
           <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
             <button
               className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${videoCompleted ? '' : 'disabled'}`}
+              aria-disabled={videoCompleted ? true : undefined}
               onClick={
                 progress.status === 'running'
                   ? () =>
@@ -146,6 +147,7 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
           <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
             <button
               className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${status === 'completed' ? '' : 'disabled'}`}
+              aria-disabled={status === 'completed' ? true : undefined}
             >
               {' '}
               <span className="material-symbols-outlined g-icon-sm-2em g-icon-color">history</span>{' '}
