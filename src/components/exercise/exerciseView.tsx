@@ -123,7 +123,7 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
           <p>{formatDuration(progress.status === 'running' ? currentSessionMs : progress.elapsedTrainingMs)}</p>
           <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
             <button
-              className="btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5"
+              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${videoCompleted ? '' : 'disabled'}`}
               onClick={
                 progress.status === 'running'
                   ? () =>
@@ -144,7 +144,9 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
           </div>
 
           <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
-            <button className="btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ">
+            <button
+              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${status === 'completed' ? '' : 'disabled'}`}
+            >
               {' '}
               <span className="material-symbols-outlined g-icon-sm-2em g-icon-color">history</span>{' '}
             </button>
