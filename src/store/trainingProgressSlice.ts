@@ -13,6 +13,7 @@ interface SectionTrainingProgress {
   requiredTrainingMs: number;
   startedAtMs: number | null | undefined;
   status: TrainingStatus;
+  trainingCompleted: boolean;
 }
 
 export interface TrainingProgressState {
@@ -35,6 +36,7 @@ const initialProgressBySectionId = Object.fromEntries(
       requiredTrainingMs: section.requiredTrainingMs,
       startedAtMs: null,
       status: 'idle',
+      trainingCompleted: false,
     },
   ]),
 ) as Record<SectionId, SectionTrainingProgress>;
@@ -128,18 +130,16 @@ const progressSlice = createSlice({
 
       // state contains the actual state that has to be updated.
       const progress = state.progressBySectionId[sectionId];
+
       !startedAtMs && progress.startedAtMs
         ? (startedAtMs = progress.startedAtMs)
         : (progress.startedAtMs = startedAtMs);
-      if (!progress.videoCompleted) {
-        return;
-      }
 
       // Start and pause are binded to the same button
-      if (progress.status === 'readyToComplete' || progress.status === 'completed') {
+      if (!progress.videoCompleted || progress.status === 'readyToComplete' || progress.status === 'completed') {
         return;
       }
-
+      console.log('AAAAAAAAAAAAAAAA');
       if (state.activeSectionId !== null && state.activeSectionId !== sectionId) {
         return;
       }
@@ -177,6 +177,9 @@ const progressSlice = createSlice({
       }
     },
 
+    /**
+     * This function has to be executed only one time otherwise it runs endlessly
+     */
     setReadyToBeCompleted: (
       state,
       action: PayloadAction<{
@@ -186,20 +189,24 @@ const progressSlice = createSlice({
     ) => {
       const { sectionId, elapsedTrainingMs } = action.payload;
       const progress = state.progressBySectionId[sectionId];
+      console.log(`setReadyToBeCompleted status before: ${progress.status}`);
       if (progress.status !== 'running') {
         return;
       }
-
-      if (progress.elapsedTrainingMs < progress.requiredTrainingMs) {
+      console.log(
+        `setReadyToBeCompleted progress.elapsedTrainingMs: ${progress.elapsedTrainingMs}  elapsedTrainingMs:${elapsedTrainingMs} `,
+      );
+      if (elapsedTrainingMs < progress.requiredTrainingMs) {
         return;
       }
 
       progress.elapsedTrainingMs = progress.requiredTrainingMs;
       progress.status = 'readyToComplete';
-
+      console.log(`setReadyToBeCompleted status after: ${progress.status}`);
       if (state.activeSectionId === sectionId) {
         state.activeSectionId = null;
       }
+      return;
     },
 
     completeTraining: (
@@ -215,6 +222,24 @@ const progressSlice = createSlice({
       }
 
       progress.status = 'completed';
+      progress.trainingCompleted = true;
+    },
+
+    resetTraining: (
+      state,
+      action: PayloadAction<{
+        sectionId: SectionId;
+      }>,
+    ) => {
+      const progress = state.progressBySectionId[action.payload.sectionId];
+
+      if (progress.status !== 'completed' && progress.status !== 'readyToComplete') {
+        return;
+      }
+
+      progress.elapsedTrainingMs = 0;
+      progress.startedAtMs = null;
+      progress.status = 'idle';
     },
   },
 });
@@ -226,6 +251,7 @@ export const {
   pauseTraining,
   setReadyToBeCompleted,
   completeTraining,
+  resetTraining,
 } = progressSlice.actions;
 
 export default progressSlice.reducer;

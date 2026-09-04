@@ -12,7 +12,7 @@ import imgMovPiedi2 from '../assets/img/mov-piedi-2.png';
  *
  */
 
-const TIME_REQUIRED_TRAINING_SECONDS = 60 * 60;
+const TIME_REQUIRED_TRAINING_SECONDS = 1 * 5;
 
 export const exerciseSectionsData = [
   {

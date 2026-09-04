@@ -8,8 +8,8 @@ import {
   setVideoCompleted,
   startTraining,
   pauseTraining,
-  setReadyToBeCompleted,
   completeTraining,
+  resetTraining,
 } from '../../store/trainingProgressSlice';
 
 import { useRef, type SyntheticEvent } from 'react';
@@ -130,10 +130,10 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
           <p>{formatDuration(totalElapsedMs)}</p>
           <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
             <button
-              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${videoCompleted ? '' : 'disabled'}`}
-              aria-disabled={videoCompleted ? true : undefined}
+              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${videoCompleted && status !== 'readyToComplete' ? '' : 'disabled'}`}
+              aria-disabled={videoCompleted && status !== 'readyToComplete' ? undefined : true}
               onClick={
-                progress.status === 'running'
+                status === 'running'
                   ? () =>
                       dispatch(
                         pauseTraining({
@@ -152,21 +152,43 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
             >
               {' '}
               <span className="material-symbols-outlined g-icon-sm-2em g-icon-color">
-                {progress.status === 'running' ? 'pause' : 'play_arrow'}
+                {status === 'running' ? 'pause' : 'play_arrow'}
               </span>{' '}
             </button>
           </div>
 
           <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
             <button
-              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${status === 'completed' ? '' : 'disabled'}`}
-              aria-disabled={status === 'completed' ? true : undefined}
+              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${status === 'completed' || status === 'readyToComplete' ? '' : 'disabled'}`}
+              aria-disabled={status === 'completed' || status === 'readyToComplete' ? undefined : true}
+              onClick={() =>
+                dispatch(
+                  resetTraining({
+                    sectionId: section.id,
+                  }),
+                )
+              }
             >
               {' '}
               <span className="material-symbols-outlined g-icon-sm-2em g-icon-color">history</span>{' '}
             </button>
           </div>
-          <button> Completa Allenamento </button>
+          <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
+            <button
+              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${status === 'readyToComplete' && !progress.trainingCompleted ? '' : 'disabled'}`}
+              aria-disabled={status === 'readyToComplete' && !progress.trainingCompleted ? undefined : true}
+              onClick={() =>
+                dispatch(
+                  completeTraining({
+                    sectionId: section.id,
+                  }),
+                )
+              }
+            >
+              <span className="material-symbols-outlined g-icon-sm-2em g-icon-color">check</span>
+              Esercizio Completato{' '}
+            </button>
+          </div>
         </div>
       </div>
     </article>

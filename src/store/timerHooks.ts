@@ -30,18 +30,22 @@ export default function useTrainingTimer(section: ExerciseSection) {
         const currentTime = Date.now();
 
         setNow(currentTime);
-        console.log(`updateTimer  currentTime: ${currentTime}  progress.startedAtMs: ${progress.startedAtMs}`);
+        console.log(
+          `updateTimer  currentTime: ${currentTime}  progress.startedAtMs: ${progress.startedAtMs}   status: ${progress.status}`,
+        );
         const currentSessionMs = currentTime - progress.startedAtMs!;
 
         const totalElapsedMs = progress.elapsedTrainingMs + currentSessionMs;
 
         if (totalElapsedMs >= progress.requiredTrainingMs) {
+          console.log('setReadyToBeCompleted will be called!');
           dispatch(
             setReadyToBeCompleted({
               sectionId: section.id,
               elapsedTrainingMs: totalElapsedMs,
             }),
           );
+          return;
         }
       };
 
@@ -71,7 +75,7 @@ export default function useTrainingTimer(section: ExerciseSection) {
     progress.startedAtMs && now && progress.status === 'running' ? Math.max(now - progress.startedAtMs!, 0) : 0;
 
   const totalElapsedMs = Math.min(progress.elapsedTrainingMs + currentSessionMs, progress.requiredTrainingMs);
-
+  console.log(`useTrainingTimer progress.elapsedTrainingMs: ${progress.elapsedTrainingMs}`);
   const remainingTrainingMs = Math.max(progress.requiredTrainingMs - totalElapsedMs, 0);
   console.log(`useTrainingTimer currentSessionMs: ${currentSessionMs}  now: ${now}`);
   return {
