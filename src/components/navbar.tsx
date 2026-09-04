@@ -19,9 +19,9 @@ export default function Navbar() {
               <ul className="navbar-nav flex-row  justify-content-center justify-content-sm-end  w-100 gap-sm-5">
                 <li className="nav-item flex-fill flex-sm-grow-0 lh-1">
                   {/** 
-                  NavLink: NavLink, perché permette di aggiungere la classe Bootstrap 'active' quando la pagina corrisponde all’URL corrente.
-                  isActive: React Router espone isActive attraverso className.
-                  aria-current="page": viene aggiunto automaticamente quando isActive è true.
+                  NavLink: NavLink, allow to add the Bootstrap class active when the page corresponds to the one that is opened.
+                  isActive: React Router expose isActive through className.
+                  aria-current="page": is automatically added when isActive is true.
                   */}
                   <NavLink className={({ isActive }) => `fs-5 nav-link ${isActive ? 'active' : ''}`} to="/" end>
                     <span className="nav-label">Home</span>
@@ -31,7 +31,7 @@ export default function Navbar() {
                     </span>
                   </NavLink>
                 </li>
-                {/**flex-fill : suddivide in parti uguali lo spazio tra le due icone al cambiare della view */}
+                {/**flex-fill : keeps an equal spacing between the two icons with view changing. */}
                 <li className="nav-item flex-fill flex-sm-grow-0 lh-1 me-5">
                   <NavLink className={({ isActive }) => `fs-5 nav-link ${isActive ? 'active' : ''}`} to="/exercises">
                     <span className="nav-label">Exercises</span>
