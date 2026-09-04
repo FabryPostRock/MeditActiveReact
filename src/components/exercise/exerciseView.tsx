@@ -35,6 +35,11 @@ function formatDuration(durationMs: number) {
   return [minutes, seconds].map((value) => String(value).padStart(2, '0')).join(':');
 }
 
+/**
+ * This function return the playedSeconds and doesn't update them if the user slide backward or forward
+ * @param video: the HTML video element
+ * @returns playedSeconds
+ */
 function getPlayedSeconds(video: HTMLVideoElement) {
   let playedSeconds = 0;
 
@@ -67,7 +72,9 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
     }
 
     lastRecordedInterval.current = currentInterval;
-
+    console.log(
+      `handleVideoTimeUpdate  - playedSeconds: ${Math.floor(getPlayedSeconds(video))} currentSecond: ${currentSecond}  currentInterval: ${currentInterval}`,
+    );
     dispatch(
       setVideoProgress({
         sectionId: section.id,
@@ -89,11 +96,11 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
     );
   };
 
-  const { progress, currentSessionMs } = useTrainingTimer(section);
+  const { progress, currentSessionMs, totalElapsedMs } = useTrainingTimer(section);
 
   const status = progress?.status ?? 'idle';
   const videoCompleted = progress?.videoCompleted ?? false;
-
+  console.log(`ExerciseView - currentSessionMs: ${currentSessionMs}   totalElapsedMs: ${totalElapsedMs}`);
   return (
     <article>
       <div>
@@ -120,7 +127,7 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
           </p>
         </div>
         <div>
-          <p>{formatDuration(progress.status === 'running' ? currentSessionMs : progress.elapsedTrainingMs)}</p>
+          <p>{formatDuration(totalElapsedMs)}</p>
           <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
             <button
               className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${videoCompleted ? '' : 'disabled'}`}
@@ -134,7 +141,13 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
                           elapsedTrainingMs: Date.now(),
                         }),
                       )
-                  : () => dispatch(startTraining({ sectionId: section.id, startedAtMs: Date.now() }))
+                  : () =>
+                      dispatch(
+                        !progress.startedAtMs
+                          ? // The start time is absolute and is needed only at the first start
+                            startTraining({ sectionId: section.id, startedAtMs: Date.now() })
+                          : startTraining({ sectionId: section.id }),
+                      )
               }
             >
               {' '}

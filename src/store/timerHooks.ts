@@ -2,19 +2,12 @@ import { useEffect, useState } from 'react';
 
 import type ExerciseSection from '../data/learningContent';
 
-import {
-  setVideoCompleted,
-  startTraining,
-  pauseTraining,
-  setReadyToBeCompleted,
-  completeTraining,
-} from './trainingProgressSlice';
+import { setReadyToBeCompleted } from './trainingProgressSlice';
 
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 
 export default function useTrainingTimer(section: ExerciseSection) {
   const dispatch = useAppDispatch();
-
   const progress = useAppSelector((state) => state.trainingProgress.progressBySectionId[section.id]);
 
   /**
@@ -26,7 +19,7 @@ export default function useTrainingTimer(section: ExerciseSection) {
 
   useEffect(
     () => {
-      if (progress.status !== 'running' || progress.startedAtMs === null) {
+      if (progress.status !== 'running' || !progress.startedAtMs) {
         return;
       }
 
@@ -37,7 +30,7 @@ export default function useTrainingTimer(section: ExerciseSection) {
         const currentTime = Date.now();
 
         setNow(currentTime);
-
+        console.log(`updateTimer  currentTime: ${currentTime}  progress.startedAtMs: ${progress.startedAtMs}`);
         const currentSessionMs = currentTime - progress.startedAtMs!;
 
         const totalElapsedMs = progress.elapsedTrainingMs + currentSessionMs;
@@ -59,6 +52,7 @@ export default function useTrainingTimer(section: ExerciseSection) {
       return () => {
         // setInterval has to be cleared only when a new action is performed on start e pause buttons
         window.clearInterval(intervalId);
+        console.log('Timer Cleared');
       };
     },
     // Here is specified that the useEffect will be executed when the following
@@ -74,12 +68,12 @@ export default function useTrainingTimer(section: ExerciseSection) {
   );
 
   const currentSessionMs =
-    progress.status === 'running' && progress.startedAtMs !== null ? Math.max(now - progress.startedAtMs, 0) : 0;
+    progress.startedAtMs && now && progress.status === 'running' ? Math.max(now - progress.startedAtMs!, 0) : 0;
 
   const totalElapsedMs = Math.min(progress.elapsedTrainingMs + currentSessionMs, progress.requiredTrainingMs);
 
   const remainingTrainingMs = Math.max(progress.requiredTrainingMs - totalElapsedMs, 0);
-
+  console.log(`useTrainingTimer currentSessionMs: ${currentSessionMs}  now: ${now}`);
   return {
     progress,
     totalElapsedMs,

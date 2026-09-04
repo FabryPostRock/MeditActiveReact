@@ -11,7 +11,7 @@ interface SectionTrainingProgress {
 
   elapsedTrainingMs: number;
   requiredTrainingMs: number;
-  startedAtMs: number | null;
+  startedAtMs: number | null | undefined;
   status: TrainingStatus;
 }
 
@@ -79,9 +79,7 @@ const progressSlice = createSlice({
       const progress = state.progressBySectionId[sectionId];
 
       progress.videoCurrentSecond = currentSecond;
-
       progress.videoWatchedSeconds = watchedSeconds;
-
       progress.videoDurationSeconds = durationSeconds;
     },
     setVideoCompleted: (
@@ -122,15 +120,17 @@ const progressSlice = createSlice({
       state,
       action: PayloadAction<{
         sectionId: SectionId;
-        startedAtMs: number;
+        startedAtMs?: number;
       }>,
     ) => {
       // action contains what and how i want to change values.
-      const { sectionId, startedAtMs } = action.payload;
-      if (!startedAtMs) return;
+      let { sectionId, startedAtMs } = action.payload;
+
       // state contains the actual state that has to be updated.
       const progress = state.progressBySectionId[sectionId];
-      console.log('startTraining launched!');
+      !startedAtMs && progress.startedAtMs
+        ? (startedAtMs = progress.startedAtMs)
+        : (progress.startedAtMs = startedAtMs);
       if (!progress.videoCompleted) {
         return;
       }
@@ -143,7 +143,7 @@ const progressSlice = createSlice({
       if (state.activeSectionId !== null && state.activeSectionId !== sectionId) {
         return;
       }
-      progress.startedAtMs = startedAtMs;
+
       progress.status = 'running';
       state.activeSectionId = sectionId;
     },
@@ -156,15 +156,19 @@ const progressSlice = createSlice({
       }>,
     ) => {
       const { sectionId, elapsedTrainingMs } = action.payload;
-      console.log('pauseTraining launched!');
       const progress = state.progressBySectionId[sectionId];
 
-      if (progress.status !== 'running' || progress.elapsedTrainingMs === null) {
+      if (
+        progress.status !== 'running' ||
+        (!progress.elapsedTrainingMs && !Number.isFinite(progress?.elapsedTrainingMs))
+      ) {
         return;
       }
       // At this point progress.startedAtMs is for sure not null or undefined
       progress.elapsedTrainingMs = elapsedTrainingMs - progress.startedAtMs!;
-      console.log(`pauseTraining ${progress.elapsedTrainingMs}`);
+      console.log(
+        `pauseTraining elapsedTrainingMs : ${progress.elapsedTrainingMs}   startedAtMs : ${progress.startedAtMs}`,
+      );
       progress.status = progress.elapsedTrainingMs >= progress.requiredTrainingMs ? 'readyToComplete' : 'paused';
 
       // If the training is not running no active Section is valid
