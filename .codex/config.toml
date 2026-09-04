@@ -19,3 +19,6 @@ glob_scan_max_depth = 4
 
 [permissions.project-only.network]
 enabled = false
+
+[history]
+persistence = "none"
