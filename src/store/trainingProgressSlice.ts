@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { exerciseSections, type SectionId } from '../data/learningContent';
 
-type TrainingStatus = 'idle' | 'running' | 'paused' | 'readyToComplete' | 'completed';
+export type TrainingStatus = 'idle' | 'running' | 'paused' | 'readyToComplete' | 'completed';
 
 interface SectionTrainingProgress {
   videoCompleted: boolean;
@@ -14,6 +14,7 @@ interface SectionTrainingProgress {
   startedAtMs: number | null | undefined;
   status: TrainingStatus;
   trainingCompleted: boolean;
+  isLocked: boolean;
 }
 
 export interface TrainingProgressState {
@@ -37,9 +38,13 @@ const initialProgressBySectionId = Object.fromEntries(
       startedAtMs: null,
       status: 'idle',
       trainingCompleted: false,
+      isLocked: true,
     },
   ]),
 ) as Record<SectionId, SectionTrainingProgress>;
+
+// Unlock the first section by default
+Object.values(initialProgressBySectionId)[0].isLocked = false;
 
 export const initialState: TrainingProgressState = {
   progressBySectionId: initialProgressBySectionId,
@@ -139,7 +144,7 @@ const progressSlice = createSlice({
       if (!progress.videoCompleted || progress.status === 'readyToComplete' || progress.status === 'completed') {
         return;
       }
-      console.log('AAAAAAAAAAAAAAAA');
+
       if (state.activeSectionId !== null && state.activeSectionId !== sectionId) {
         return;
       }
@@ -223,6 +228,17 @@ const progressSlice = createSlice({
 
       progress.status = 'completed';
       progress.trainingCompleted = true;
+
+      // Finds the next training section and enables it
+      const currentSection = exerciseSections.find((section) => section.id === action.payload.sectionId);
+      const progressNextSection = currentSection?.nextSectionId
+        ? state.progressBySectionId[currentSection.nextSectionId]
+        : null;
+      if (progressNextSection) progressNextSection.isLocked = false;
+
+      console.log(
+        `completeTraining - sectionId: ${action.payload.sectionId} trainingCompleted: ${progress.trainingCompleted}  status: ${progress.status}  progressNextSection.isLocked: ${progressNextSection?.isLocked}`,
+      );
     },
 
     resetTraining: (

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import type ExerciseSection from '../../data/learningContent';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import useTrainingTimer from '../../store/timerHooks';
+import Error from '../../pages/error';
 import {
   setVideoProgress,
   setVideoCompleted,
@@ -19,6 +20,7 @@ import { useRef, type SyntheticEvent } from 'react';
  */
 interface ExerciseCardProps {
   section: ExerciseSection;
+  isLocked: boolean;
 }
 
 function formatDuration(durationMs: number) {
@@ -50,7 +52,7 @@ function getPlayedSeconds(video: HTMLVideoElement) {
   return playedSeconds;
 }
 
-export default function ExerciseView({ section }: ExerciseCardProps) {
+export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   const dispatch = useAppDispatch();
   const VIDEO_PROGRESS_INTERVAL_SECONDS = 2;
   /**
@@ -101,7 +103,7 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
   const status = progress?.status ?? 'idle';
   const videoCompleted = progress?.videoCompleted ?? false;
   console.log(`ExerciseView - currentSessionMs: ${currentSessionMs}   totalElapsedMs: ${totalElapsedMs}`);
-  return (
+  return !isLocked ? (
     <article>
       <div>
         <Title title={section.title} />
@@ -192,5 +194,7 @@ export default function ExerciseView({ section }: ExerciseCardProps) {
         </div>
       </div>
     </article>
+  ) : (
+    <Error />
   );
 }
