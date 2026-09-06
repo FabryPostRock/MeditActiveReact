@@ -1,13 +1,13 @@
-1. Dati delle lezioni — learningContent
-   Unit test
+-1. Dati delle lezioni — learningContent
+Unit test
 
-- Verificare che tutti gli ID delle sezioni siano univoci.
-- Verificare che ogni sezione contenga titolo, descrizione, video, anteprima e durata di allenamento validi.
-- Verificare che ogni nextSectionId, quando presente, corrisponda a una sezione esistente.
-- Verificare che l’ultima sezione abbia nextSectionId uguale a null.
-- Verificare che exerciseSectionById restituisca la sezione corretta.
-- Verificare che isSectionId restituisca true per gli ID esistenti.
-- Verificare che isSectionId restituisca false per stringhe vuote, ID sconosciuti e nomi di proprietà ereditate come toString.
+- ~~Verificare che tutti gli ID delle sezioni siano univoci.~~
+- ~~Verificare che ogni sezione contenga titolo, descrizione, video, anteprima e durata di allenamento validi.~~
+- ~~Verificare che ogni nextSectionId, quando presente, corrisponda a una sezione esistente.~~
+- ~~Verificare che l’ultima sezione abbia nextSectionId uguale a null.~~
+- ~~Verificare che exerciseSectionById restituisca la sezione corretta.~~
+- ~~Verificare che isSectionId restituisca true per gli ID esistenti.~~
+- ~~Verificare che isSectionId restituisca false per stringhe vuote, ID sconosciuti e nomi di proprietà ereditate come toString.~~
 
 2. Redux — trainingProgressSlice
    Stato iniziale
