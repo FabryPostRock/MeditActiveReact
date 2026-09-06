@@ -12,11 +12,10 @@ Unit test
 2. Redux — trainingProgressSlice
    Stato iniziale
 
-- Verificare che esista un progresso per ogni sezione.
-- Verificare che la durata richiesta provenga dai dati della sezione.
-- Verificare che la prima sezione sia sbloccata e tutte le successive bloccate.
-- Verificare che video, timer e completamento partano dai valori iniziali previsti.
-- Verificare che activeSectionId sia inizialmente null.
+- ~~Verificare che la durata richiesta provenga dai dati della sezione.~~
+- ~~Verificare che la prima sezione sia sbloccata e tutte le successive bloccate.~~
+- ~~Verificare che video, timer e completamento partano dai valori iniziali previsti.~~
+- ~~Verificare che activeSectionId sia inizialmente null.~~
 
   Aggiornamento del video
 
