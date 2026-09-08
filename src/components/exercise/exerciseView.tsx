@@ -6,6 +6,8 @@ import useTrainingTimer from '../../store/timerHooks';
 import Error from '../../pages/error';
 import {
   setVideoProgress,
+  startVideoPlayback,
+  stopVideoPlayback,
   setVideoCompleted,
   startTraining,
   pauseTraining,
@@ -14,6 +16,7 @@ import {
 } from '../../store/trainingProgressSlice';
 
 import { useRef, type SyntheticEvent } from 'react';
+import { store } from '../../store/store';
 
 /**
  * Definizione props con le caratteristiche statiche passate dal padre
@@ -54,6 +57,7 @@ function getPlayedSeconds(video: HTMLVideoElement) {
 
 export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   const dispatch = useAppDispatch();
+  const state = store.getState();
   const VIDEO_PROGRESS_INTERVAL_SECONDS = 2;
   /**
    * useRef saves the last recorded interval
@@ -98,6 +102,31 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
     );
   };
 
+  const handleVideoPlay = (event: SyntheticEvent<HTMLVideoElement>) => {
+    const activeSectionId = state.trainingProgress.activeSectionId;
+    const anotherVideoIsPlaying = activeSectionId !== null && activeSectionId !== section.id;
+    console.log(`handleVideoPlay called!`);
+    if (anotherVideoIsPlaying) {
+      // Will pause video play
+      event.currentTarget.pause();
+      return;
+    }
+    console.log(`handleVideoPlay activeSectionId : ${activeSectionId}  section.id: ${section.id}`);
+    dispatch(
+      startVideoPlayback({
+        sectionId: section.id,
+      }),
+    );
+  };
+
+  const handleVideoPause = () => {
+    dispatch(
+      stopVideoPlayback({
+        sectionId: section.id,
+      }),
+    );
+  };
+
   const { progress, currentSessionMs, totalElapsedMs } = useTrainingTimer(section);
 
   const status = progress?.status ?? 'idle';
@@ -114,8 +143,11 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
           <video
             src={section.videoUrl}
             controls
+            //timeupdate, ended, play, pause are standards DOM events for <video> tag but in react turn into CamelCase properties
             onTimeUpdate={handleVideoTimeUpdate}
             onEnded={handleVideoEnded}
+            onPlay={handleVideoPlay}
+            onPause={handleVideoPause}
             aria-label={`Video: ${section.title}`}
           />
           <p>{section.description}</p>

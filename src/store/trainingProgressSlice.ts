@@ -89,6 +89,36 @@ const progressSlice = createSlice({
       progress.videoWatchedSeconds = watchedSeconds;
       progress.videoDurationSeconds = durationSeconds;
     },
+    startVideoPlayback: (
+      state,
+      action: PayloadAction<{
+        sectionId: SectionId;
+      }>,
+    ) => {
+      const { sectionId } = action.payload;
+
+      if (state.activeSectionId !== null && state.activeSectionId !== sectionId) {
+        return;
+      }
+
+      state.activeSectionId = sectionId;
+      console.log(`startVideoPlayback state.activeSectionId : ${state.activeSectionId}`);
+    },
+
+    stopVideoPlayback: (
+      state,
+      action: PayloadAction<{
+        sectionId: SectionId;
+      }>,
+    ) => {
+      const { sectionId } = action.payload;
+      console.log(`stopVideoPlayback before state.activeSectionId : ${state.activeSectionId}`);
+      if (state.activeSectionId === sectionId) {
+        state.activeSectionId = null;
+      }
+      console.log(`stopVideoPlayback after state.activeSectionId : ${state.activeSectionId}`);
+    },
+
     setVideoCompleted: (
       state,
       /**
@@ -260,17 +290,26 @@ const progressSlice = createSlice({
       progress.startedAtMs = null;
       progress.status = 'idle';
     },
+
+    synchronizeTrainingProgress: (state, action: PayloadAction<TrainingProgressState>) => {
+      return {
+        ...action.payload,
+      };
+    },
   },
 });
 
 export const {
   setVideoProgress,
+  startVideoPlayback,
+  stopVideoPlayback,
   setVideoCompleted,
   startTraining,
   pauseTraining,
   setReadyToBeCompleted,
   completeTraining,
   resetTraining,
+  synchronizeTrainingProgress,
 } = progressSlice.actions;
 
 export default progressSlice.reducer;
