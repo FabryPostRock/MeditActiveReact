@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { exerciseSections } from '../data/learningContent';
-import trainingProgressReducer, { setVideoCompleted, setVideoProgress, startTraining } from './trainingProgressSlice';
+import trainingProgressReducer, {
+  completeTraining,
+  pauseTraining,
+  setReadyToBeCompleted,
+  setVideoCompleted,
+  setVideoProgress,
+  startTraining,
+} from './trainingProgressSlice';
 
 function createInitialState() {
   /*
@@ -11,6 +18,37 @@ function createInitialState() {
   - return: restituisce lo stato iniziale generato dal reducer.
   */
   return trainingProgressReducer(undefined, { type: '@@INIT' });
+}
+
+function completeVideo(state, sectionId) {
+  /**
+   * With the approach 'trainingProgressReducer(state, action)' what happens is:
+   *
+   * startTraining(payload)
+   *     ↓
+   *   creates the action
+   *     ↓
+   *   trainingProgressReducer(state, action)
+   *     ↓
+   *   we obtain the nextState
+   *
+   * Therefore in a test case we pass the action to the reducer manually and skip the store and dispatch phases
+   *
+   */
+  return trainingProgressReducer(state, setVideoCompleted({ sectionId, watchedSeconds: 60, durationSeconds: 60 }));
+}
+
+function createReadyToCompleteState(sectionId, startedAtMs = 1_000) {
+  let state = completeVideo(createInitialState(), sectionId);
+  state = trainingProgressReducer(state, startTraining({ sectionId, startedAtMs }));
+
+  return trainingProgressReducer(
+    state,
+    setReadyToBeCompleted({
+      sectionId,
+      elapsedTrainingMs: state.progressBySectionId[sectionId].requiredTrainingMs,
+    }),
+  );
 }
 
 /*-------------------------TRAINING INITIAL STATE---------------------------*/
@@ -175,24 +213,92 @@ describe('trainingProgressSlice video progress', () => {
 });
 
 /*-------------------------TRAINING STARTUP---------------------------*/
-/*describe('Startup', () => {
-  it('Non deve partire finché il video non è completato.', () => {
+describe('trainingProgressSlice training startup', () => {
+  it('does not start before the video is completed', () => {
     const state = createInitialState();
-
     const sectionId = exerciseSections[0].id;
-    expect(state.activeSectionId).toBe(null);
 
-    const now = Date.now();
+    const nextState = trainingProgressReducer(state, startTraining({ sectionId, startedAtMs: 1000 }));
+
+    const progress = nextState.progressBySectionId[sectionId];
+
+    expect(progress.status).toBe('idle');
+    expect(progress.startedAtMs).toBeNull();
+    expect(nextState.activeSectionId).toBeNull();
+  });
+
+  it('stores the timestamp and sets the status to running on the first valid start and sets the first started section as the active section', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = completeVideo(createInitialState(), sectionId);
+
+    const nextState = trainingProgressReducer(state, startTraining({ sectionId, startedAtMs: 1000 }));
+
+    expect(nextState.progressBySectionId[sectionId]).toMatchObject({
+      startedAtMs: 1000,
+      status: 'running',
+    });
+    expect(nextState.activeSectionId).toBe(sectionId);
+  });
+
+  it('does not start a second section while another section is active', () => {
+    const [firstSection, secondSection] = exerciseSections;
+    let state = completeVideo(createInitialState(), firstSection.id);
+    state = completeVideo(state, secondSection.id);
+    state = trainingProgressReducer(state, startTraining({ sectionId: firstSection.id, startedAtMs: 1_000 }));
+
     const nextState = trainingProgressReducer(
       state,
-      startTraining({
-        sectionId,
-        startedAtMs: now,
-      }),
+      startTraining({ sectionId: secondSection.id, startedAtMs: 2_000 }),
     );
-    const progress = nextState.progressBySectionId[sectionId];
-    expect(progress.startedAtMs).toBe(now);
-    expect(progress.status).toBe('idle');
-    expect(nextState.activeSectionId).toBe(null);
+
+    expect(nextState.progressBySectionId[secondSection.id].status).toBe('idle');
+    expect(nextState.progressBySectionId[secondSection.id].startedAtMs).toBeNull();
+    expect(nextState.activeSectionId).toBe(firstSection.id);
   });
-});*/
+
+  it.each(['readyToComplete', 'completed'])('does not start from the %s status', (status) => {
+    const sectionId = exerciseSections[0].id;
+    let state = createReadyToCompleteState(sectionId);
+
+    if (status === 'completed') {
+      state = trainingProgressReducer(state, completeTraining({ sectionId }));
+    }
+
+    const nextState = trainingProgressReducer(state, startTraining({ sectionId, startedAtMs: 2_000 }));
+
+    expect(nextState.progressBySectionId[sectionId].status).toBe(status);
+    expect(nextState.progressBySectionId[sectionId].startedAtMs).toBe(1_000);
+    expect(nextState.activeSectionId).toBeNull();
+  });
+
+  it('does not modify startedAtMs after an invalid start attempt', () => {
+    const state = createInitialState();
+    const sectionId = exerciseSections[0].id;
+
+    const nextState = trainingProgressReducer(state, startTraining({ sectionId, startedAtMs: 1_000 }));
+
+    expect(nextState.progressBySectionId[sectionId].startedAtMs).toBeNull();
+  });
+
+  it('resumes with a new session start without including the paused time', () => {
+    const sectionId = exerciseSections[0].id;
+    let state = completeVideo(createInitialState(), sectionId);
+    state = trainingProgressReducer(state, startTraining({ sectionId, startedAtMs: 1_000 }));
+    state = trainingProgressReducer(state, pauseTraining({ sectionId, elapsedTrainingMs: 3_000 }));
+
+    const resumedState = trainingProgressReducer(state, startTraining({ sectionId, startedAtMs: 10_000 }));
+
+    expect(resumedState.progressBySectionId[sectionId]).toMatchObject({
+      elapsedTrainingMs: 2_000,
+      startedAtMs: 10_000,
+      status: 'running',
+    });
+
+    const pausedAgainState = trainingProgressReducer(
+      resumedState,
+      pauseTraining({ sectionId, elapsedTrainingMs: 11_000 }),
+    );
+
+    expect(pausedAgainState.progressBySectionId[sectionId].elapsedTrainingMs).toBe(3_000);
+  });
+});

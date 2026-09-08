@@ -139,14 +139,14 @@ const progressSlice = createSlice({
       // state contains the actual state that has to be updated.
       const progress = state.progressBySectionId[sectionId];
 
-      !startedAtMs && progress.startedAtMs
-        ? (startedAtMs = progress.startedAtMs)
-        : (progress.startedAtMs = startedAtMs);
-
       // Start and pause are binded to the same button
       if (!progress.videoCompleted || progress.status === 'readyToComplete' || progress.status === 'completed') {
         return;
       }
+
+      !startedAtMs && progress.startedAtMs
+        ? (startedAtMs = progress.startedAtMs)
+        : (progress.startedAtMs = startedAtMs);
 
       if (state.activeSectionId !== null && state.activeSectionId !== sectionId) {
         return;
