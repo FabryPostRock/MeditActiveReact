@@ -19,13 +19,13 @@ Unit test
 
   Aggiornamento del video
 
-- setVideoProgress deve aggiornare posizione corrente, secondi realmente guardati e durata.
-- L’aggiornamento di una sezione non deve modificare le altre.
-- setVideoCompleted deve completare il video quando è stato guardato interamente.
-- Deve accettare lo scarto massimo di un secondo previsto dalla tolleranza.
-- Non deve completare il video appena sotto la soglia di tolleranza.
-- Non deve completare video con durata zero o non valida.
-- Al completamento deve impostare la posizione finale usando la durata arrotondata verso il basso.
+- ~~setVideoProgress deve aggiornare posizione corrente, secondi realmente guardati e durata.~~
+- ~~L’aggiornamento di una sezione non deve modificare le altre.~~
+- ~~setVideoCompleted deve completare il video quando è stato guardato interamente.~~
+- ~~Deve accettare lo scarto massimo di un secondo previsto dalla tolleranza.~~
+- ~~Non deve completare il video appena sotto la soglia di tolleranza.~~
+- ~~Non deve completare video con durata zero o non valida.~~
+- ~~Al completamento deve impostare la posizione finale usando la durata arrotondata verso il basso.~~
 
   Avvio dell’allenamento
 

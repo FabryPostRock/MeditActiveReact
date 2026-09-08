@@ -111,7 +111,10 @@ const progressSlice = createSlice({
       const progress = state.progressBySectionId[sectionId];
       const completionToleranceSeconds = 1;
       const videoWasFullyWatched =
-        durationSeconds > 0 && watchedSeconds >= durationSeconds - completionToleranceSeconds;
+        durationSeconds > 0 &&
+        watchedSeconds >= durationSeconds - completionToleranceSeconds &&
+        watchedSeconds < Number.POSITIVE_INFINITY &&
+        durationSeconds < Number.POSITIVE_INFINITY;
 
       if (!videoWasFullyWatched) {
         return;

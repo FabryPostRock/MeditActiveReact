@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { exerciseSections } from '../data/learningContent';
-import trainingProgressReducer, { setVideoCompleted, setVideoProgress } from './trainingProgressSlice';
+import trainingProgressReducer, { setVideoCompleted, setVideoProgress, startTraining } from './trainingProgressSlice';
 
 function createInitialState() {
   /*
@@ -12,6 +12,8 @@ function createInitialState() {
   */
   return trainingProgressReducer(undefined, { type: '@@INIT' });
 }
+
+/*-------------------------TRAINING INITIAL STATE---------------------------*/
 
 describe('trainingProgressSlice initial state', () => {
   it('uses the required training duration defined by each exercise section', () => {
@@ -57,6 +59,8 @@ describe('trainingProgressSlice initial state', () => {
     expect(state.activeSectionId).toBeNull();
   });
 });
+
+/*-------------------------VIDEO UPDATE---------------------------*/
 
 describe('trainingProgressSlice video progress', () => {
   it('updates the current position, watched seconds and video duration', () => {
@@ -169,3 +173,26 @@ describe('trainingProgressSlice video progress', () => {
     });
   });
 });
+
+/*-------------------------TRAINING STARTUP---------------------------*/
+/*describe('Startup', () => {
+  it('Non deve partire finché il video non è completato.', () => {
+    const state = createInitialState();
+
+    const sectionId = exerciseSections[0].id;
+    expect(state.activeSectionId).toBe(null);
+
+    const now = Date.now();
+    const nextState = trainingProgressReducer(
+      state,
+      startTraining({
+        sectionId,
+        startedAtMs: now,
+      }),
+    );
+    const progress = nextState.progressBySectionId[sectionId];
+    expect(progress.startedAtMs).toBe(now);
+    expect(progress.status).toBe('idle');
+    expect(nextState.activeSectionId).toBe(null);
+  });
+});*/
