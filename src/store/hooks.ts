@@ -2,33 +2,32 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from './store';
 
 /*
- * "import type" è una sintassi TypeScript.
+ * "import type" is TypeScript syntax.
  *
- * Segnala che AppDispatch e RootState vengono utilizzati esclusivamente
- * durante il controllo dei tipi. Questi import saranno eliminati dal codice
- * JavaScript generato e non produrranno dipendenze a runtime.
+ * It indicates that AppDispatch and RootState are used exclusively during
+ * type checking. These imports will be removed from the generated JavaScript
+ * code and will not introduce runtime dependencies.
  */
 
 /*
- * useDispatch è un hook fornito da React Redux: non è un hook built-in di React.
+ * useDispatch is a hook provided by React Redux: it is not a built-in React hook.
  *
- * withTypes è un metodo fornito da React Redux e non da TypeScript.
- * Crea una versione di useDispatch già associata ad AppDispatch.
+ * withTypes is a method provided by React Redux, not by TypeScript.
+ * It creates a version of useDispatch that is already associated with AppDispatch.
  *
- * In questo modo i componenti possono inviare action e thunk mantenendo
- * l'autocompletamento e il controllo dei tipi, senza ripetere AppDispatch
- * a ogni utilizzo.
+ * This allows components to dispatch actions and thunks while preserving
+ * autocomplete and type checking, without repeating AppDispatch on every use.
  */
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 
 /*
- * Anche useSelector è fornito da React Redux e non è built-in di React.
+ * useSelector is also provided by React Redux and is not built into React.
  *
- * withTypes collega RootState al parametro state ricevuto dai selector.
- * TypeScript potrà quindi riconoscere automaticamente gli slice disponibili
- * e segnalare l'accesso a proprietà inesistenti.
+ * withTypes associates RootState with the state parameter received by selectors.
+ * TypeScript can therefore automatically recognize the available slices and
+ * report attempts to access properties that do not exist.
  *
- * I componenti dovrebbero usare useAppSelector invece di useSelector
- * direttamente, così la tipizzazione rimane centralizzata.
+ * Components should use useAppSelector instead of using useSelector directly,
+ * so that typing remains centralized.
  */
 export const useAppSelector = useSelector.withTypes<RootState>();

@@ -23,7 +23,7 @@ export interface TrainingProgressState {
 }
 
 /**
- * Mappatura automatica dello stato iniziale a partire da una porzione dei dati statici
+ * Initial state auto mapping starting from static data
  */
 const initialProgressBySectionId = Object.fromEntries(
   exerciseSections.map((section) => [
