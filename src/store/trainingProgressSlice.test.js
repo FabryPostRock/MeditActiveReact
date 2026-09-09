@@ -5,6 +5,7 @@ import trainingProgressReducer, {
   //stopVideoPlayback,
   completeTraining,
   pauseTraining,
+  resetTraining,
   setReadyToBeCompleted,
   setVideoCompleted,
   setVideoProgress,
@@ -604,5 +605,86 @@ describe('trainingProgressSlice training completion and unlocking', () => {
     const nextState = trainingProgressReducer(completedState, completeTraining({ sectionId }));
 
     expect(nextState).toBe(completedState);
+  });
+});
+
+/*-------------------------TRAINING RESET---------------------------*/
+describe('trainingProgressSlice training reset', () => {
+  it.each(['idle', 'running', 'paused'])('ignores resetTraining when the section status is %s', (status) => {
+    const sectionId = exerciseSections[0].id;
+    let state = createInitialState();
+
+    if (status === 'running' || status === 'paused') {
+      state = createRunningState(sectionId);
+    }
+
+    if (status === 'paused') {
+      state = trainingProgressReducer(state, pauseTraining({ sectionId, elapsedTrainingMs: 2_000 }));
+    }
+
+    const nextState = trainingProgressReducer(state, resetTraining({ sectionId }));
+
+    expect(nextState).toBe(state);
+  });
+
+  it.each(['readyToComplete', 'completed'])(
+    'clears elapsed time and timestamp and sets status to idle when resetting from %s',
+    (status) => {
+      const sectionId = exerciseSections[0].id;
+      let state = createReadyToCompleteState(sectionId);
+
+      if (status === 'completed') {
+        state = trainingProgressReducer(state, completeTraining({ sectionId }));
+      }
+
+      const nextState = trainingProgressReducer(state, resetTraining({ sectionId }));
+
+      expect(nextState.progressBySectionId[sectionId]).toMatchObject({
+        elapsedTrainingMs: 0,
+        startedAtMs: null,
+        status: 'idle',
+      });
+    },
+  );
+
+  it.each(['readyToComplete', 'completed'])('preserves videoCompleted when resetting from %s', (status) => {
+    const sectionId = exerciseSections[0].id;
+    let state = createReadyToCompleteState(sectionId);
+
+    if (status === 'completed') {
+      state = trainingProgressReducer(state, completeTraining({ sectionId }));
+    }
+
+    const nextState = trainingProgressReducer(state, resetTraining({ sectionId }));
+
+    expect(nextState.progressBySectionId[sectionId].videoCompleted).toBe(true);
+  });
+
+  it('preserves trainingCompleted after resetting a completed section', () => {
+    const sectionId = exerciseSections[0].id;
+    const readyState = createReadyToCompleteState(sectionId);
+    const completedState = trainingProgressReducer(readyState, completeTraining({ sectionId }));
+
+    const nextState = trainingProgressReducer(completedState, resetTraining({ sectionId }));
+
+    expect(nextState.progressBySectionId[sectionId].trainingCompleted).toBe(true);
+  });
+
+  it('does not lock a section that was already unlocked', () => {
+    const [completedSection, unlockedSection] = exerciseSections;
+    const readyState = createReadyToCompleteState(completedSection.id);
+    const completedState = trainingProgressReducer(
+      readyState,
+      completeTraining({ sectionId: completedSection.id }),
+    );
+
+    expect(completedState.progressBySectionId[unlockedSection.id].isLocked).toBe(false);
+
+    const nextState = trainingProgressReducer(completedState, resetTraining({ sectionId: completedSection.id }));
+
+    expect(nextState.progressBySectionId[unlockedSection.id].isLocked).toBe(false);
+    expect(nextState.progressBySectionId[unlockedSection.id]).toBe(
+      completedState.progressBySectionId[unlockedSection.id],
+    );
   });
 });
