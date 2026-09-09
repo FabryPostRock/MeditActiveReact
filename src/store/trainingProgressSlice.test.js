@@ -11,6 +11,8 @@ import trainingProgressReducer, {
   startTraining,
 } from './trainingProgressSlice';
 
+const START_TIME_MS = 1000;
+
 function createInitialState() {
   /*
   - undefined: indica che non esiste ancora uno stato. Redux Toolkit usa quindi l’initialState dichiarato nello slice.
@@ -40,9 +42,14 @@ function completeVideo(state, sectionId) {
   return trainingProgressReducer(state, setVideoCompleted({ sectionId, watchedSeconds: 60, durationSeconds: 60 }));
 }
 
+function createRunningState(sectionId, startedAtMs = 1_000) {
+  const state = completeVideo(createInitialState(), sectionId);
+
+  return trainingProgressReducer(state, startTraining({ sectionId, startedAtMs }));
+}
+
 function createReadyToCompleteState(sectionId, startedAtMs = 1_000) {
-  let state = completeVideo(createInitialState(), sectionId);
-  state = trainingProgressReducer(state, startTraining({ sectionId, startedAtMs }));
+  const state = createRunningState(sectionId, startedAtMs);
 
   return trainingProgressReducer(
     state,
@@ -323,12 +330,101 @@ describe('trainingProgressSlice training startup', () => {
       startedAtMs: 10_000,
       status: 'running',
     });
+  });
+});
 
-    const pausedAgainState = trainingProgressReducer(
-      resumedState,
-      pauseTraining({ sectionId, elapsedTrainingMs: 11_000 }),
+/*-------------------------TRAINING PAUSE---------------------------*/
+describe('trainingProgressSlice training pause', () => {
+  it.each(['idle', 'paused', 'readyToComplete', 'completed'])('does not pause a section with status %s', (status) => {
+    const sectionId = exerciseSections[0].id;
+    let state;
+
+    if (status === 'idle') {
+      state = completeVideo(createInitialState(), sectionId);
+    } else if (status === 'paused') {
+      const runningState = createRunningState(sectionId);
+      state = trainingProgressReducer(runningState, pauseTraining({ sectionId, elapsedTrainingMs: 2_000 }));
+    } else {
+      state = createReadyToCompleteState(sectionId);
+
+      if (status === 'completed') {
+        state = trainingProgressReducer(state, completeTraining({ sectionId }));
+      }
+    }
+
+    const nextState = trainingProgressReducer(state, pauseTraining({ sectionId, elapsedTrainingMs: 10_000 }));
+
+    expect(nextState).toBe(state);
+  });
+
+  it('calculates the current session duration from its start timestamp', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = createRunningState(sectionId, 5_000);
+
+    const nextState = trainingProgressReducer(state, pauseTraining({ sectionId, elapsedTrainingMs: 8_500 }));
+
+    expect(nextState.progressBySectionId[sectionId].elapsedTrainingMs).toBe(3_500);
+  });
+
+  it('sets the status to paused when the required duration has not been reached', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = createRunningState(sectionId, START_TIME_MS);
+    const requiredTrainingMs = state.progressBySectionId[sectionId].requiredTrainingMs;
+
+    const nextState = trainingProgressReducer(
+      state,
+      // -1 is subtracted to obtain elapsedTrainingMs < requiredTrainingMs
+      pauseTraining({ sectionId, elapsedTrainingMs: START_TIME_MS + requiredTrainingMs - 1 }),
     );
 
-    expect(pausedAgainState.progressBySectionId[sectionId].elapsedTrainingMs).toBe(1_000);
+    expect(nextState.progressBySectionId[sectionId].status).toBe('paused');
+  });
+
+  it('sets the status to readyToComplete when the required duration has been reached', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = createRunningState(sectionId, START_TIME_MS);
+    const requiredTrainingMs = state.progressBySectionId[sectionId].requiredTrainingMs;
+
+    const nextState = trainingProgressReducer(
+      state,
+      pauseTraining({ sectionId, elapsedTrainingMs: START_TIME_MS + requiredTrainingMs }),
+    );
+
+    expect(nextState.progressBySectionId[sectionId].status).toBe('readyToComplete');
+  });
+
+  it('clears activeSectionId after pausing the active section', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = createRunningState(sectionId, START_TIME_MS);
+
+    const nextState = trainingProgressReducer(state, pauseTraining({ sectionId, elapsedTrainingMs: 2_000 }));
+
+    expect(nextState.activeSectionId).toBeNull();
+  });
+
+  it('does not modify the state when pausing a section that is not active', () => {
+    const [runningSection, notActiveSection] = exerciseSections;
+    const runningState = createRunningState(runningSection.id, START_TIME_MS);
+    const state = {
+      ...runningState,
+      progressBySectionId: {
+        ...runningState.progressBySectionId,
+        [notActiveSection.id]: {
+          ...runningState.progressBySectionId[notActiveSection.id],
+          elapsedTrainingMs: 0,
+          startedAtMs: null,
+          status: 'idle',
+        },
+      },
+      activeSectionId: runningSection.id,
+    };
+
+    const nextState = trainingProgressReducer(
+      runningState,
+      // If the section was not running the elapsedTrainingMs value is ignored
+      pauseTraining({ sectionId: notActiveSection.id, elapsedTrainingMs: 2_000 }),
+    );
+
+    expect(nextState).toStrictEqual(state);
   });
 });

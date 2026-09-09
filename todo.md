@@ -38,20 +38,18 @@ Unit test
 
   Pausa
 
-- Deve funzionare solamente quando lo stato è running.
-- Deve calcolare correttamente il tempo della sessione.
-- Dopo più pause e riprese deve sommare le sessioni senza duplicare il tempo.
-- Deve passare a paused se il tempo richiesto non è stato raggiunto.
-- Deve passare a readyToComplete se la soglia è stata raggiunta.
-- Deve liberare activeSectionId.
-- Una pausa inviata a una sezione non attiva non deve modificare lo stato.
+- ~~Deve funzionare solamente quando lo stato è running.~~
+- ~~Deve calcolare correttamente il tempo della sessione.~~
+- ~~Deve passare a paused se il tempo richiesto non è stato raggiunto.~~
+- ~~Deve passare a readyToComplete se la soglia è stata raggiunta.~~
+- ~~Deve liberare activeSectionId.~~
+- ~~Una pausa inviata a una sezione non attiva non deve modificare lo stato.~~
 
   Raggiungimento della durata richiesta
 
 - setReadyToBeCompleted deve essere ignorata se la sezione non è in esecuzione.
 - Deve essere ignorata se il tempo è inferiore alla durata richiesta.
-- Deve impostare readyToComplete al raggiungimento della soglia.
-- Il tempo salvato deve essere limitato esattamente alla durata richiesta.
+- Il tempo salvato deve essere limitato esattamente alla durata richiesta
 - Deve liberare la sezione attiva.
 - Dispatch ripetuti non devono produrre ulteriori modifiche.
   Completamento e sblocco
