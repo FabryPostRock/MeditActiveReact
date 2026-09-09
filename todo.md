@@ -49,24 +49,26 @@ Unit test
 
 - setReadyToBeCompleted deve essere ignorata se la sezione non è in esecuzione.
 - Deve essere ignorata se il tempo è inferiore alla durata richiesta.
-- Il tempo salvato deve essere limitato esattamente alla durata richiesta
+- Deve impostare readyToComplete al raggiungimento della soglia.
+- Il tempo salvato deve essere limitato esattamente alla durata richiesta.
 - Deve liberare la sezione attiva.
 - Dispatch ripetuti non devono produrre ulteriori modifiche.
   Completamento e sblocco
-- completeTraining deve funzionare soltanto da readyToComplete.
-- Deve impostare status a completed e trainingCompleted a true.
-- Deve sbloccare esclusivamente la sezione successiva.
-- Non deve alterare le sezioni non coinvolte.
-- Il completamento dell’ultima sezione deve funzionare senza errori.
-- Un completamento anticipato non deve sbloccare nulla.
-- Una seconda chiamata sulla stessa sezione deve essere innocua.
+
+- ~~completeTraining deve funzionare soltanto da readyToComplete.~~
+- ~~Deve impostare status a completed e trainingCompleted a true.~~
+- ~~Deve sbloccare esclusivamente la sezione successiva.~~
+- ~~Non deve alterare le sezioni non coinvolte.~~
+- ~~Il completamento dell’ultima sezione deve funzionare senza errori.~~
+- ~~Un completamento anticipato non deve sbloccare nulla.~~
+- ~~Una seconda chiamata sulla stessa sezione deve essere innocua.~~
 
   Reset
 
 - Il reset deve funzionare solo da readyToComplete o completed.
 - Deve azzerare tempo e timestamp e riportare lo stato a idle.
 - Deve stabilire esplicitamente cosa accade a videoCompleted: mantenerlo oppure azzerarlo.
-- Deve stabilire esplicitamente cosa accade a trainingCompleted: attualmente rimane true, situazione che può impedire un secondo completamento dalla UI.
+- Deve stabilire esplicitamente cosa accade a trainingCompleted: attualmente rimane true, situazione che impedisce correttamente un secondo completamento dalla UI.
 - Il reset di una sezione non dovrebbe ribloccare quelle già sbloccate.
 
 3. Hook del timer — useTrainingTimer
