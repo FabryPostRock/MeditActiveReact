@@ -40,9 +40,14 @@ function completeVideo(state, sectionId) {
   return trainingProgressReducer(state, setVideoCompleted({ sectionId, watchedSeconds: 60, durationSeconds: 60 }));
 }
 
+function createRunningState(sectionId, startedAtMs = 1_000) {
+  const state = completeVideo(createInitialState(), sectionId);
+
+  return trainingProgressReducer(state, startTraining({ sectionId, startedAtMs }));
+}
+
 function createReadyToCompleteState(sectionId, startedAtMs = 1_000) {
-  let state = completeVideo(createInitialState(), sectionId);
-  state = trainingProgressReducer(state, startTraining({ sectionId, startedAtMs }));
+  const state = createRunningState(sectionId, startedAtMs);
 
   return trainingProgressReducer(
     state,
@@ -330,5 +335,183 @@ describe('trainingProgressSlice training startup', () => {
     );
 
     expect(pausedAgainState.progressBySectionId[sectionId].elapsedTrainingMs).toBe(1_000);
+  });
+});
+
+/*-------------------------REQUIRED TRAINING DURATION---------------------------*/
+describe('trainingProgressSlice required training duration', () => {
+  it('ignores setReadyToBeCompleted when the section is not running', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = completeVideo(createInitialState(), sectionId);
+
+    const nextState = trainingProgressReducer(
+      state,
+      setReadyToBeCompleted({
+        sectionId,
+        elapsedTrainingMs: state.progressBySectionId[sectionId].requiredTrainingMs,
+      }),
+    );
+
+    expect(nextState).toBe(state);
+  });
+
+  it('ignores setReadyToBeCompleted below the required duration', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = createRunningState(sectionId);
+    const requiredTrainingMs = state.progressBySectionId[sectionId].requiredTrainingMs;
+
+    const nextState = trainingProgressReducer(
+      state,
+      setReadyToBeCompleted({ sectionId, elapsedTrainingMs: requiredTrainingMs - 1 }),
+    );
+
+    expect(nextState).toBe(state);
+  });
+
+  it('sets the status to readyToComplete at the required duration', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = createRunningState(sectionId);
+    const requiredTrainingMs = state.progressBySectionId[sectionId].requiredTrainingMs;
+
+    const nextState = trainingProgressReducer(
+      state,
+      setReadyToBeCompleted({ sectionId, elapsedTrainingMs: requiredTrainingMs }),
+    );
+
+    expect(nextState.progressBySectionId[sectionId].status).toBe('readyToComplete');
+  });
+
+  it('caps the saved elapsed time at exactly the required duration', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = createRunningState(sectionId);
+    const requiredTrainingMs = state.progressBySectionId[sectionId].requiredTrainingMs;
+
+    const nextState = trainingProgressReducer(
+      state,
+      setReadyToBeCompleted({ sectionId, elapsedTrainingMs: requiredTrainingMs + 1_000 }),
+    );
+
+    expect(nextState.progressBySectionId[sectionId].elapsedTrainingMs).toBe(requiredTrainingMs);
+  });
+
+  it('clears activeSectionId after reaching the required duration', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = createRunningState(sectionId);
+    const requiredTrainingMs = state.progressBySectionId[sectionId].requiredTrainingMs;
+
+    const nextState = trainingProgressReducer(
+      state,
+      setReadyToBeCompleted({ sectionId, elapsedTrainingMs: requiredTrainingMs }),
+    );
+
+    expect(nextState.activeSectionId).toBeNull();
+  });
+
+  it('does not modify the state after repeated setReadyToBeCompleted actions', () => {
+    const sectionId = exerciseSections[0].id;
+    const readyState = createReadyToCompleteState(sectionId);
+
+    const nextState = trainingProgressReducer(
+      readyState,
+      setReadyToBeCompleted({
+        sectionId,
+        elapsedTrainingMs: readyState.progressBySectionId[sectionId].requiredTrainingMs + 1_000,
+      }),
+    );
+
+    expect(nextState).toBe(readyState);
+  });
+});
+
+/*-------------------------TRAINING COMPLETION---------------------------*/
+describe('trainingProgressSlice training completion and unlocking', () => {
+  it.each(['idle', 'running', 'paused'])(
+    'ignores completeTraining when the section status is %s',
+    (status) => {
+      const sectionId = exerciseSections[0].id;
+      let state = createInitialState();
+
+      if (status === 'running' || status === 'paused') {
+        state = createRunningState(sectionId);
+      }
+
+      if (status === 'paused') {
+        state = trainingProgressReducer(state, pauseTraining({ sectionId, elapsedTrainingMs: 2_000 }));
+      }
+
+      const nextState = trainingProgressReducer(state, completeTraining({ sectionId }));
+
+      expect(nextState).toBe(state);
+    },
+  );
+
+  it('sets status to completed and trainingCompleted to true', () => {
+    const sectionId = exerciseSections[0].id;
+    const state = createReadyToCompleteState(sectionId);
+
+    const nextState = trainingProgressReducer(state, completeTraining({ sectionId }));
+
+    expect(nextState.progressBySectionId[sectionId]).toMatchObject({
+      status: 'completed',
+      trainingCompleted: true,
+    });
+  });
+
+  it('unlocks only the section immediately following the completed section', () => {
+    const [completedSection, nextSection, ...remainingSections] = exerciseSections;
+    const state = createReadyToCompleteState(completedSection.id);
+
+    const nextState = trainingProgressReducer(state, completeTraining({ sectionId: completedSection.id }));
+
+    expect(nextState.progressBySectionId[nextSection.id].isLocked).toBe(false);
+
+    remainingSections.forEach((section) => {
+      expect(nextState.progressBySectionId[section.id].isLocked).toBe(true);
+    });
+  });
+
+  it('does not alter sections unrelated to the completed or next section', () => {
+    const [completedSection, , ...unrelatedSections] = exerciseSections;
+    const state = createReadyToCompleteState(completedSection.id);
+
+    const nextState = trainingProgressReducer(state, completeTraining({ sectionId: completedSection.id }));
+
+    unrelatedSections.forEach((section) => {
+      expect(nextState.progressBySectionId[section.id]).toBe(state.progressBySectionId[section.id]);
+    });
+  });
+
+  it('completes the last section without errors', () => {
+    const lastSection = exerciseSections.at(-1);
+    const state = createReadyToCompleteState(lastSection.id);
+
+    const nextState = trainingProgressReducer(state, completeTraining({ sectionId: lastSection.id }));
+
+    expect(nextState.progressBySectionId[lastSection.id]).toMatchObject({
+      status: 'completed',
+      trainingCompleted: true,
+    });
+  });
+
+  it('does not unlock any section when completion is attempted too early', () => {
+    const [section, ...otherSections] = exerciseSections;
+    const state = createRunningState(section.id);
+
+    const nextState = trainingProgressReducer(state, completeTraining({ sectionId: section.id }));
+
+    expect(nextState).toBe(state);
+    otherSections.forEach((otherSection) => {
+      expect(nextState.progressBySectionId[otherSection.id].isLocked).toBe(true);
+    });
+  });
+
+  it('does not modify the state when completing the same section twice', () => {
+    const sectionId = exerciseSections[0].id;
+    const readyState = createReadyToCompleteState(sectionId);
+    const completedState = trainingProgressReducer(readyState, completeTraining({ sectionId }));
+
+    const nextState = trainingProgressReducer(completedState, completeTraining({ sectionId }));
+
+    expect(nextState).toBe(completedState);
   });
 });
