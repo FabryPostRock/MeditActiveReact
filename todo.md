@@ -31,10 +31,10 @@ Unit test
 
 - ~~Non deve partire finché il video non è completato.~~
 - ~~Il primo avvio deve salvare il timestamp e impostare lo stato running e la sezione come activeSectionId.~~
-- Il primo avvio non deve consentire l’avvio di una seconda sezione mentre un’altra è attiva.
-- Il primo avvio non deve partire da readyToComplete o completed.
-- Un tentativo di avvio non valido non dovrebbe modificare neppure startedAtMs.
-- La ripresa dopo una pausa deve usare un nuovo inizio di sessione senza includere nel timer il tempo trascorso in pausa.
+- ~~Il primo avvio non deve consentire l’avvio di una seconda sezione mentre un’altra è attiva.~~
+- ~~Il primo avvio non deve partire da readyToComplete o completed.~~
+- ~~Un tentativo di avvio non valido non dovrebbe modificare neppure startedAtMs.~~
+- ~~La ripresa dopo una pausa deve usare un nuovo inizio di sessione senza includere nel timer il tempo trascorso in pausa.~~
 
   Pausa
 

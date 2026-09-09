@@ -174,13 +174,14 @@ const progressSlice = createSlice({
         return;
       }
 
-      !startedAtMs && progress.startedAtMs
-        ? (startedAtMs = progress.startedAtMs)
-        : (progress.startedAtMs = startedAtMs);
-
       if (state.activeSectionId !== null && state.activeSectionId !== sectionId) {
         return;
       }
+
+      // startedAtMs stays null until a startTraining call is accepted.
+      !startedAtMs && progress.startedAtMs
+        ? (startedAtMs = progress.startedAtMs)
+        : (progress.startedAtMs = startedAtMs);
 
       progress.status = 'running';
       state.activeSectionId = sectionId;

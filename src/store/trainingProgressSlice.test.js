@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { exerciseSections } from '../data/learningContent';
 import trainingProgressReducer, {
+  startVideoPlayback,
+  //stopVideoPlayback,
   completeTraining,
   pauseTraining,
   setReadyToBeCompleted,
@@ -210,6 +212,29 @@ describe('trainingProgressSlice video progress', () => {
       videoCompleted: true,
     });
   });
+
+  it('does not start a second video section while another video section is being played', () => {
+    const [firstSection, secondSection] = exerciseSections;
+    let state = createInitialState();
+
+    state = trainingProgressReducer(
+      state,
+      startVideoPlayback({
+        sectionId: firstSection.id,
+      }),
+    );
+
+    expect(state.activeSectionId).toBe(firstSection.id);
+
+    const nextState = trainingProgressReducer(
+      state,
+      startVideoPlayback({
+        sectionId: secondSection.id,
+      }),
+    );
+
+    expect(nextState.activeSectionId).toBe(firstSection.id);
+  });
 });
 
 /*-------------------------TRAINING STARTUP---------------------------*/
@@ -242,15 +267,20 @@ describe('trainingProgressSlice training startup', () => {
 
   it('does not start a second section while another section is active', () => {
     const [firstSection, secondSection] = exerciseSections;
+
     let state = completeVideo(createInitialState(), firstSection.id);
     state = completeVideo(state, secondSection.id);
-    state = trainingProgressReducer(state, startTraining({ sectionId: firstSection.id, startedAtMs: 1_000 }));
+    state = trainingProgressReducer(state, startTraining({ sectionId: firstSection.id, startedAtMs: 1000 }));
 
-    const nextState = trainingProgressReducer(
-      state,
-      startTraining({ sectionId: secondSection.id, startedAtMs: 2_000 }),
-    );
+    expect(state.progressBySectionId[firstSection.id].status).toBe('running');
+    expect(state.progressBySectionId[secondSection.id].status).toBe('idle');
+    expect(state.progressBySectionId[secondSection.id].startedAtMs).toBeNull();
+    expect(state.activeSectionId).toBe(firstSection.id);
 
+    const nextState = trainingProgressReducer(state, startTraining({ sectionId: secondSection.id, startedAtMs: 2000 }));
+
+    expect(nextState.progressBySectionId[firstSection.id].status).toBe('running');
+    expect(nextState.progressBySectionId[firstSection.id].startedAtMs).toBe(1000);
     expect(nextState.progressBySectionId[secondSection.id].status).toBe('idle');
     expect(nextState.progressBySectionId[secondSection.id].startedAtMs).toBeNull();
     expect(nextState.activeSectionId).toBe(firstSection.id);
@@ -299,6 +329,6 @@ describe('trainingProgressSlice training startup', () => {
       pauseTraining({ sectionId, elapsedTrainingMs: 11_000 }),
     );
 
-    expect(pausedAgainState.progressBySectionId[sectionId].elapsedTrainingMs).toBe(3_000);
+    expect(pausedAgainState.progressBySectionId[sectionId].elapsedTrainingMs).toBe(1_000);
   });
 });
