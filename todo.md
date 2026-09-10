@@ -75,16 +75,16 @@ Unit test
 3. Hook del timer — useTrainingTimer
    Unit test
 
-- In stato idle, paused, readyToComplete o completed non deve creare intervalli.
-- In stato running deve aggiornare immediatamente il tempo.
-- Deve aggiornare il tempo ogni secondo.
-- Deve restituire correttamente currentSessionMs e totalElapsedMs.
-- Il tempo totale non deve superare requiredTrainingMs.
-- Un eventuale timestamp futuro non deve produrre valori negativi.
-- Al raggiungimento della durata deve inviare setReadyToBeCompleted.
-- L’azione di completamento temporale deve essere inviata una sola volta.
-- L’intervallo deve essere rimosso alla pausa, al cambio sezione e allo smontaggio.
-- Dopo una pausa e una ripresa deve conteggiare solo il tempo effettivamente allenato.
+- ~~In stato idle, paused, readyToComplete o completed non deve creare intervalli.~~
+- ~~In stato running deve aggiornare immediatamente il tempo.~~
+- ~~Deve aggiornare il tempo ogni secondo.~~
+- ~~Deve restituire correttamente currentSessionMs e totalElapsedMs.~~
+- ~~Il tempo totale non deve superare requiredTrainingMs.~~
+- ~~Un eventuale timestamp futuro non deve produrre valori negativi.~~
+- ~~Al raggiungimento della durata deve inviare setReadyToBeCompleted.v
+- ~~L’azione di completamento temporale deve essere inviata una sola volta.~~
+- ~~L’intervallo deve essere rimosso alla pausa, al cambio sezione e allo smontaggio.~~
+- ~~Dopo una pausa e una ripresa deve conteggiare solo il tempo effettivamente allenato.~~
 
 4. Componenti semplici — Title e Article
    Unit test
