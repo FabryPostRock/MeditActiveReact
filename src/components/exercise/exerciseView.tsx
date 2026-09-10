@@ -57,7 +57,7 @@ function getPlayedSeconds(video: HTMLVideoElement) {
 
 export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   const dispatch = useAppDispatch();
-  const state = store.getState();
+
   const VIDEO_PROGRESS_INTERVAL_SECONDS = 2;
   /**
    * useRef saves the last recorded interval
@@ -103,7 +103,9 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   };
 
   const handleVideoPlay = (event: SyntheticEvent<HTMLVideoElement>) => {
-    const activeSectionId = state.trainingProgress.activeSectionId;
+    // Using useAppSelector is quite more secure then store.getState because in the former
+    // case the state is subscribed to changes.
+    const activeSectionId = useAppSelector((state) => state.trainingProgress.activeSectionId);
     const anotherVideoIsPlaying = activeSectionId !== null && activeSectionId !== section.id;
     console.log(`handleVideoPlay called!`);
     if (anotherVideoIsPlaying) {
