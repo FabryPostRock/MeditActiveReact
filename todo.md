@@ -92,14 +92,14 @@ Unit test
 
 ### Navigazione e routing
 
-- Verificare che / carichi l’applicazione senza errori JavaScript.
-- Verificare che il link “Exercises” apra /exercises.
-- Verificare che il link “Home” riporti a /.
-- Verificare che il link della pagina corrente abbia aria-current="page".
-- Verificare che cliccando sulla prima lezione si apra /exercise/breathing-section-1.
-- Verificare che una sezione sconosciuta, ad esempio /exercise/unknown, mostri “Pagina Errore”.
-- Verificare che una rotta inesistente mostri “Pagina Errore”.
-- Verificare che accedere direttamente a una sezione bloccata mostri la pagina di errore.
+- ~~Verificare che / carichi l’applicazione senza errori JavaScript.~~
+- ~~Verificare che il link “Exercises” apra /exercises.~~
+- ~~Verificare che il link “Home” riporti a /.~~
+- ~~Verificare che il link della pagina corrente abbia aria-current="page".~~
+- ~~Verificare che cliccando sulla prima lezione si apra /exercise/breathing-section-1.~~
+- ~~Verificare che una sezione sconosciuta, ad esempio /exercise/unknown, mostri “Pagina Errore”.~~
+- ~~Verificare che una rotta inesistente mostri “Pagina Errore”.~~
+- ~~Verificare che accedere direttamente a una sezione bloccata mostri la pagina di errore.~~
 
 ### Elenco delle lezioni
 
