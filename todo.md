@@ -1,3 +1,5 @@
+## UNIT TESTS
+
 -1. Dati delle lezioni — learningContent
 Unit test
 
@@ -86,102 +88,162 @@ Unit test
 - ~~L’intervallo deve essere rimosso alla pausa, al cambio sezione e allo smontaggio.~~
 - ~~Dopo una pausa e una ripresa deve conteggiare solo il tempo effettivamente allenato.~~
 
-4. Componenti semplici — Title e Article
-   Unit test
+## INTEGRATION TESTS
 
-- Title deve mostrare il titolo ricevuto.
-- Article deve mostrare titolo, anteprima, stato e stato del video.
-- L’immagine deve avere src e testo alternativo corretti.
-- Se il video non è completato deve mostrare “da vedere”.
-- Se il video è completato deve mostrare “completato”.
-- Una card bloccata deve avere inert, aria-disabled, opacità ridotta e interazioni disattivate.
-- Una card sbloccata non deve contenere attributi di disabilitazione.
+### Navigazione e routing
 
-5. Card della lezione — ExerciseCard
-   Test d’integrazione
+- ~~Verificare che / carichi l’applicazione senza errori JavaScript.~~
+- ~~Verificare che il link “Exercises” apra /exercises.~~
+- ~~Verificare che il link “Home” riporti a /.~~
+- ~~Verificare che il link della pagina corrente abbia aria-current="page".~~
+- ~~Verificare che cliccando sulla prima lezione si apra /exercise/breathing-section-1.~~
+- ~~Verificare che una sezione sconosciuta, ad esempio /exercise/unknown, mostri “Pagina Errore”.~~
+- ~~Verificare che una rotta inesistente mostri “Pagina Errore”.~~
+- ~~Verificare che accedere direttamente a una sezione bloccata mostri la pagina di errore.~~
 
-- Deve leggere dal Redux store il progresso della sezione corretta.
-- Una sezione sbloccata deve essere racchiusa in un link verso /exercise/:sectionId.
-- Il link deve avere un nome accessibile contenente il titolo della lezione.
-- Una sezione bloccata non deve avere un link navigabile.
-- Lo stato e il completamento video mostrati devono aggiornarsi quando cambia Redux.
-- Il completamento della lezione precedente deve trasformare la card successiva da bloccata a navigabile.
+### Elenco delle lezioni
 
-6. Vista della singola lezione — ExerciseView
-   Unit test del rendering
+- Verificare che /exercises mostri il titolo del corso.
+- Verificare che siano visualizzate tutte e cinque le sezioni.
+- Verificare titolo, anteprima, stato e progresso video di ogni scheda.
+- Verificare che inizialmente solamente la prima sezione sia navigabile.
+- Verificare che le sezioni bloccate abbiano aria-disabled="true" e inert.
+- Verificare che le sezioni bloccate non siano raggiungibili tramite mouse o tastiera.
+- Verificare che la prima scheda mostri inizialmente Stato: idle e Video: da vedere.
 
-- Deve mostrare titolo, descrizione e video corretti.
-- Il video deve avere controlli e nome accessibile.
-- Deve mostrare stato, completamento video e timer formattato.
-- Verificare la formattazione a 00:00, sotto il secondo, a 60 secondi e oltre il minuto.
-- Una sezione bloccata deve mostrare la pagina di errore e non il video.
+### Pagina della lezione
 
-  Integrazione video–Redux
+- Verificare che la pagina mostri titolo, descrizione e video della sezione corretta.
+- Verificare che il video abbia l’etichetta accessibile corrispondente al titolo.
+- Verificare che il video punti al file MP4 previsto e che la risorsa risponda correttamente.
+- Verificare che i controlli video siano presenti.
+- Verificare che il tempo iniziale mostrato sia 00:00.
+- Verificare che il training non possa partire prima del completamento del video.
+- Verificare che, dopo il completamento del video, l’interfaccia mostri Video: completato.
+- Verificare che il progresso video venga salvato nel localStorage.
+- Verificare che spostarsi direttamente alla fine del video senza averlo guardato non lo completi.
+- Verificare che la riproduzione completa abiliti l’avvio del training.
+  I test sul video reale potrebbero essere differenti tra Chromium, Firefox e WebKit a causa del supporto dei codec MP4 e delle regole di autoplay. Conviene usare il video reale per pochi smoke test e precaricare videoCompleted nel localStorage per i test dedicati al timer.
 
-- timeupdate deve inviare un aggiornamento solamente quando cambia l’intervallo di due secondi.
-- Eventi ripetuti nello stesso intervallo non devono produrre dispatch duplicati.
-- Il payload deve contenere posizione corrente, durata e somma degli intervalli realmente riprodotti.
-- Lo spostamento avanti nel video non deve essere considerato automaticamente tempo guardato.
-- Lo spostamento indietro non deve duplicare i secondi già guardati.
-- L’evento ended deve completare il video solamente se gli intervalli riprodotti coprono quasi tutta la durata.
-- Cambiando lezione senza smontare il componente, il primo aggiornamento del nuovo video non deve essere ignorato dal riferimento all’intervallo precedente.
+### Esclusione della riproduzione multipla
 
-  Integrazione pulsanti–Redux
+Dopo aver predisposto due sezioni sbloccate:
 
-- Prima del completamento video, il pulsante play deve essere realmente non utilizzabile.
-- Il primo click valido deve avviare l’allenamento con il timestamp corrente.
-- Durante l’esecuzione deve mostrare pausa e inviare l’azione corretta.
-- Dopo una pausa deve mostrare nuovamente play e riprendere il conteggio.
-- Il reset deve essere disponibile solamente da readyToComplete o completed.
-- Il pulsante di completamento deve essere disponibile solamente da readyToComplete.
-- I pulsanti indicati come disabilitati non devono inviare azioni tramite mouse o tastiera.
-- Ogni pulsante dovrebbe avere un nome accessibile comprensibile, non dipendente dal testo tecnico dell’icona.
+- Aprire due lezioni in due tab dello stesso browser.
+- Avviare il primo video.
+- Tentare di avviare il secondo.
+- Verificare che il secondo venga immediatamente messo in pausa.
+- Verificare che il primo continui a essere la sezione attiva.
+- Mettere in pausa il primo video e verificare che il secondo possa partire.
+- Chiudere il tab del video attivo e verificare il comportamento previsto per activeSectionId.
+  L’ultimo caso è importante perché attualmente una chiusura improvvisa potrebbe lasciare nel localStorage una sezione attiva non più reale.
 
-7. Pagina elenco — Exercises
+### Avvio e timer del training
 
-   Test d’integrazione
+Per questi test Playwright può controllare Date.now(), setInterval e il passaggio del tempo mediante la Clock API, senza attendere realmente cinque secondi. Documentazione Playwright Clock.
 
-- Deve mostrare il titolo del corso.
-- Deve renderizzare una card per ogni sezione.
-- Le card devono rispettare l’ordine definito nei dati.
-- All’avvio soltanto la prima card deve essere navigabile.
-- Il completamento progressivo deve rendere navigabile una card alla volta.
+- Precaricare una sezione con videoCompleted: true.
+- Verificare che il pulsante di avvio sia utilizzabile.
+- Cliccare il pulsante e verificare che lo stato diventi running.
+- Verificare che il timer si aggiorni immediatamente.
+- Far avanzare il tempo di un secondo e verificare 00:01.
+- Verificare che il timer non superi 00:05, che è la durata attuale.
+- Verificare che non sia possibile avviare un’altra sezione mentre ne esiste una attiva.
+- Verificare che un timestamp futuro non produca un valore negativo.
+- Ricaricare la pagina mentre il training è running e stabilire se il tempo trascorso fuori dalla pagina debba essere contato.
+  Pausa e ripresa
+- Avviare il training e far trascorrere due secondi.
+- Premere pausa e verificare lo stato paused.
+- Verificare che il timer resti fermo durante la pausa.
+- Far trascorrere diversi secondi mentre il training è in pausa.
+- Riprendere il training e verificare che il tempo della pausa non venga conteggiato.
+- Eseguire più cicli di pausa e ripresa e verificare la somma delle sole sessioni attive.
+- Verificare che mettere in pausa una sezione liberi activeSectionId.
+- Verificare che dopo la pausa sia possibile avviare una sezione differente.
+  Questa suite è particolarmente importante: la UI attualmente riprende con:
+  startTraining({ sectionId: section.id })
+  senza passare un nuovo startedAtMs. Un test Playwright può verificare se, nel flusso reale, il tempo della pausa viene erroneamente incluso.
 
-8. Pagina esercizio — Exercise
+### Raggiungimento della durata richiesta
 
-   Test d’integrazione
+- Avviare il training con il video già completato.
+- Far avanzare il tempo fino a un millisecondo prima della soglia e verificare che lo stato resti running.
+- Raggiungere la soglia e verificare readyToComplete.
+- Verificare che il tempo visualizzato venga limitato alla durata richiesta.
+- Verificare che l’intervallo smetta di aggiornarsi.
+- Verificare che la sezione attiva venga liberata.
+- Continuare ad avanzare l’orologio e verificare che non avvengano ulteriori modifiche.
+- Verificare che il pulsante “Esercizio Completato” diventi disponibile.
 
-- Un ID valido deve mostrare la lezione corrispondente.
-- Un ID inesistente deve mostrare la pagina di errore.
-- Un parametro mancante deve mostrare la pagina di errore.
-- Una sezione valida ma ancora bloccata deve mostrare l’errore.
-- La navigazione da una sezione valida a un URL non valido non deve causare errori React.
-- La navigazione tra due sezioni valide deve aggiornare video, titolo e stato Redux corretti.
-  Quest’ultimo gruppo è importante perché il componente chiama attualmente useAppSelector solo nel ramo con parametro valido: un test di navigazione può evidenziare una variazione nell’ordine degli hook.
+### Completamento e sblocco
 
-9. Routing, App e navbar
-   Test d’integrazione
+- Verificare che il completamento non sia possibile prima di readyToComplete.
+- Completare la prima sezione e verificare Stato: completed.
+- Tornare all’elenco e verificare Video: completato.
+- Verificare che venga sbloccata solamente la sezione successiva.
+- Verificare che le sezioni successive alla seconda restino bloccate.
+- Aprire la seconda sezione appena sbloccata.
+- Completare progressivamente tutte le sezioni e verificare l’ordine di sblocco.
+- Completare l’ultima sezione e verificare che l’app non mostri errori.
+- Tentare un completamento anticipato e verificare che nessuna lezione venga sbloccata.
+- Verificare che un doppio clic sul pulsante di completamento non produca due transizioni.
 
-- / deve mostrare Home.
-- /exercises deve mostrare l’elenco delle lezioni.
-- /exercise/:sectionId deve mostrare la lezione richiesta.
-- Un percorso sconosciuto deve mostrare la pagina di errore.
-- La navbar deve essere presente su tutte le pagine.
-- Logo e nome del sito devono portare alla Home.
-- I link Home ed Exercises devono navigare correttamente.
-- Il link attivo deve ricevere classe active e aria-current="page".
-- Il link Home non deve risultare attivo sulle rotte figlie per errore.
+### Reset
 
-10. Flussi completi
-    Test d’integrazione/E2E
+- Verificare che il reset non sia disponibile da idle, running o paused.
+- Verificare che sia disponibile da readyToComplete.
+- Verificare che sia disponibile da completed.
+- Dopo il reset, verificare Stato: idle e timer 00:00.
+- Verificare che il video rimanga completato.
+- Dopo il reset di una sezione completata, verificare che non possa essere completata una seconda volta.
+- Verificare che il reset non riblocchi la sezione successiva.
+- Verificare che il reset di una sezione non modifichi le altre schede.
 
-- Guardare completamente il primo video, avviare il timer, attendere la soglia, completare l’esercizio e verificare lo sblocco della seconda lezione.
-- Mettere in pausa e riprendere più volte, verificando che il tempo in pausa non venga conteggiato.
-- Provare ad avviare una seconda lezione mentre la prima è attiva e verificare il blocco.
-- Provare ad aprire direttamente tramite URL una lezione bloccata.
-- Completare in sequenza tutte le lezioni fino all’ultima.
-- Resettare una lezione completata e verificare che possa essere svolta e completata nuovamente.
-- Navigare nell’app durante un allenamento e verificare il comportamento scelto per il timer.
-- Ricaricare la pagina e verificare il comportamento atteso: attualmente lo stato Redux in memoria viene perso.
-- Eseguire il flusso tramite tastiera, controllando focus, link e pulsanti.
-- Verificare il layout desktop e mobile: navbar, contenuti non sovrapposti, video adattato al viewport e assenza di scorrimento orizzontale.
+### Persistenza nel localStorage
+
+- Verificare che una modifica del progresso crei la chiave meditactive-training-progress.
+- Verificare che il valore salvato sia JSON valido.
+- Verificare che un reload mantenga video completato, timer, stato e sezioni sbloccate.
+- Verificare che chiudere e riaprire una pagina nello stesso contesto mantenga il progresso.
+- Verificare che un nuovo browser context parta dallo stato iniziale.
+- Inserire JSON non valido nel localStorage e verificare che l’app parta senza errori dallo stato iniziale.
+- Rimuovere la chiave e verificare il comportamento previsto.
+- Verificare che un errore di scrittura nel localStorage non renda inutilizzabile l’interfaccia.
+
+### Sincronizzazione tra tab
+
+Due tab dello stesso BrowserContext condividono il localStorage e sono adatti a verificare l’evento storage. Playwright supporta più pagine nello stesso contesto.
+
+- Aprire /exercises in due tab.
+- Completare una lezione nel primo tab.
+- Verificare che il secondo tab mostri la sezione completata.
+- Verificare che la sezione successiva venga sbloccata anche nel secondo tab.
+- Avviare un training nel primo tab e verificare che il secondo riceva lo stato running.
+- Mettere in pausa nel primo tab e verificare paused nel secondo.
+- Eseguire aggiornamenti alternati nei due tab e verificare che non si crei un ciclo infinito di eventi storage.
+- Inviare nel secondo tab un evento con JSON non valido e verificare che venga ignorato.
+- Verificare che modifiche a chiavi localStorage diverse non alterino Redux.
+- Verificare cosa accade quando il tab proprietario di activeSectionId viene chiuso.
+
+### Accessibilità e responsive
+
+- Navigare usando solamente Tab, Enter e Space.
+- Verificare che le sezioni bloccate non ricevano focus.
+- Verificare che i pulsanti disabilitati non siano attivabili da tastiera.
+- Verificare i nomi accessibili di navigazione, video e pulsanti.
+- Verificare il comportamento della navbar su viewport desktop e mobile.
+- Verificare che non ci siano sovrapposizioni o contenuti fuori viewport.
+- Eseguire gli stessi flussi principali su Chromium, Firefox e WebKit.
+  Attualmente i pulsanti play/pausa e reset non hanno un aria-label esplicito e dipendono dal testo delle icone (play_arrow, history). Prima di scrivere test Playwright stabili sarebbe consigliabile fornire nomi accessibili espliciti. Playwright raccomanda locator basati su ruolo e nome accessibile anziché selettori CSS legati alla struttura. Best practice sui locator.
+
+Ordine consigliato
+Inizierei da questa suite minima:
+
+1. Navigazione e routing.
+2. Stato iniziale e blocco delle lezioni.
+3. Avvio, pausa e ripresa con video già completato via localStorage.
+4. Raggiungimento della durata con Playwright Clock.
+5. Completamento e sblocco della sezione successiva.
+6. Persistenza dopo reload.
+7. Sincronizzazione tra due tab.
+8. Flusso completo del video reale su Chromium.
