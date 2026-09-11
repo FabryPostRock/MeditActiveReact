@@ -180,7 +180,7 @@ test.describe('Section list', () => {
 
       const focusIsInsideLockedCard = await lockedCards.evaluateAll((cards) => {
         const activeElement = document.activeElement;
-        // controls that at least one element satysfies the condition
+        // controls if at least one element satysfies the condition
         return cards.some((card) => card.contains(activeElement));
       });
 
