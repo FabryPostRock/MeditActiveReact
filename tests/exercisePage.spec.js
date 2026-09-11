@@ -147,4 +147,46 @@ test.describe('Section list', () => {
       }
     }
   });
+
+  test('locked sections cannot be reached using the keyboard', async ({ page }) => {
+    await page.goto('/exercises');
+
+    const lockedCards = page.locator('main article[aria-disabled="true"]');
+
+    await expect(lockedCards).toHaveCount(4);
+
+    for (const lockedCard of await lockedCards.all()) {
+      await expect(lockedCard).toHaveAttribute('inert', '');
+
+      // A locked card must not contain links or other keyboard controls.
+      await expect(
+        lockedCard.locator('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'),
+      ).toHaveCount(0);
+    }
+
+    const initialUrl = page.url();
+
+    const possibleTabStops = page.locator(
+      // button:not([disabled]) : selects the buttons that doesn't have the 'disabled' attribute.
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+
+    // One additional iteration verifies that focus wraps around without
+    // entering any locked card.
+    const numberOfTabPresses = (await possibleTabStops.count()) + 1;
+
+    for (let index = 0; index < numberOfTabPresses; index += 1) {
+      await page.keyboard.press('Tab');
+
+      const focusIsInsideLockedCard = await lockedCards.evaluateAll((cards) => {
+        const activeElement = document.activeElement;
+        // controls that at least one element satysfies the condition
+        return cards.some((card) => card.contains(activeElement));
+      });
+
+      expect(focusIsInsideLockedCard).toBe(false);
+    }
+
+    await expect(page).toHaveURL(initialUrl);
+  });
 });

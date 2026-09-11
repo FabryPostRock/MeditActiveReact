@@ -103,13 +103,9 @@ Unit test
 
 ### Elenco delle lezioni
 
-- Verificare che /exercises mostri il titolo del corso.
-- Verificare che siano visualizzate tutte e cinque le sezioni.
-- Verificare titolo, anteprima, stato e progresso video di ogni scheda.
-- Verificare che inizialmente solamente la prima sezione sia navigabile.
-- Verificare che le sezioni bloccate abbiano aria-disabled="true" e inert.
-- Verificare che le sezioni bloccate non siano raggiungibili tramite mouse o tastiera.
-- Verificare che la prima scheda mostri inizialmente Stato: idle e Video: da vedere.
+- ~~Verificare che /exercises mostri il titolo del corso.~~
+- ~~Verificare che siano visualizzate tutte e cinque le sezioni.~~
+- ~~Verificare che inizialmente solamente la prima sezione sia navigabile da mouse e tastiera.~~
 
 ### Pagina della lezione
 

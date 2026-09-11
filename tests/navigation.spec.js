@@ -32,7 +32,6 @@ test.describe('Navigation and routing', () => {
     await page.getByRole('link', { name: 'Exercises' }).click();
 
     await expect(page).toHaveURL(/\/exercises$/);
-    await expect(page.getByRole('heading', { name: 'Corso base di consapevolezza del corpo' })).toBeVisible();
   });
 
   test('returns to the home page from the Home link', async ({ page }) => {
