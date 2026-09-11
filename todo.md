@@ -109,17 +109,10 @@ Unit test
 
 ### Pagina della lezione
 
-- Verificare che la pagina mostri titolo, descrizione e video della sezione corretta.
-- Verificare che il video abbia l’etichetta accessibile corrispondente al titolo.
 - Verificare che il video punti al file MP4 previsto e che la risorsa risponda correttamente.
 - Verificare che i controlli video siano presenti.
-- Verificare che il tempo iniziale mostrato sia 00:00.
 - Verificare che il training non possa partire prima del completamento del video.
-- Verificare che, dopo il completamento del video, l’interfaccia mostri Video: completato.
-- Verificare che il progresso video venga salvato nel localStorage.
-- Verificare che spostarsi direttamente alla fine del video senza averlo guardato non lo completi.
 - Verificare che la riproduzione completa abiliti l’avvio del training.
-  I test sul video reale potrebbero essere differenti tra Chromium, Firefox e WebKit a causa del supporto dei codec MP4 e delle regole di autoplay. Conviene usare il video reale per pochi smoke test e precaricare videoCompleted nel localStorage per i test dedicati al timer.
 
 ### Esclusione della riproduzione multipla
 
@@ -139,26 +132,14 @@ Dopo aver predisposto due sezioni sbloccate:
 Per questi test Playwright può controllare Date.now(), setInterval e il passaggio del tempo mediante la Clock API, senza attendere realmente cinque secondi. Documentazione Playwright Clock.
 
 - Precaricare una sezione con videoCompleted: true.
-- Verificare che il pulsante di avvio sia utilizzabile.
-- Cliccare il pulsante e verificare che lo stato diventi running.
+- Verificare che il pulsante di avvio sia cliccabile.
 - Verificare che il timer si aggiorni immediatamente.
 - Far avanzare il tempo di un secondo e verificare 00:01.
-- Verificare che il timer non superi 00:05, che è la durata attuale.
 - Verificare che non sia possibile avviare un’altra sezione mentre ne esiste una attiva.
-- Verificare che un timestamp futuro non produca un valore negativo.
 - Ricaricare la pagina mentre il training è running e stabilire se il tempo trascorso fuori dalla pagina debba essere contato.
   Pausa e ripresa
 - Avviare il training e far trascorrere due secondi.
-- Premere pausa e verificare lo stato paused.
 - Verificare che il timer resti fermo durante la pausa.
-- Far trascorrere diversi secondi mentre il training è in pausa.
-- Riprendere il training e verificare che il tempo della pausa non venga conteggiato.
-- Eseguire più cicli di pausa e ripresa e verificare la somma delle sole sessioni attive.
-- Verificare che mettere in pausa una sezione liberi activeSectionId.
-- Verificare che dopo la pausa sia possibile avviare una sezione differente.
-  Questa suite è particolarmente importante: la UI attualmente riprende con:
-  startTraining({ sectionId: section.id })
-  senza passare un nuovo startedAtMs. Un test Playwright può verificare se, nel flusso reale, il tempo della pausa viene erroneamente incluso.
 
 ### Raggiungimento della durata richiesta
 
@@ -181,19 +162,14 @@ Per questi test Playwright può controllare Date.now(), setInterval e il passagg
 - Aprire la seconda sezione appena sbloccata.
 - Completare progressivamente tutte le sezioni e verificare l’ordine di sblocco.
 - Completare l’ultima sezione e verificare che l’app non mostri errori.
-- Tentare un completamento anticipato e verificare che nessuna lezione venga sbloccata.
 - Verificare che un doppio clic sul pulsante di completamento non produca due transizioni.
 
 ### Reset
 
-- Verificare che il reset non sia disponibile da idle, running o paused.
-- Verificare che sia disponibile da readyToComplete.
-- Verificare che sia disponibile da completed.
-- Dopo il reset, verificare Stato: idle e timer 00:00.
+- Verificare che il reset non sia cliccabile da idle, running o paused.
+- Verificare che sia disponibile da completed e readyToComplete.
 - Verificare che il video rimanga completato.
 - Dopo il reset di una sezione completata, verificare che non possa essere completata una seconda volta.
-- Verificare che il reset non riblocchi la sezione successiva.
-- Verificare che il reset di una sezione non modifichi le altre schede.
 
 ### Persistenza nel localStorage
 
@@ -222,15 +198,6 @@ Due tab dello stesso BrowserContext condividono il localStorage e sono adatti a 
 - Verificare cosa accade quando il tab proprietario di activeSectionId viene chiuso.
 
 ### Accessibilità e responsive
-
-- Navigare usando solamente Tab, Enter e Space.
-- Verificare che le sezioni bloccate non ricevano focus.
-- Verificare che i pulsanti disabilitati non siano attivabili da tastiera.
-- Verificare i nomi accessibili di navigazione, video e pulsanti.
-- Verificare il comportamento della navbar su viewport desktop e mobile.
-- Verificare che non ci siano sovrapposizioni o contenuti fuori viewport.
-- Eseguire gli stessi flussi principali su Chromium, Firefox e WebKit.
-  Attualmente i pulsanti play/pausa e reset non hanno un aria-label esplicito e dipendono dal testo delle icone (play_arrow, history). Prima di scrivere test Playwright stabili sarebbe consigliabile fornire nomi accessibili espliciti. Playwright raccomanda locator basati su ruolo e nome accessibile anziché selettori CSS legati alla struttura. Best practice sui locator.
 
 Ordine consigliato
 Inizierei da questa suite minima:
