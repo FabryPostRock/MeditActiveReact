@@ -109,10 +109,10 @@ Unit test
 
 ### Pagina della lezione
 
-- Verificare che il video punti al file MP4 previsto e che la risorsa risponda correttamente.
-- Verificare che i controlli video siano presenti.
-- Verificare che il training non possa partire prima del completamento del video.
-- Verificare che la riproduzione completa abiliti l’avvio del training.
+- ~~Verificare che il video punti al file MP4 previsto e che la risorsa risponda correttamente.~~
+- ~~Verificare che i controlli video siano presenti.~~
+- ~~Verificare che il training non possa partire prima del completamento del video.~~
+- ~~Verificare che la riproduzione completa abiliti l’avvio del training.~~
 
 ### Esclusione della riproduzione multipla
 
