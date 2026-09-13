@@ -118,14 +118,12 @@ Unit test
 
 Dopo aver predisposto due sezioni sbloccate:
 
-- Aprire due lezioni in due tab dello stesso browser.
-- Avviare il primo video.
-- Tentare di avviare il secondo.
-- Verificare che il secondo venga immediatamente messo in pausa.
-- Verificare che il primo continui a essere la sezione attiva.
-- Mettere in pausa il primo video e verificare che il secondo possa partire.
-- Chiudere il tab del video attivo e verificare il comportamento previsto per activeSectionId.
-  L’ultimo caso è importante perché attualmente una chiusura improvvisa potrebbe lasciare nel localStorage una sezione attiva non più reale.
+- ~~Aprire due lezioni in due tab dello stesso browser.~~
+- ~~Avviare il primo video.~~
+- ~~Tentare di avviare il secondo e verificare che il primo continui a essere la sezione attiva.~~
+- ~~Verificare che il secondo venga immediatamente messo in pausa.~~
+- ~~Mettere in pausa il primo video e verificare che il secondo possa partire.~~
+- ~~Chiudere il tab del video attivo e verificare il comportamento previsto per activeSectionId.~~
 
 ### Avvio e timer del training
 
@@ -137,7 +135,9 @@ Per questi test Playwright può controllare Date.now(), setInterval e il passagg
 - Far avanzare il tempo di un secondo e verificare 00:01.
 - Verificare che non sia possibile avviare un’altra sezione mentre ne esiste una attiva.
 - Ricaricare la pagina mentre il training è running e stabilire se il tempo trascorso fuori dalla pagina debba essere contato.
-  Pausa e ripresa
+
+Pausa e ripresa
+
 - Avviare il training e far trascorrere due secondi.
 - Verificare che il timer resti fermo durante la pausa.
 

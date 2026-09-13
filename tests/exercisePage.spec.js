@@ -17,13 +17,6 @@ page.evaluate() executes its callback inside the browser page, not inside Playwr
 
 */
 import { expect, test } from '@playwright/test';
-//import { createTestStore } from '../src/timerHooks';
-//import { useAppSelector } from '../../store/hooks';
-// import trainingProgressReducer, {
-//   pauseTraining,
-//   setReadyToBeCompleted,
-//   startTraining,
-// } from '../src/store/trainingProgressSlice';
 
 const exerciseSections = [
   {
