@@ -185,6 +185,57 @@ async function getStoredActiveSectionId(page) {
   }, TRAINING_PROGRESS_STORAGE_KEY);
 }
 
+async function getTrainingProgress(page) {
+  return page.evaluate(async () => {
+    const { store } = await import('/src/store/store.ts');
+
+    return store.getState().trainingProgress;
+  });
+}
+
+async function prepareSectionForCompletion(page, section) {
+  await prepareSectionState(
+    page,
+    {
+      videoCompleted: true,
+      videoCurrentSecond: 10,
+      videoWatchedSeconds: 10,
+      videoDurationSeconds: 10,
+      elapsedTrainingMs: section.requiredTrainingMs,
+      startedAtMs: null,
+      status: 'readyToComplete',
+      trainingCompleted: false,
+      isLocked: false,
+    },
+    section.id,
+  );
+}
+
+async function startTrackingSectionStatusTransitions(page, sectionId) {
+  await page.evaluate(async (trackedSectionId) => {
+    const { store } = await import('/src/store/store.ts');
+    let previousStatus = store.getState().trainingProgress.progressBySectionId[trackedSectionId].status;
+
+    window.__exerciseStatusTransitions = [];
+
+    store.subscribe(() => {
+      const currentStatus = store.getState().trainingProgress.progressBySectionId[trackedSectionId].status;
+
+      if (currentStatus === previousStatus) return;
+
+      window.__exerciseStatusTransitions.push({
+        from: previousStatus,
+        to: currentStatus,
+      });
+      previousStatus = currentStatus;
+    });
+  }, sectionId);
+}
+
+async function getTrackedSectionStatusTransitions(page) {
+  return page.evaluate(() => window.__exerciseStatusTransitions);
+}
+
 test.describe('Exercise lesson page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(`/exercise/${exerciseSections[0].id}`);
@@ -367,5 +418,131 @@ test.describe('Timer startup and stop', () => {
     await page.clock.runFor(2_000);
 
     await expect(timer).toHaveText('00:02');
+  });
+
+  test('counts time elapsed outside the page when a running training is reloaded', async ({ page }) => {
+    await page.clock.install({
+      time: new Date('2026-01-01T09:59:00'),
+    });
+    await prepareSectionState(
+      page,
+      {
+        videoCompleted: true,
+        videoCurrentSecond: 10,
+        videoWatchedSeconds: 10,
+        videoDurationSeconds: 10,
+        elapsedTrainingMs: 0,
+        startedAtMs: null,
+        status: 'idle',
+        isLocked: false,
+      },
+      exerciseSections[1].id,
+    );
+    await page.clock.pauseAt(new Date('2026-01-01T10:00:00'));
+
+    const startTrainingButton = page.locator('main article button').first();
+    const timer = page.locator('main article div p').nth(3);
+
+    await startTrainingButton.click();
+    await expect(page.getByText('Stato: running', { exact: true })).toBeVisible();
+
+    await page.clock.runFor(1_000);
+    await expect(timer).toHaveText('00:01');
+
+    // Move the wall clock without firing interval callbacks to represent time
+    // passing while the document is not executing.
+    await page.clock.setSystemTime(new Date('2026-01-01T10:00:03'));
+    await page.reload();
+
+    await expect(page.getByText('Stato: running', { exact: true })).toBeVisible();
+    await expect(timer).toHaveText('00:03');
+  });
+});
+
+test.describe('Training completion and unlocking', () => {
+  test('unlocks every section progressively in the configured order', async ({ page }) => {
+    const lastSectionIndex = exerciseSections.length - 1;
+
+    for (const [completedSectionIndex, section] of exerciseSections.entries()) {
+      await prepareSectionForCompletion(page, section);
+
+      const completeTrainingButton = page.getByRole('button', {
+        name: /Esercizio Completato/,
+      });
+
+      await expect(page.getByText('Stato: readyToComplete', { exact: true })).toBeVisible();
+      await completeTrainingButton.click();
+      await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+
+      // jump back to exercises page to see locked and unlocked sections updates
+      await page.goto('/exercises');
+
+      const sectionCards = page.locator('main article');
+      const lastUnlockedSectionIndex = Math.min(completedSectionIndex + 1, lastSectionIndex);
+
+      for (const [sectionIndex, expectedSection] of exerciseSections.entries()) {
+        const sectionCard = sectionCards.nth(sectionIndex);
+        const sectionLink = page.getByRole('link', {
+          name: `Apri la lezione ${expectedSection.title}`,
+          exact: true,
+        });
+        // all previous sections unlocked before the last unlocked section
+        if (sectionIndex <= lastUnlockedSectionIndex) {
+          await expect(sectionCard).not.toHaveAttribute('aria-disabled', 'true');
+          await expect(sectionLink).toHaveCount(1);
+        } else {
+          await expect(sectionCard).toHaveAttribute('aria-disabled', 'true');
+          await expect(sectionLink).toHaveCount(0);
+        }
+      }
+    }
+  });
+
+  test('completes the last section without application errors', async ({ page }) => {
+    const pageErrors = [];
+    const lastSection = exerciseSections.at(-1);
+
+    page.on('pageerror', (error) => pageErrors.push(error.message));
+    await prepareSectionForCompletion(page, lastSection);
+
+    await page.getByRole('button', { name: /Esercizio Completato/ }).click();
+
+    await expect(page).toHaveURL(`/exercise/${lastSection.id}`);
+    await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+    await expect(page.getByText('Pagina Errore', { exact: true })).toHaveCount(0);
+
+    const trainingProgress = await getTrainingProgress(page);
+
+    expect(trainingProgress.progressBySectionId[lastSection.id]).toMatchObject({
+      status: 'completed',
+      trainingCompleted: true,
+    });
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('a double click produces only one completion transition', async ({ page }) => {
+    const section = exerciseSections[0];
+
+    await prepareSectionForCompletion(page, section);
+    await startTrackingSectionStatusTransitions(page, section.id);
+
+    const completeTrainingButton = page.getByRole('button', {
+      name: /Esercizio Completato/,
+    });
+
+    await completeTrainingButton.dblclick();
+    await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+
+    const statusTransitions = await getTrackedSectionStatusTransitions(page);
+    const trainingProgress = await getTrainingProgress(page);
+
+    expect(statusTransitions).toEqual([
+      {
+        from: 'readyToComplete',
+        to: 'completed',
+      },
+    ]);
+    expect(trainingProgress.progressBySectionId[section.id].trainingCompleted).toBe(true);
+    expect(trainingProgress.progressBySectionId[section.nextSectionId].isLocked).toBe(false);
   });
 });
