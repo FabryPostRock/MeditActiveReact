@@ -129,38 +129,18 @@ Dopo aver predisposto due sezioni sbloccate:
 
 Per questi test Playwright può controllare Date.now(), setInterval e il passaggio del tempo mediante la Clock API, senza attendere realmente cinque secondi. Documentazione Playwright Clock.
 
-- Precaricare una sezione con videoCompleted: true e verificare che il pulsante di avvio sia cliccabile.
-- Verificare che il timer si aggiorni immediatamente.
-- Far avanzare il tempo di un secondo e verificare 00:01.
+- ~~Precaricare una sezione con videoCompleted: true e verificare che il pulsante di avvio sia cliccabile.~~
+- ~~Far avanzare il tempo di due secondi e verificare 00:02~~.
 - Ricaricare la pagina mentre il training è running e stabilire se il tempo trascorso fuori dalla pagina debba essere contato.
-
-### Raggiungimento della durata richiesta
-
-- Avviare il training con il video già completato.
-- Far avanzare il tempo fino a un millisecondo prima della soglia e verificare che lo stato resti running.
-- Raggiungere la soglia e verificare readyToComplete.
-- Verificare che il tempo visualizzato venga limitato alla durata richiesta.
-- Verificare che l’intervallo smetta di aggiornarsi.
-- Verificare che la sezione attiva venga liberata.
-- Continuare ad avanzare l’orologio e verificare che non avvengano ulteriori modifiche.
-- Verificare che il pulsante “Esercizio Completato” diventi disponibile.
 
 ### Completamento e sblocco
 
-- Verificare che il completamento non sia possibile prima di readyToComplete.
-- Completare la prima sezione e verificare Stato: completed.
-- Tornare all’elenco e verificare Video: completato.
-- Verificare che venga sbloccata solamente la sezione successiva.
-- Verificare che le sezioni successive alla seconda restino bloccate.
-- Aprire la seconda sezione appena sbloccata.
 - Completare progressivamente tutte le sezioni e verificare l’ordine di sblocco.
 - Completare l’ultima sezione e verificare che l’app non mostri errori.
 - Verificare che un doppio clic sul pulsante di completamento non produca due transizioni.
 
 ### Reset
 
-- Verificare che il reset non sia cliccabile da idle, running o paused.
-- Verificare che sia disponibile da completed e readyToComplete.
 - Verificare che il video rimanga completato.
 - Dopo il reset di una sezione completata, verificare che non possa essere completata una seconda volta.
 

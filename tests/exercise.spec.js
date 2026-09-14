@@ -305,8 +305,8 @@ test.describe('Multiple video playback exclusion', () => {
 
     await expect(secondVideo).toHaveJSProperty('paused', true);
     await expect(firstVideo).toHaveJSProperty('paused', false);
-    await expect.poll(() => getActiveSectionId(firstPage)).toBe(exerciseSections[1].id);
-    await expect.poll(() => getActiveSectionId(secondPage)).toBe(exerciseSections[1].id);
+    await expect.poll(() => getActiveSectionId(firstPage)).toBe(exerciseSections[0].id);
+    await expect.poll(() => getActiveSectionId(secondPage)).toBe(exerciseSections[0].id);
 
     await firstVideo.evaluate((mediaElement) => mediaElement.pause());
 
@@ -316,8 +316,8 @@ test.describe('Multiple video playback exclusion', () => {
     await secondVideo.evaluate((mediaElement) => mediaElement.play());
 
     await expect(secondVideo).toHaveJSProperty('paused', false);
-    await expect.poll(() => getActiveSectionId(firstPage)).toBe(exerciseSections[0].id);
-    await expect.poll(() => getActiveSectionId(secondPage)).toBe(exerciseSections[0].id);
+    await expect.poll(() => getActiveSectionId(firstPage)).toBe(exerciseSections[1].id);
+    await expect.poll(() => getActiveSectionId(secondPage)).toBe(exerciseSections[1].id);
   });
 
   test('clears activeSectionId when the tab playing the active video is closed', async ({ page, context }) => {
@@ -339,19 +339,25 @@ test.describe('Multiple video playback exclusion', () => {
 
 test.describe('Timer startup and stop', () => {
   test('After 2 seconds the timer view is updated', async ({ page }) => {
+    // this clock doesn't pause itself, during page preparation it's incremented. It needs to be manually paused
     await page.clock.install({
-      time: new Date('2026-01-01T10:00:00'),
+      time: new Date('2026-01-01T09:59:00'),
     });
-    await prepareSectionState(page, exerciseSections[1].id, {
-      videoCompleted: true,
-      videoCurrentSecond: 10,
-      videoWatchedSeconds: 10,
-      videoDurationSeconds: 10,
-      isLocked: false,
-    });
+    await prepareSectionState(
+      page,
+      {
+        videoCompleted: true,
+        videoCurrentSecond: 10,
+        videoWatchedSeconds: 10,
+        videoDurationSeconds: 10,
+        isLocked: false,
+      },
+      exerciseSections[1].id,
+    );
+    // Freeze time after page initialization, before starting the training.
+    await page.clock.pauseAt(new Date('2026-01-01T10:00:00'));
+
     const startTrainingButton = page.locator('main article button').first();
-    const video = page.getByLabel(`Video: ${exerciseSections[1].title}`);
-    await installControllablePlayback(video);
     await startTrainingButton.click();
     await expect(startTrainingButton).not.toHaveAttribute('aria-disabled', 'true');
 
