@@ -15,7 +15,7 @@ import {
   resetTraining,
 } from '../../store/trainingProgressSlice';
 
-import { useRef, type SyntheticEvent } from 'react';
+import { useRef, useEffect, type SyntheticEvent } from 'react';
 import { store } from '../../store/store';
 
 /**
@@ -60,6 +60,23 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   // Using useAppSelector is quite more secure then store.getState because in the former
   // case the state is subscribed to changes.
   const activeSectionId = useAppSelector((state) => state.trainingProgress.activeSectionId);
+
+  useEffect(() => {
+    const releaseActiveSection = () => {
+      const currentActiveSectionId = store.getState().trainingProgress.activeSectionId;
+      // This control avoids state resetting through inactive page.
+      if (currentActiveSectionId !== section.id) return;
+
+      dispatch(stopVideoPlayback({ sectionId: section.id }));
+    };
+
+    // cross compatible through different browsers
+    window.addEventListener('beforeunload', releaseActiveSection);
+
+    return () => {
+      window.removeEventListener('beforeunload', releaseActiveSection);
+    };
+  }, [dispatch, section.id]);
 
   const VIDEO_PROGRESS_INTERVAL_SECONDS = 2;
   /**
