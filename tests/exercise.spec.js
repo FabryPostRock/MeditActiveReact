@@ -1,18 +1,63 @@
 import { expect, test } from '@playwright/test';
+//import { setVideoCompleted } from '../src/store/trainingProgressSlice';
 
-const lesson = {
-  id: 'breathing-section-1',
-  path: '/exercise/breathing-section-1',
-  title: 'Respirazione da sdraiato con mani sulla pancia',
-  videoUrl: '/videos/resp-sdraiato-1.mp4',
-};
-
-const secondLesson = {
-  id: 'breathing-section-2',
-  path: '/exercise/breathing-section-2',
-  title: 'Respirazione da sdraiato con libro sulla pancia',
-};
-
+const exerciseSections = [
+  {
+    id: 'breathing-section-1',
+    exerciseId: 'breathing-basics',
+    title: 'Respirazione da sdraiato con mani sulla pancia',
+    description:
+      'Sdraiati comodamente e appoggia le mani sulla pancia. Porta l’attenzione al movimento dell’addome mentre respiri, senza forzare: senti le mani sollevarsi durante l’inspirazione e abbassarsi durante l’espirazione. L’obiettivo è prendere consapevolezza del respiro e imparare a lasciarlo fluire in modo naturale.',
+    videoUrl: '/videos/resp-sdraiato-1.mp4',
+    thumbnailUrl: '../assets/img/resp-sdraiato-1.png',
+    requiredTrainingMs: 5000,
+    nextSectionId: 'breathing-section-2',
+  },
+  {
+    id: 'breathing-section-2',
+    exerciseId: 'breathing-basics',
+    title: 'Respirazione da sdraiato con libro sulla pancia',
+    description:
+      'Sdraiati e appoggia un libro leggero sulla pancia. Osserva come il respiro lo fa salire durante l’inspirazione e scendere durante l’espirazione. Il piccolo peso offre un riferimento visivo e tattile che aiuta a percepire meglio il movimento addominale e a rendere il respiro più consapevole e regolare.',
+    videoUrl: '/videos/resp-sdraiato-2.mp4',
+    thumbnailUrl: '../assets/img/resp-sdraiato-2.png',
+    requiredTrainingMs: 5000,
+    nextSectionId: 'breathing-section-3',
+  },
+  {
+    id: 'breathing-section-3',
+    exerciseId: 'breathing-basics',
+    title: 'Respirazione da in piedi',
+    description:
+      'Porta ora la respirazione appresa da sdraiato nella posizione eretta. Mantieni il corpo rilassato, le ginocchia morbide e il busto naturale. Respira osservando il movimento dell’addome senza irrigidirti. L’obiettivo è mantenere un respiro calmo e consapevole anche quando il corpo deve sostenersi contro la gravità.',
+    videoUrl: '/videos/resp-inpiedi-3.mp4',
+    thumbnailUrl: '../assets/img/resp-inpiedi-3.png',
+    requiredTrainingMs: 5000,
+    nextSectionId: 'feet-position-section-1',
+  },
+  {
+    id: 'feet-position-section-1',
+    exerciseId: 'feet-basics',
+    title: 'Respirare con la terra',
+    description:
+      'In piedi, porta l’attenzione contemporaneamente al respiro e al contatto dei piedi con il terreno. Durante ogni ciclo respiratorio percepisci il corpo che si rilassa e il peso che scende verso la terra. Non cercare di spingere: lascia che respiro, postura e appoggio dei piedi inizino gradualmente a lavorare insieme.',
+    videoUrl: '/videos/mov-piedi-1.mp4',
+    thumbnailUrl: '../assets/img/mov-piedi-1.png',
+    requiredTrainingMs: 5000,
+    nextSectionId: 'feet-position-section-2',
+  },
+  {
+    id: 'feet-position-section-2',
+    exerciseId: 'feet-basics',
+    title: 'Sentire la distribuzione del peso sulla terra',
+    description:
+      'Porta l’attenzione sotto i piedi e osserva dove senti maggiormente il peso: tallone, avampiede, lato interno o esterno. Spostalo lentamente per esplorare le diverse sensazioni, poi cerca una posizione stabile e centrale. Respira senza tensioni e percepisci come piccoli cambiamenti dell’appoggio modificano l’equilibrio di tutto il corpo.',
+    videoUrl: '/videos/mov-piedi-2.mp4',
+    thumbnailUrl: '../assets/img/mov-piedi-2.png',
+    requiredTrainingMs: 5000,
+    nextSectionId: null,
+  },
+];
 const TRAINING_PROGRESS_STORAGE_KEY = 'meditactive-training-progress';
 
 async function prepareTwoUnlockedLessons(page, context) {
@@ -43,17 +88,51 @@ async function prepareTwoUnlockedLessons(page, context) {
     },
     {
       // Playwright serializes this argument and passes it to the browser callback.
-      secondSectionId: secondLesson.id,
+      secondSectionId: exerciseSections[1].id,
       storageKey: TRAINING_PROGRESS_STORAGE_KEY,
     },
   );
 
-  await page.goto(lesson.path);
+  await page.goto(`/exercise/${exerciseSections[0].id}`);
 
   const secondPage = await context.newPage();
-  await secondPage.goto(secondLesson.path);
+  await secondPage.goto(`/exercise/${exerciseSections[1].id}`);
 
   return { firstPage: page, secondPage };
+}
+
+async function prepareSectionState(page, progressOverrides = {}, sectionId) {
+  await page.goto('/');
+
+  await page.evaluate(
+    async ({ progressOverrides, sectionId, storageKey }) => {
+      const { store } = await import('/src/store/store.ts');
+
+      let trainingProgress = structuredClone(store.getState().trainingProgress);
+
+      const currentProgress = trainingProgress.progressBySectionId[sectionId];
+
+      const preparedProgress = {
+        ...currentProgress,
+        ...progressOverrides,
+      };
+
+      trainingProgress.progressBySectionId[sectionId] = preparedProgress;
+
+      trainingProgress.activeSectionId = preparedProgress.status === 'running' ? sectionId : null;
+
+      localStorage.setItem(storageKey, JSON.stringify(trainingProgress));
+    },
+    {
+      progressOverrides,
+      sectionId,
+      storageKey: TRAINING_PROGRESS_STORAGE_KEY,
+    },
+  );
+
+  await page.goto(`/exercise/${sectionId}`);
+
+  return { page: page };
 }
 
 async function installControllablePlayback(video) {
@@ -108,27 +187,27 @@ async function getStoredActiveSectionId(page) {
 
 test.describe('Exercise lesson page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(lesson.path);
+    await page.goto(`/exercise/${exerciseSections[0].id}`);
   });
 
   test('uses the expected MP4 file and the resource responds successfully', async ({ page, request }) => {
-    const video = page.getByLabel(`Video: ${lesson.title}`);
+    const video = page.getByLabel(`Video: ${exerciseSections[0].title}`);
 
-    await expect(video).toHaveAttribute('src', lesson.videoUrl);
+    await expect(video).toHaveAttribute('src', exerciseSections[0].videoUrl);
 
     /**
      * `request.head()` uses Playwright's API request context to inspect a resource
      * without downloading its response body. It shares the configured base URL,
      * so a relative application URL can be checked directly.
      */
-    const videoResponse = await request.head(lesson.videoUrl);
+    const videoResponse = await request.head(exerciseSections[0].videoUrl);
 
     expect(videoResponse.ok()).toBe(true);
     expect(videoResponse.headers()['content-type']).toContain('video/mp4');
   });
 
   test('shows the native video controls', async ({ page }) => {
-    const video = page.getByLabel(`Video: ${lesson.title}`);
+    const video = page.getByLabel(`Video: ${exerciseSections[0].title}`);
 
     /**
      * `toHaveJSProperty()` checks the live DOM property instead of only checking
@@ -155,7 +234,7 @@ test.describe('Exercise lesson page', () => {
   });
 
   test('enables training after the video has been fully played', async ({ page }) => {
-    const video = page.getByLabel(`Video: ${lesson.title}`);
+    const video = page.getByLabel(`Video: ${exerciseSections[0].title}`);
     const startTrainingButton = page.locator('main article button').first();
 
     /**
@@ -211,8 +290,8 @@ test.describe('Exercise lesson page', () => {
 test.describe('Multiple video playback exclusion', () => {
   test('keeps the first lesson active until its video is paused', async ({ page, context }) => {
     const { firstPage, secondPage } = await prepareTwoUnlockedLessons(page, context);
-    const firstVideo = firstPage.getByLabel(`Video: ${lesson.title}`);
-    const secondVideo = secondPage.getByLabel(`Video: ${secondLesson.title}`);
+    const firstVideo = firstPage.getByLabel(`Video: ${exerciseSections[0].title}`);
+    const secondVideo = secondPage.getByLabel(`Video: ${exerciseSections[1].title}`);
 
     await installControllablePlayback(firstVideo);
     await installControllablePlayback(secondVideo);
@@ -220,14 +299,14 @@ test.describe('Multiple video playback exclusion', () => {
     await firstVideo.evaluate((mediaElement) => mediaElement.play());
 
     await expect(firstVideo).toHaveJSProperty('paused', false);
-    await expect.poll(() => getActiveSectionId(secondPage)).toBe(lesson.id);
+    await expect.poll(() => getActiveSectionId(secondPage)).toBe(exerciseSections[0].id);
 
     await secondVideo.evaluate((mediaElement) => mediaElement.play());
 
     await expect(secondVideo).toHaveJSProperty('paused', true);
     await expect(firstVideo).toHaveJSProperty('paused', false);
-    await expect.poll(() => getActiveSectionId(firstPage)).toBe(lesson.id);
-    await expect.poll(() => getActiveSectionId(secondPage)).toBe(lesson.id);
+    await expect.poll(() => getActiveSectionId(firstPage)).toBe(exerciseSections[1].id);
+    await expect.poll(() => getActiveSectionId(secondPage)).toBe(exerciseSections[1].id);
 
     await firstVideo.evaluate((mediaElement) => mediaElement.pause());
 
@@ -237,23 +316,50 @@ test.describe('Multiple video playback exclusion', () => {
     await secondVideo.evaluate((mediaElement) => mediaElement.play());
 
     await expect(secondVideo).toHaveJSProperty('paused', false);
-    await expect.poll(() => getActiveSectionId(firstPage)).toBe(secondLesson.id);
-    await expect.poll(() => getActiveSectionId(secondPage)).toBe(secondLesson.id);
+    await expect.poll(() => getActiveSectionId(firstPage)).toBe(exerciseSections[0].id);
+    await expect.poll(() => getActiveSectionId(secondPage)).toBe(exerciseSections[0].id);
   });
 
   test('clears activeSectionId when the tab playing the active video is closed', async ({ page, context }) => {
     const { firstPage, secondPage } = await prepareTwoUnlockedLessons(page, context);
-    const firstVideo = firstPage.getByLabel(`Video: ${lesson.title}`);
+    const firstVideo = firstPage.getByLabel(`Video: ${exerciseSections[0].title}`);
 
     await installControllablePlayback(firstVideo);
     await firstVideo.evaluate((mediaElement) => mediaElement.play());
 
-    await expect.poll(() => getActiveSectionId(secondPage)).toBe(lesson.id);
-    await expect.poll(() => getStoredActiveSectionId(secondPage)).toBe(lesson.id);
+    await expect.poll(() => getActiveSectionId(secondPage)).toBe(exerciseSections[0].id);
+    await expect.poll(() => getStoredActiveSectionId(secondPage)).toBe(exerciseSections[0].id);
 
     await firstPage.close({ runBeforeUnload: true });
 
     await expect.poll(() => getActiveSectionId(secondPage)).toBeNull();
     await expect.poll(() => getStoredActiveSectionId(secondPage)).toBeNull();
+  });
+});
+
+test.describe('Timer startup and stop', () => {
+  test('After 2 seconds the timer view is updated', async ({ page }) => {
+    await page.clock.install({
+      time: new Date('2026-01-01T10:00:00'),
+    });
+    await prepareSectionState(page, exerciseSections[1].id, {
+      videoCompleted: true,
+      videoCurrentSecond: 10,
+      videoWatchedSeconds: 10,
+      videoDurationSeconds: 10,
+      isLocked: false,
+    });
+    const startTrainingButton = page.locator('main article button').first();
+    const video = page.getByLabel(`Video: ${exerciseSections[1].title}`);
+    await installControllablePlayback(video);
+    await startTrainingButton.click();
+    await expect(startTrainingButton).not.toHaveAttribute('aria-disabled', 'true');
+
+    const timer = page.locator('main article div p').nth(3);
+
+    // Advance browser time by two second and execute the setInterval callback.
+    await page.clock.runFor(2_000);
+
+    await expect(timer).toHaveText('00:02');
   });
 });

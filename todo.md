@@ -129,17 +129,10 @@ Dopo aver predisposto due sezioni sbloccate:
 
 Per questi test Playwright può controllare Date.now(), setInterval e il passaggio del tempo mediante la Clock API, senza attendere realmente cinque secondi. Documentazione Playwright Clock.
 
-- Precaricare una sezione con videoCompleted: true.
-- Verificare che il pulsante di avvio sia cliccabile.
+- Precaricare una sezione con videoCompleted: true e verificare che il pulsante di avvio sia cliccabile.
 - Verificare che il timer si aggiorni immediatamente.
 - Far avanzare il tempo di un secondo e verificare 00:01.
-- Verificare che non sia possibile avviare un’altra sezione mentre ne esiste una attiva.
 - Ricaricare la pagina mentre il training è running e stabilire se il tempo trascorso fuori dalla pagina debba essere contato.
-
-Pausa e ripresa
-
-- Avviare il training e far trascorrere due secondi.
-- Verificare che il timer resti fermo durante la pausa.
 
 ### Raggiungimento della durata richiesta
 
