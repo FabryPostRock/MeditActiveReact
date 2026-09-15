@@ -131,17 +131,16 @@ Per questi test Playwright può controllare Date.now(), setInterval e il passagg
 
 - ~~Precaricare una sezione con videoCompleted: true e verificare che il pulsante di avvio sia cliccabile.~~
 - ~~Far avanzare il tempo di due secondi e verificare 00:02~~.
-- Ricaricare la pagina mentre il training è running e stabilire se il tempo trascorso fuori dalla pagina debba essere contato.
+- ~~Ricaricare la pagina mentre il training è running e stabilire se il tempo trascorso fuori dalla pagina debba essere contato.~~
 
 ### Completamento e sblocco
 
-- Completare progressivamente tutte le sezioni e verificare l’ordine di sblocco.
-- Completare l’ultima sezione e verificare che l’app non mostri errori.
-- Verificare che un doppio clic sul pulsante di completamento non produca due transizioni.
+- ~~Completare progressivamente tutte le sezioni e verificare l’ordine di sblocco.~~
+- ~~Completare l’ultima sezione e verificare che l’app non mostri errori.~~
+- ~~Verificare che un doppio clic sul pulsante di completamento non produca due transizioni.~~
 
 ### Reset
 
-- Verificare che il video rimanga completato.
 - Dopo il reset di una sezione completata, verificare che non possa essere completata una seconda volta.
 
 ### Persistenza nel localStorage

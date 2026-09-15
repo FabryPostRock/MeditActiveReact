@@ -256,7 +256,7 @@ const progressSlice = createSlice({
     ) => {
       const progress = state.progressBySectionId[action.payload.sectionId];
 
-      if (progress.status !== 'readyToComplete') {
+      if (progress.status !== 'readyToComplete' || progress.trainingCompleted) {
         return;
       }
 

@@ -545,4 +545,62 @@ test.describe('Training completion and unlocking', () => {
     expect(trainingProgress.progressBySectionId[section.id].trainingCompleted).toBe(true);
     expect(trainingProgress.progressBySectionId[section.nextSectionId].isLocked).toBe(false);
   });
+
+  test('does not complete an already completed section again after reset', async ({ page }) => {
+    const section = exerciseSections[0];
+
+    await prepareSectionForCompletion(page, section);
+
+    const completeTrainingButton = page.getByRole('button', {
+      name: /Esercizio Completato/,
+    });
+    const resetTrainingButton = page.getByRole('button', {
+      name: 'history',
+      exact: true,
+    });
+
+    await completeTrainingButton.click();
+    await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+
+    await resetTrainingButton.click();
+    await expect(page.getByText('Stato: idle', { exact: true })).toBeVisible();
+
+    const progressAfterReset = await getTrainingProgress(page);
+
+    expect(progressAfterReset.progressBySectionId[section.id]).toMatchObject({
+      status: 'idle',
+      trainingCompleted: true,
+    });
+
+    // Recreate the state reached after another training session while keeping
+    // the permanent trainingCompleted flag produced by the first completion.
+    await prepareSectionState(
+      page,
+      {
+        elapsedTrainingMs: section.requiredTrainingMs,
+        startedAtMs: null,
+        status: 'readyToComplete',
+      },
+      section.id,
+    );
+
+    const secondCompletionButton = page.getByRole('button', {
+      name: /Esercizio Completato/,
+    });
+
+    // toBeDisabled() ricognizes disabled and aria-disabled="true"
+    await expect(secondCompletionButton).toBeDisabled();
+
+    // dispatch the click to verify that Redux also rejects it.
+    await secondCompletionButton.dispatchEvent('click');
+
+    await expect(page.getByText('Stato: readyToComplete', { exact: true })).toBeVisible();
+
+    const progressAfterSecondCompletionAttempt = await getTrainingProgress(page);
+
+    expect(progressAfterSecondCompletionAttempt.progressBySectionId[section.id]).toMatchObject({
+      status: 'readyToComplete',
+      trainingCompleted: true,
+    });
+  });
 });
