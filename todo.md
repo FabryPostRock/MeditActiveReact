@@ -141,7 +141,7 @@ Per questi test Playwright può controllare Date.now(), setInterval e il passagg
 
 ### Reset
 
-- Dopo il reset di una sezione completata, verificare che non possa essere completata una seconda volta.
+- ~~Dopo il reset di una sezione completata, verificare che non possa essere completata una seconda volta.~~
 
 ### Persistenza nel localStorage
 
