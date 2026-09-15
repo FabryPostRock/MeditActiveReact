@@ -171,6 +171,7 @@ async function installControllablePlayback(video) {
 
 async function getActiveSectionId(page) {
   return page.evaluate(async () => {
+    // dynamic import returns a distinct instance of the same <Provider>
     const { store } = await import('/src/store/store.ts');
 
     return store.getState().trainingProgress.activeSectionId;
@@ -342,8 +343,10 @@ test.describe('Multiple video playback exclusion', () => {
     await secondVideo.evaluate((mediaElement) => mediaElement.play());
 
     await expect(secondVideo).toHaveJSProperty('paused', false);
+    // Verifies that the other tab received the new active section.
     await expect.poll(() => getActiveSectionId(firstPage)).toBe(exerciseSections[1].id);
-    await expect.poll(() => getActiveSectionId(secondPage)).toBe(exerciseSections[1].id);
+    // Verifies that the originating tab persisted the new active section.
+    await expect.poll(() => getStoredActiveSectionId(secondPage)).toBe(exerciseSections[1].id);
   });
 
   test('clears activeSectionId when the tab playing the active video is closed', async ({ page, context }) => {

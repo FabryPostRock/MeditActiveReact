@@ -123,19 +123,19 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   };
 
   const handleVideoPlay = (event: SyntheticEvent<HTMLVideoElement>) => {
-    const anotherVideoIsPlaying = activeSectionId !== null && activeSectionId !== section.id;
-    console.log(`handleVideoPlay called!`);
-    if (anotherVideoIsPlaying) {
-      // Will pause video play
-      event.currentTarget.pause();
-      return;
-    }
     console.log(`handleVideoPlay activeSectionId : ${activeSectionId}  section.id: ${section.id}`);
     dispatch(
       startVideoPlayback({
         sectionId: section.id,
       }),
     );
+    // The activeSectionId coming from the component hook useAppSelector, cannot update the variable as soon as
+    // a rerender is done. Therefore activeSectionId can be a previous one.
+    const currentActiveSectionId = store.getState().trainingProgress.activeSectionId;
+
+    if (currentActiveSectionId !== section.id) {
+      event.currentTarget.pause();
+    }
   };
 
   const handleVideoPause = () => {
