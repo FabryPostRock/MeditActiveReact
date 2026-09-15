@@ -145,26 +145,11 @@ Per questi test Playwright può controllare Date.now(), setInterval e il passagg
 
 ### Persistenza nel localStorage
 
-- Verificare che una modifica del progresso crei la chiave meditactive-training-progress.
-- Verificare che il valore salvato sia JSON valido.
-- Verificare che un reload mantenga video completato, timer, stato e sezioni sbloccate.
-- Verificare che chiudere e riaprire una pagina nello stesso contesto mantenga il progresso.
-- Verificare che un nuovo browser context parta dallo stato iniziale.
-- Inserire JSON non valido nel localStorage e verificare che l’app parta senza errori dallo stato iniziale.
-- Rimuovere la chiave e verificare il comportamento previsto.
-- Verificare che un errore di scrittura nel localStorage non renda inutilizzabile l’interfaccia.
-
-### Sincronizzazione tra tab
-
-Due tab dello stesso BrowserContext condividono il localStorage e sono adatti a verificare l’evento storage. Playwright supporta più pagine nello stesso contesto.
-
-- Aprire /exercises in due tab.
-- Completare una lezione nel primo tab.
-- Verificare che il secondo tab mostri la sezione completata.
-- Verificare che la sezione successiva venga sbloccata anche nel secondo tab.
-- Avviare un training nel primo tab e verificare che il secondo riceva lo stato running.
-- Mettere in pausa nel primo tab e verificare paused nel secondo.
-- Eseguire aggiornamenti alternati nei due tab e verificare che non si crei un ciclo infinito di eventi storage.
-- Inviare nel secondo tab un evento con JSON non valido e verificare che venga ignorato.
-- Verificare che modifiche a chiavi localStorage diverse non alterino Redux.
-- Verificare cosa accade quando il tab proprietario di activeSectionId viene chiuso.
+- ~~Verificare che una modifica del progresso crei la chiave meditactive-training-progress.~~
+- ~~Verificare che il valore salvato sia JSON valido.~~
+- ~~Verificare che un reload mantenga video completato, timer, stato e sezioni sbloccate.~~
+- ~~Verificare che chiudere e riaprire una pagina nello stesso contesto mantenga il progresso.~~
+- ~~Verificare che un nuovo browser context parta dallo stato iniziale.~~
+- ~~Inserire JSON non valido nel localStorage e verificare che l’app parta senza errori dallo stato iniziale.~~
+- ~~Rimuovere la chiave e verificare il comportamento previsto.~~
+- ~~Verificare che un errore di scrittura nel localStorage non renda inutilizzabile l’interfaccia.~~

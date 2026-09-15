@@ -439,6 +439,8 @@ test.describe('Timer startup and stop', () => {
 
 test.describe('Training completion and unlocking', () => {
   test('unlocks every section progressively in the configured order', async ({ page }) => {
+    // the predifined timeout is 30s.
+    test.setTimeout(60_000);
     const lastSectionIndex = exerciseSections.length - 1;
 
     for (const [completedSectionIndex, section] of exerciseSections.entries()) {
@@ -452,8 +454,12 @@ test.describe('Training completion and unlocking', () => {
       await completeTrainingButton.click();
       await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
 
-      // jump back to exercises page to see locked and unlocked sections updates
-      await page.goto('/exercises');
+      // jump back to exercises page to see locked and unlocked sections updates.
+      // 'page.goto' wait 'load' therfore images and other things. Webkit is still waiting when the 30s timeout
+      // happens
+      await page.goto('/exercises', {
+        waitUntil: 'domcontentloaded',
+      });
 
       const sectionCards = page.locator('main article');
       const lastUnlockedSectionIndex = Math.min(completedSectionIndex + 1, lastSectionIndex);

@@ -57,7 +57,25 @@ store.subscribe(() => {
   }
 
   previousTrainingProgress = currentTrainingProgress;
-  saveTrainingProgress(currentTrainingProgress);
+  /* 
+  If an error like 'Error trying to save data in Local Storage' occurs it's correct to allow React to update
+  the state. The Local Storage will be updated as soon as it returns available and with a new state update.
+  Otherwise this will happen:
+  Example:
+  setVideoCompleted changes Redux
+  → the persistence subscriber is executed
+  → localStorage.setItem fails
+  → saveTrainingProgress throws an error
+  → Redux notifications get interrupted 
+  → React doesn't receive the update
+  → The interface doesn't update the video watching state
+
+  */
+  try {
+    saveTrainingProgress(currentTrainingProgress);
+  } catch (error) {
+    console.error('Unable to persist training progress:', error);
+  }
 });
 
 /**
