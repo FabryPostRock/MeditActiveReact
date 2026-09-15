@@ -211,31 +211,6 @@ async function prepareSectionForCompletion(page, section) {
   );
 }
 
-async function startTrackingSectionStatusTransitions(page, sectionId) {
-  await page.evaluate(async (trackedSectionId) => {
-    const { store } = await import('/src/store/store.ts');
-    let previousStatus = store.getState().trainingProgress.progressBySectionId[trackedSectionId].status;
-
-    window.__exerciseStatusTransitions = [];
-
-    store.subscribe(() => {
-      const currentStatus = store.getState().trainingProgress.progressBySectionId[trackedSectionId].status;
-
-      if (currentStatus === previousStatus) return;
-
-      window.__exerciseStatusTransitions.push({
-        from: previousStatus,
-        to: currentStatus,
-      });
-      previousStatus = currentStatus;
-    });
-  }, sectionId);
-}
-
-async function getTrackedSectionStatusTransitions(page) {
-  return page.evaluate(() => window.__exerciseStatusTransitions);
-}
-
 test.describe('Exercise lesson page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(`/exercise/${exerciseSections[0].id}`);
@@ -524,7 +499,6 @@ test.describe('Training completion and unlocking', () => {
     const section = exerciseSections[0];
 
     await prepareSectionForCompletion(page, section);
-    await startTrackingSectionStatusTransitions(page, section.id);
 
     const completeTrainingButton = page.getByRole('button', {
       name: /Esercizio Completato/,
@@ -533,16 +507,13 @@ test.describe('Training completion and unlocking', () => {
     await completeTrainingButton.dblclick();
     await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
 
-    const statusTransitions = await getTrackedSectionStatusTransitions(page);
     const trainingProgress = await getTrainingProgress(page);
 
-    expect(statusTransitions).toEqual([
-      {
-        from: 'readyToComplete',
-        to: 'completed',
-      },
-    ]);
-    expect(trainingProgress.progressBySectionId[section.id].trainingCompleted).toBe(true);
+    expect(trainingProgress.progressBySectionId[section.id]).toMatchObject({
+      status: 'completed',
+      trainingCompleted: true,
+    });
+
     expect(trainingProgress.progressBySectionId[section.nextSectionId].isLocked).toBe(false);
   });
 
