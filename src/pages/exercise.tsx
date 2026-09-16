@@ -15,11 +15,9 @@ export default function Exercise() {
     const progress = useAppSelector((state) => state.trainingProgress.progressBySectionId[sectionId]);
 
     return (
-      <main className="container">
-        <div>
-          <ExerciseView section={section} isLocked={progress.isLocked} />
-        </div>
-      </main>
+      <div className="container">
+        <ExerciseView section={section} isLocked={progress.isLocked} />
+      </div>
     );
   }
 }

@@ -15,7 +15,7 @@ function App() {
       <div className="app-shell">
         <div className="container nav-mt" />
         <Navbar />
-        <div className="page-content">
+        <main className="page-content">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/exercises" element={<Exercises />} />
@@ -23,7 +23,7 @@ function App() {
             <Route path="/exercise/:sectionId" element={<Exercise />} />
             <Route path="*" element={<Error />} />
           </Routes>
-        </div>
+        </main>
       </div>
     </>
   );

@@ -3,7 +3,7 @@ import ExerciseCard from '../components/exercise/exerciseCard';
 
 export default function Exercises() {
   return (
-    <main className="container">
+    <div className="container">
       <h1>Corso base di consapevolezza del corpo</h1>
 
       <div>
@@ -11,6 +11,6 @@ export default function Exercises() {
           <ExerciseCard key={section.id} section={section} />
         ))}
       </div>
-    </main>
+    </div>
   );
 }
