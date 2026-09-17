@@ -4,6 +4,17 @@ import { HomeConcept } from '../components/homeConcept';
 import { useEffect, useRef } from 'react';
 
 export default function Home() {
+  /*
+  useRef creates { current: null }
+              ↓
+  useEffect register the function
+              ↓
+  React builds the DOM
+              ↓
+  React assign the div to 'current'
+              ↓
+  useEffect function gets executed
+  */
   const conceptsContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,6 +65,8 @@ export default function Home() {
 
     // Disconnect the observer when Home unmounts or the effect is restarted.
     return () => observer.disconnect();
+    // []: means only at Home mounting. But even if IntersectionObserver is mounted only one time
+    // this doesn t mean that concepts cannot animate multiple times.
   }, []);
 
   return (
