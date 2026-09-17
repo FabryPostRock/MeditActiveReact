@@ -1,8 +1,61 @@
 import logo_936x905 from '../assets/img/logo_936x905.png';
 import { homeConceptsData } from '../data/homeConcepts';
 import { HomeConcept } from '../components/homeConcept';
+import { useEffect, useRef } from 'react';
 
 export default function Home() {
+  const conceptsContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    /*
+     * React assigns the DOM element to the ref after rendering. The effect runs
+     * after that, so `current` can safely be used here without causing
+     * another render.
+     */
+    const container = conceptsContainerRef.current;
+
+    if (!container) return;
+
+    /*
+     * Querying from the referenced container limits the selection to this
+     * page's concepts instead of matching every `.reveal` element in the
+     * document.
+     */
+    const elements = container.querySelectorAll<HTMLElement>('.reveal');
+
+    // Keep the content visible when IntersectionObserver is not supported.
+    if (!('IntersectionObserver' in window)) {
+      elements.forEach((element) => element.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // multiple time animation
+          // entry.target.classList.toggle('is-visible', entry.isIntersecting);
+          // One time animation
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        /*
+         * No `root` is provided, so intersections are measured against the
+         * viewport. The ref only scopes the DOM query; it is not the observer's
+         * root.
+         */
+        threshold: 0.1,
+      },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    // Disconnect the observer when Home unmounts or the effect is restarted.
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <section>
@@ -24,10 +77,12 @@ export default function Home() {
         </div>
       </section>
 
-      {homeConceptsData.map((concept, index) => {
-        const imageOnLeft = index % 2 !== 0;
-        return <HomeConcept key={concept.id} concept={concept} imageOnLeft={imageOnLeft} />;
-      })}
+      <div ref={conceptsContainerRef}>
+        {homeConceptsData.map((concept, index) => {
+          const imageOnLeft = index % 2 !== 0;
+          return <HomeConcept key={concept.id} concept={concept} imageOnLeft={imageOnLeft} />;
+        })}
+      </div>
     </>
   );
 }

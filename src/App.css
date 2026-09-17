@@ -12093,6 +12093,42 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
     aspect-ratio: 1/1;
   }
 }
+@keyframes textSlideFromBot {
+  0% {
+    opacity: 0;
+    transform: translate(0, var(--start-y));
+  }
+  50% {
+    opacity: 1;
+    transform: translate(0, var(--mid-y));
+    animation-timing-function: cubic-bezier(0.3, 0.6, 0.36, 1);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+.reveal {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.reveal.is-visible {
+  visibility: visible;
+  --start-y: 200px;
+  --mid-y: 20px;
+  animation: textSlideFromBot 1.5s ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
 :root {
   /* Le variabili CSS Custom qui sotto aggiornano anche i componenti scss importati sopra*/
   --bs-body-font-family: 'Nunito', sans-serif;

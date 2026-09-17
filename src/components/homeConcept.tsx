@@ -7,7 +7,7 @@ interface HomeConceptProps {
 
 export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
   return (
-    <section>
+    <section className="reveal">
       <div className="container-fluid mb-5">
         <div className="row justify-content-center mx-3 mx-lg-5">
           <div className="col-12 mb-3 p-0">

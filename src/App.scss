@@ -7,6 +7,7 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
 @use './Colors.scss' as colors;
 @use './BootstrapVars' as *;
 @use './components/Navbar.scss';
+@use './Animations.scss';
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 

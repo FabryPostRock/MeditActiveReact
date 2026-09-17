@@ -1,0 +1,47 @@
+$rising-start-div: 200px;
+$rising-mid-div: 20px;
+$rising-duration-div: 1.5s;
+
+@mixin text-rising-in($start-y: 0, $mid-y: 0, $duration: 1s) {
+  --start-y: #{$start-y};
+  --mid-y: #{$mid-y};
+  animation: textSlideFromBot $duration ease-in-out forwards;
+}
+
+@keyframes textSlideFromBot {
+  0% {
+    opacity: 0;
+    transform: translate(0, var(--start-y));
+  }
+  50% {
+    opacity: 1;
+    transform: translate(0, var(--mid-y));
+
+    // Applied specifically from 50% to 100%.
+    animation-timing-function: cubic-bezier(0.3, 0.6, 0.36, 1);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+.reveal {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.reveal.is-visible {
+  visibility: visible;
+  @include text-rising-in($rising-start-div, $rising-mid-div, $rising-duration-div);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
