@@ -18,7 +18,7 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
                 }`}
               >
                 <div className="d-flex flex-row justify-content-center">
-                  <div className="col-8 col-lg-6">
+                  <div className="col-10 col-lg-8">
                     <img
                       className="img-fluid d-block mx-auto concept-image-shadow rounded p-0 h-auto"
                       src={concept.image.src}
@@ -30,7 +30,7 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
 
               <div className="text-justify mb-4">
                 <h2 className="fs-3 secondary-color text-start mb-3">{concept.title}</h2>
-                <p className="mb-0">{concept.description}</p>
+                {concept.description}
               </div>
             </div>
           </div>
