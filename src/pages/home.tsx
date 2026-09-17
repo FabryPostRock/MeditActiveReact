@@ -24,9 +24,10 @@ export default function Home() {
         </div>
       </section>
 
-      {homeConceptsData.map((concept) => (
-        <HomeConcept key={concept.id} concept={concept} />
-      ))}
+      {homeConceptsData.map((concept, index) => {
+        const imageOnLeft = index % 2 !== 0;
+        return <HomeConcept key={concept.id} concept={concept} imageOnLeft={imageOnLeft} />;
+      })}
     </>
   );
 }
