@@ -17,11 +17,15 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
                   imageOnLeft ? 'float-md-start p-4 pe-md-5 ps-md-0' : 'float-md-end p-4 ps-md-5 pe-md-0'
                 }`}
               >
-                <img
-                  className="img-fluid d-block mx-auto concept-image-shadow rounded p-0 h-auto"
-                  src={concept.image.src}
-                  alt={concept.image.alt}
-                />
+                <div className="d-flex flex-row justify-content-center">
+                  <div className="col-8 col-lg-6">
+                    <img
+                      className="img-fluid d-block mx-auto concept-image-shadow rounded p-0 h-auto"
+                      src={concept.image.src}
+                      alt={concept.image.alt}
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="text-justify mb-4">
