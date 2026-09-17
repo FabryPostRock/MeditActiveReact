@@ -126,6 +126,11 @@ strong {
   border-radius: var(--bs-border-radius);
 }
 
+/*-------------------------------------------------IMAGES--------------------------------------*/
+.concept-image-shadow {
+  // drop-shadow: shadow determined by the image alpha channel.
+  filter: drop-shadow(10px 10px 3px rgba(rgba(59, 106, 79), 0.8));
+}
 /* ------------------------------------------------ SPACING ----------------------------------------------------*/
 .mt-6 {
   margin-top: ($spacer * 6);
@@ -230,6 +235,16 @@ ul {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
+  }
+}
+
+/*------------------------------------------------LAYERS----------------------------------------*/
+
+@media only screen and (min-width: 0px) and (max-width: 767px) {
+  .row-md-none {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 

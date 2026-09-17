@@ -12012,6 +12012,10 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   --bs-navbar-toggler-border-color: rgba(255, 255, 255, 0.6);
 }
 
+.nav-wrapper {
+  z-index: 1030;
+}
+
 @media only screen and (max-width: 578px) {
   .navbar {
     --bs-navbar-padding-y: 0rem;
@@ -12043,7 +12047,6 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
     */
     flex: 0 0 auto;
     width: 100%;
-    z-index: 1030;
   }
   /*Nasconde testo brand*/
   .brand-text {
@@ -12066,7 +12069,7 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
     background-color: var(--bs-body-bg);
     box-shadow: 0px -10px 10px 0px rgba(255, 255, 255, 0.8);
   }
-  img {
+  .navbar-brand img {
     width: 2rem;
     aspect-ratio: 1/1;
   }
@@ -12085,7 +12088,7 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   .nav-mb {
     display: none;
   }
-  img {
+  .navbar-brand img {
     width: 3rem;
     aspect-ratio: 1/1;
   }
@@ -12204,6 +12207,11 @@ strong {
   border-radius: var(--bs-border-radius);
 }
 
+/*-------------------------------------------------IMAGES--------------------------------------*/
+.concept-image-shadow {
+  filter: drop-shadow(10px 10px 3px rgba(59, 106, 79, 0.8));
+}
+
 /* ------------------------------------------------ SPACING ----------------------------------------------------*/
 .mt-6 {
   margin-top: 6rem;
@@ -12315,6 +12323,14 @@ ul {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
+  }
+}
+/*------------------------------------------------LAYERS----------------------------------------*/
+@media only screen and (min-width: 0px) and (max-width: 767px) {
+  .row-md-none {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 @media only screen and (min-width: 579px) and (max-width: 992px) {

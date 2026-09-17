@@ -1,6 +1,6 @@
 import problemProductivityImage from '../assets/img/problem_productivity.png';
-import visionImage from '../assets/img/vision_small.png';
-import missionImage from '../assets/img/mission.png';
+import visionImage from '../assets/img/people_meditating_cartoon.png';
+import missionImage from '../assets/img/people_mission_cartoon.png';
 
 export interface HomeConceptData {
   id: string;
