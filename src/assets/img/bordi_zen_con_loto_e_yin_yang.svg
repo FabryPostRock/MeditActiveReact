@@ -1,0 +1,157 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1586"
+  height="992"
+  viewBox="0 0 1586 992"
+  preserveAspectRatio="none"
+  role="img"
+  aria-labelledby="title description"
+>
+  <title id="title">Pareti zen vettoriali con loti e Tao</title>
+  <desc id="description">
+    Pareti laterali verdi e dorate con texture materica, tre loti sulla sinistra e un Tao in prospettiva sulla destra.
+  </desc>
+
+  <defs>
+    <linearGradient id="leftWallGradient" x1="0" y1="496" x2="410" y2="496" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#66ad70" />
+      <stop offset="0.34" stop-color="#8ac77b" />
+      <stop offset="0.59" stop-color="#e3a83d" />
+      <stop offset="0.78" stop-color="#ffc95e" stop-opacity="0.92" />
+      <stop offset="0.91" stop-color="#ffe7a5" stop-opacity="0.54" />
+      <stop offset="1" stop-color="#fff7dc" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="rightWallGradient" x1="1586" y1="496" x2="1176" y2="496" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#66ad70" />
+      <stop offset="0.34" stop-color="#8ac77b" />
+      <stop offset="0.59" stop-color="#e3a83d" />
+      <stop offset="0.78" stop-color="#ffc95e" stop-opacity="0.92" />
+      <stop offset="0.91" stop-color="#ffe7a5" stop-opacity="0.54" />
+      <stop offset="1" stop-color="#fff7dc" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="goldCut" x1="-130" y1="-80" x2="140" y2="76" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff4c4" />
+      <stop offset="0.35" stop-color="#f1c25d" />
+      <stop offset="0.72" stop-color="#c7800e" />
+      <stop offset="1" stop-color="#754817" />
+    </linearGradient>
+
+    <linearGradient id="taoLight" x1="-95" y1="-110" x2="100" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff2b8" />
+      <stop offset="0.48" stop-color="#e7c66f" />
+      <stop offset="1" stop-color="#b67a18" />
+    </linearGradient>
+
+    <linearGradient id="taoDark" x1="-110" y1="-120" x2="95" y2="115" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#285d3b" />
+      <stop offset="0.55" stop-color="#4c884f" />
+      <stop offset="1" stop-color="#183f2b" />
+    </linearGradient>
+
+    <filter id="wallTexture" x="-8%" y="-6%" width="116%" height="112%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018 0.075" numOctaves="3" seed="21" result="grain" />
+      <feColorMatrix
+        in="grain"
+        type="matrix"
+        values="
+          0.75 0 0 0 0.16
+          0 0.68 0 0 0.2
+          0 0 0.42 0 0.1
+          0 0 0 0.34 0"
+        result="coloredGrain"
+      />
+      <feComposite in="coloredGrain" in2="SourceAlpha" operator="in" result="clippedGrain" />
+      <feBlend in="SourceGraphic" in2="clippedGrain" mode="soft-light" />
+    </filter>
+
+    <filter id="edgeGlow" x="-80%" y="-20%" width="260%" height="140%">
+      <feGaussianBlur stdDeviation="18" />
+    </filter>
+
+    <filter id="carvedTexture" x="-15%" y="-20%" width="130%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.025 0.16" numOctaves="1" seed="7" result="cutNoise" />
+      <feDisplacementMap in="SourceGraphic" in2="cutNoise" scale="1.15" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+
+    <path
+      id="leftWallShape"
+      d="M0 0H350C366 53 354 103 377 151C392 199 374 248 393 296C406 344 386 393 399 446C411 500 385 553 400 612C411 670 387 724 396 783C404 845 377 916 359 992H0Z"
+    />
+
+    <path
+      id="rightWallShape"
+      d="M1586 0H1238C1220 54 1234 108 1210 155C1194 204 1213 252 1194 302C1180 351 1202 400 1188 451C1174 503 1201 557 1186 614C1174 672 1198 726 1189 785C1180 848 1209 917 1227 992H1586Z"
+    />
+
+    <g id="lotusGeometry" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-134 43C-70 42 27 30 140 -13" />
+      <path d="M-119 55C-47 54 46 36 128 -2" />
+      <path d="M-107 28C-132 0 -119 -33 -82 -18C-64 -10 -56 8 -52 25C-74 22 -91 22 -107 28Z" />
+      <path d="M-55 21C-72 -24 -55 -68 -22 -80C-2 -48 -7 -9 -25 17C-35 17 -45 18 -55 21Z" />
+      <path d="M-18 17C3 -32 42 -64 78 -70C68 -35 35 0 3 20C-4 18 -11 17 -18 17Z" />
+      <path d="M22 13C53 -24 91 -47 120 -43C101 -13 70 10 39 21C34 18 28 15 22 13Z" />
+      <path d="M63 4C91 -20 121 -31 139 -25C126 -5 102 12 75 20C72 14 68 9 63 4Z" />
+    </g>
+
+    <g id="taoGrooves" fill="none">
+      <circle r="126" />
+      <path d="M0 -126A63 63 0 1 1 0 0A63 63 0 1 0 0 126" />
+      <circle cy="-63" r="18" />
+      <circle cy="63" r="18" />
+    </g>
+  </defs>
+
+  <g id="zenWalls">
+    <use href="#leftWallShape" fill="url(#leftWallGradient)" filter="url(#wallTexture)" />
+    <use href="#rightWallShape" fill="url(#rightWallGradient)" filter="url(#wallTexture)" />
+
+    <path
+      d="M352 -12C367 55 354 105 378 153C394 202 376 251 395 299C409 347 389 398 402 449C414 502 388 557 403 615C414 673 390 728 399 787C407 848 379 920 361 1004"
+      fill="none"
+      stroke="#ffd778"
+      stroke-opacity="0.58"
+      stroke-width="50"
+      filter="url(#edgeGlow)"
+    />
+    <path
+      d="M1236 -12C1219 55 1233 109 1208 157C1192 206 1211 255 1192 305C1177 354 1200 403 1185 454C1171 506 1198 560 1183 617C1171 675 1195 729 1186 788C1177 851 1206 921 1225 1004"
+      fill="none"
+      stroke="#ffd778"
+      stroke-opacity="0.58"
+      stroke-width="50"
+      filter="url(#edgeGlow)"
+    />
+
+    <g filter="url(#carvedTexture)">
+      <g transform="translate(158 169) matrix(0.96 -0.07 0.16 0.72 0 0)">
+        <use href="#lotusGeometry" transform="translate(-4 6)" stroke="#244d32" stroke-opacity="0.72" stroke-width="12" />
+        <use href="#lotusGeometry" transform="translate(2 -2)" stroke="#fff1b1" stroke-opacity="0.96" stroke-width="8" />
+        <use href="#lotusGeometry" stroke="url(#goldCut)" stroke-width="3.2" />
+      </g>
+
+      <g transform="translate(158 495) matrix(0.98 -0.07 0.16 0.74 0 0)">
+        <use href="#lotusGeometry" transform="translate(-4 6)" stroke="#244d32" stroke-opacity="0.72" stroke-width="12" />
+        <use href="#lotusGeometry" transform="translate(2 -2)" stroke="#fff1b1" stroke-opacity="0.96" stroke-width="8" />
+        <use href="#lotusGeometry" stroke="url(#goldCut)" stroke-width="3.2" />
+      </g>
+
+      <g transform="translate(158 821) matrix(1 -0.07 0.16 0.76 0 0)">
+        <use href="#lotusGeometry" transform="translate(-4 6)" stroke="#244d32" stroke-opacity="0.72" stroke-width="12" />
+        <use href="#lotusGeometry" transform="translate(2 -2)" stroke="#fff1b1" stroke-opacity="0.96" stroke-width="8" />
+        <use href="#lotusGeometry" stroke="url(#goldCut)" stroke-width="3.2" />
+      </g>
+    </g>
+
+    <g transform="translate(1361 503) matrix(0.82 0.05 -0.08 1 0 0)" filter="url(#carvedTexture)">
+      <circle r="126" fill="url(#taoLight)" fill-opacity="0.82" />
+      <path d="M0 -126A126 126 0 0 0 0 126A63 63 0 0 0 0 0A63 63 0 0 1 0 -126Z" fill="url(#taoDark)" />
+      <circle cy="-63" r="18" fill="url(#taoLight)" />
+      <circle cy="63" r="18" fill="url(#taoDark)" />
+      <use href="#taoGrooves" transform="translate(-5 6)" stroke="#21472f" stroke-opacity="0.76" stroke-width="12" />
+      <use href="#taoGrooves" transform="translate(3 -3)" stroke="#fff0ad" stroke-opacity="0.86" stroke-width="7" />
+      <use href="#taoGrooves" stroke="#b87314" stroke-opacity="0.92" stroke-width="3.2" />
+    </g>
+  </g>
+</svg>
