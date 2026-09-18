@@ -12139,8 +12139,17 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
 .home-page__content {
   position: relative;
   z-index: 1;
+  width: 100%;
+  margin-inline: auto;
 }
 
+@media only screen and (min-width: 1200px) {
+  .home-page__content {
+    /*Use as width the smallest value between 55% of the window width and 820px*/
+    width: min(65vw, 960px);
+    padding-inline: 1rem;
+  }
+}
 .perspective-walls {
   position: fixed;
   inset: 0;
@@ -12160,7 +12169,7 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
      object-fit: fill;
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 1199px) {
   .perspective-walls {
     display: none;
   }
