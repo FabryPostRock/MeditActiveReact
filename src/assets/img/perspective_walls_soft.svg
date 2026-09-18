@@ -1,0 +1,71 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1440 900"
+  preserveAspectRatio="none"
+  role="img"
+  aria-labelledby="title description"
+>
+  <title id="title">Tunnel prospettico verde e oro con sfumatura morbida</title>
+  <desc id="description">
+    Quattro superfici sfumano dal verde all'oro e si dissolvono verso un'apertura centrale trasparente.
+  </desc>
+
+  <defs>
+    <linearGradient id="leftWallSoft" x1="0" y1="450" x2="432" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7fc87b" stop-opacity="0.96" />
+      <stop offset="0.44" stop-color="#acc854" stop-opacity="0.9" />
+      <stop offset="0.7" stop-color="#eba416" stop-opacity="0.82" />
+      <stop offset="0.88" stop-color="#f4cf69" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#fff3c9" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="rightWallSoft" x1="1440" y1="450" x2="1008" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7fc87b" stop-opacity="0.96" />
+      <stop offset="0.44" stop-color="#acc854" stop-opacity="0.9" />
+      <stop offset="0.7" stop-color="#eba416" stop-opacity="0.82" />
+      <stop offset="0.88" stop-color="#f4cf69" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#fff3c9" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="ceilingSoft" x1="720" y1="0" x2="720" y2="225" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7fc87b" stop-opacity="0.96" />
+      <stop offset="0.44" stop-color="#acc854" stop-opacity="0.9" />
+      <stop offset="0.7" stop-color="#eba416" stop-opacity="0.82" />
+      <stop offset="0.88" stop-color="#f4cf69" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#fff3c9" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="floorSoft" x1="720" y1="900" x2="720" y2="585" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7fc87b" stop-opacity="0.96" />
+      <stop offset="0.44" stop-color="#acc854" stop-opacity="0.9" />
+      <stop offset="0.7" stop-color="#eba416" stop-opacity="0.82" />
+      <stop offset="0.88" stop-color="#f4cf69" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#fff3c9" stop-opacity="0" />
+    </linearGradient>
+
+    <filter id="softLineBlur" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2.5" />
+    </filter>
+  </defs>
+
+  <path d="M0 0L432 225V585L0 900Z" fill="url(#leftWallSoft)" />
+  <path d="M1440 0L1008 225V585L1440 900Z" fill="url(#rightWallSoft)" />
+  <path d="M0 0H1440L1008 225H432Z" fill="url(#ceilingSoft)" />
+  <path d="M0 900H1440L1008 585H432Z" fill="url(#floorSoft)" />
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path
+      d="M0 0L432 225H1008L1440 0M0 900L432 585H1008L1440 900M432 225V585M1008 225V585"
+      stroke="#3b6a4f"
+      stroke-width="12"
+      stroke-opacity="0.14"
+      filter="url(#softLineBlur)"
+    />
+    <path
+      d="M0 0L432 225H1008L1440 0M0 900L432 585H1008L1440 900M432 225V585M1008 225V585"
+      stroke="#4f865e"
+      stroke-width="2.5"
+      stroke-opacity="0.34"
+    />
+  </g>
+</svg>
