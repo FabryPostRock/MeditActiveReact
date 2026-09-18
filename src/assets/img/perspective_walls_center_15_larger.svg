@@ -5,13 +5,13 @@
   role="img"
   aria-labelledby="title description"
 >
-  <title id="title">Tunnel prospettico verde e oro con sfumatura morbida</title>
+  <title id="title">Tunnel prospettico con apertura centrale aumentata del 15%</title>
   <desc id="description">
-    Quattro superfici sfumano dal verde all'oro e si dissolvono verso un'apertura centrale trasparente.
+    Quattro superfici sfumate convergono verso un'apertura trasparente più grande del 15% rispetto alla versione base.
   </desc>
 
   <defs>
-    <linearGradient id="leftWallSoft" x1="0" y1="450" x2="320" y2="450" gradientUnits="userSpaceOnUse">
+    <linearGradient id="leftWall" x1="0" y1="450" x2="260" y2="450" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#b9e8b5" stop-opacity="0.76" />
       <stop offset="0.18" stop-color="#c5e6a5" stop-opacity="0.74" />
       <stop offset="0.36" stop-color="#d2df8e" stop-opacity="0.7" />
@@ -22,7 +22,7 @@
       <stop offset="1" stop-color="#fff8e7" stop-opacity="0" />
     </linearGradient>
 
-    <linearGradient id="rightWallSoft" x1="1440" y1="450" x2="1120" y2="450" gradientUnits="userSpaceOnUse">
+    <linearGradient id="rightWall" x1="1440" y1="450" x2="1180" y2="450" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#b9e8b5" stop-opacity="0.76" />
       <stop offset="0.18" stop-color="#c5e6a5" stop-opacity="0.74" />
       <stop offset="0.36" stop-color="#d2df8e" stop-opacity="0.7" />
@@ -33,7 +33,7 @@
       <stop offset="1" stop-color="#fff8e7" stop-opacity="0" />
     </linearGradient>
 
-    <linearGradient id="ceilingSoft" x1="720" y1="0" x2="720" y2="180" gradientUnits="userSpaceOnUse">
+    <linearGradient id="ceiling" x1="720" y1="0" x2="720" y2="142.5" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#b9e8b5" stop-opacity="0.76" />
       <stop offset="0.18" stop-color="#c5e6a5" stop-opacity="0.74" />
       <stop offset="0.36" stop-color="#d2df8e" stop-opacity="0.7" />
@@ -44,7 +44,7 @@
       <stop offset="1" stop-color="#fff8e7" stop-opacity="0" />
     </linearGradient>
 
-    <linearGradient id="floorSoft" x1="720" y1="900" x2="720" y2="680" gradientUnits="userSpaceOnUse">
+    <linearGradient id="floor" x1="720" y1="900" x2="720" y2="717.5" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#b9e8b5" stop-opacity="0.76" />
       <stop offset="0.18" stop-color="#c5e6a5" stop-opacity="0.74" />
       <stop offset="0.36" stop-color="#d2df8e" stop-opacity="0.7" />
@@ -55,46 +55,46 @@
       <stop offset="1" stop-color="#fff8e7" stop-opacity="0" />
     </linearGradient>
 
-    <radialGradient id="wallEdgeGlow" cx="720" cy="430" r="900" gradientUnits="userSpaceOnUse">
+    <radialGradient id="edgeGlow" cx="720" cy="430" r="900" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#fff3c8" stop-opacity="0.07" />
       <stop offset="0.38" stop-color="#f5cf70" stop-opacity="0.14" />
       <stop offset="0.7" stop-color="#eba416" stop-opacity="0.13" />
       <stop offset="1" stop-color="#fae8b7" stop-opacity="0.05" />
     </radialGradient>
 
-    <radialGradient id="wallEdgeLine" cx="720" cy="430" r="900" gradientUnits="userSpaceOnUse">
+    <radialGradient id="edgeLine" cx="720" cy="430" r="900" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#fff5d2" stop-opacity="0.1" />
       <stop offset="0.4" stop-color="#f6d482" stop-opacity="0.22" />
       <stop offset="0.72" stop-color="#eba416" stop-opacity="0.19" />
       <stop offset="1" stop-color="#fae9bc" stop-opacity="0.08" />
     </radialGradient>
 
-    <filter id="softLineBlur" x="-10%" y="-10%" width="120%" height="120%">
+    <filter id="lineBlur" x="-10%" y="-10%" width="120%" height="120%">
       <feGaussianBlur stdDeviation="6" />
     </filter>
 
-    <filter id="softLineDetailBlur" x="-10%" y="-10%" width="120%" height="120%">
+    <filter id="lineDetailBlur" x="-10%" y="-10%" width="120%" height="120%">
       <feGaussianBlur stdDeviation="1.2" />
     </filter>
   </defs>
 
-  <path d="M0 0L320 180V680L0 900Z" fill="url(#leftWallSoft)" />
-  <path d="M1440 0L1120 180V680L1440 900Z" fill="url(#rightWallSoft)" />
-  <path d="M0 0H1440L1120 180H320Z" fill="url(#ceilingSoft)" />
-  <path d="M0 900H1440L1120 680H320Z" fill="url(#floorSoft)" />
+  <path d="M0 0L260 142.5V717.5L0 900Z" fill="url(#leftWall)" />
+  <path d="M1440 0L1180 142.5V717.5L1440 900Z" fill="url(#rightWall)" />
+  <path d="M0 0H1440L1180 142.5H260Z" fill="url(#ceiling)" />
+  <path d="M0 900H1440L1180 717.5H260Z" fill="url(#floor)" />
 
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
     <path
-      d="M0 0L320 180H1120L1440 0M0 900L320 680H1120L1440 900M320 180V680M1120 180V680"
-      stroke="url(#wallEdgeGlow)"
+      d="M0 0L260 142.5H1180L1440 0M0 900L260 717.5H1180L1440 900M260 142.5V717.5M1180 142.5V717.5"
+      stroke="url(#edgeGlow)"
       stroke-width="20"
-      filter="url(#softLineBlur)"
+      filter="url(#lineBlur)"
     />
     <path
-      d="M0 0L320 180H1120L1440 0M0 900L320 680H1120L1440 900M320 180V680M1120 180V680"
-      stroke="url(#wallEdgeLine)"
+      d="M0 0L260 142.5H1180L1440 0M0 900L260 717.5H1180L1440 900M260 142.5V717.5M1180 142.5V717.5"
+      stroke="url(#edgeLine)"
       stroke-width="2.5"
-      filter="url(#softLineDetailBlur)"
+      filter="url(#lineDetailBlur)"
     />
   </g>
 </svg>

@@ -1,0 +1,80 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1440 900"
+  preserveAspectRatio="none"
+  role="img"
+  aria-labelledby="title description"
+>
+  <title id="title">Pareti laterali infinite con profondità base</title>
+  <desc id="description">
+    Due pareti laterali sfumate, profonde 320 unità, con bande verticali morbide ripetibili durante lo scorrimento.
+  </desc>
+
+  <defs>
+    <linearGradient id="leftWall" x1="0" y1="450" x2="320" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b9e8b5" stop-opacity="0.74" />
+      <stop offset="0.22" stop-color="#91d38c" stop-opacity="0.7" />
+      <stop offset="0.42" stop-color="#7fc87b" stop-opacity="0.64" />
+      <stop offset="0.58" stop-color="#b8ce78" stop-opacity="0.54" />
+      <stop offset="0.7" stop-color="#d9bd61" stop-opacity="0.44" />
+      <stop offset="0.8" stop-color="#eba416" stop-opacity="0.32" />
+      <stop offset="0.88" stop-color="#f0c86d" stop-opacity="0.22" />
+      <stop offset="0.95" stop-color="#f8e8c4" stop-opacity="0.1" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="rightWall" x1="1440" y1="450" x2="1120" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b9e8b5" stop-opacity="0.74" />
+      <stop offset="0.22" stop-color="#91d38c" stop-opacity="0.7" />
+      <stop offset="0.42" stop-color="#7fc87b" stop-opacity="0.64" />
+      <stop offset="0.58" stop-color="#b8ce78" stop-opacity="0.54" />
+      <stop offset="0.7" stop-color="#d9bd61" stop-opacity="0.44" />
+      <stop offset="0.8" stop-color="#eba416" stop-opacity="0.32" />
+      <stop offset="0.88" stop-color="#f0c86d" stop-opacity="0.22" />
+      <stop offset="0.95" stop-color="#f8e8c4" stop-opacity="0.1" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="motionBand" x1="0" y1="0" x2="0" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff8e7" stop-opacity="0" />
+      <stop offset="0.2" stop-color="#fff8e7" stop-opacity="0.06" />
+      <stop offset="0.4" stop-color="#eba416" stop-opacity="0.11" />
+      <stop offset="0.6" stop-color="#7fc87b" stop-opacity="0.08" />
+      <stop offset="0.82" stop-color="#fff8e7" stop-opacity="0.04" />
+      <stop offset="1" stop-color="#fff8e7" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="leftMotionFade" x1="0" y1="450" x2="320" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="0.58" stop-color="#ffffff" stop-opacity="0.88" />
+      <stop offset="0.78" stop-color="#ffffff" stop-opacity="0.48" />
+      <stop offset="0.92" stop-color="#ffffff" stop-opacity="0.14" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="rightMotionFade" x1="1440" y1="450" x2="1120" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="0.58" stop-color="#ffffff" stop-opacity="0.88" />
+      <stop offset="0.78" stop-color="#ffffff" stop-opacity="0.48" />
+      <stop offset="0.92" stop-color="#ffffff" stop-opacity="0.14" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <pattern id="verticalFlow" width="1440" height="300" patternUnits="userSpaceOnUse">
+      <rect width="1440" height="300" fill="url(#motionBand)" />
+    </pattern>
+
+    <mask id="leftMotionMask" maskUnits="userSpaceOnUse" x="0" y="0" width="320" height="900">
+      <rect width="320" height="900" fill="url(#leftMotionFade)" />
+    </mask>
+
+    <mask id="rightMotionMask" maskUnits="userSpaceOnUse" x="1120" y="0" width="320" height="900">
+      <rect x="1120" width="320" height="900" fill="url(#rightMotionFade)" />
+    </mask>
+  </defs>
+
+  <rect width="320" height="900" fill="url(#leftWall)" />
+  <rect x="1120" width="320" height="900" fill="url(#rightWall)" />
+  <rect width="320" height="900" fill="url(#verticalFlow)" mask="url(#leftMotionMask)" />
+  <rect x="1120" width="320" height="900" fill="url(#verticalFlow)" mask="url(#rightMotionMask)" />
+</svg>
