@@ -142,6 +142,7 @@ strong {
   // drop-shadow: shadow determined by the image alpha channel.
   filter: drop-shadow(10px 10px 3px rgba(rgba(59, 106, 79), 0.8));
 }
+
 /* ------------------------------------------------ SPACING ----------------------------------------------------*/
 .mt-6 {
   margin-top: ($spacer * 6);
@@ -185,6 +186,35 @@ ul {
   padding-left: 0.5rem;
 }
 /*----------------------------------------CUSTOM SIZING----------------------------*/
+.w-sm-30 {
+  @media only screen and (max-width: 578px) {
+    width: 30% !important;
+  }
+}
+
+.w-sm-40 {
+  @media only screen and (max-width: 578px) {
+    width: 40% !important;
+  }
+}
+
+.w-md-30 {
+  @media only screen and (min-width: 579px) {
+    width: 30% !important;
+  }
+}
+
+.w-md-50 {
+  @media only screen and (min-width: 579px) {
+    width: 50% !important;
+  }
+}
+
+.w-lg-40 {
+  @media only screen and (min-width: 767px) {
+    width: 50% !important;
+  }
+}
 
 /*---------------------------------------- FONT ICONS------------------------------*/
 .material-symbols-outlined {
