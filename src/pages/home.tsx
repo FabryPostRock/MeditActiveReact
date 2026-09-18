@@ -75,7 +75,7 @@ export default function Home() {
         <div className="container mb-5">
           <div className="row flex-row d-flex justify-content-center mb-3">
             <div className="col-12 col-md-4 col-lg-3 text-center text-md-end">
-              <img className="img-fluid w-sm-40 w-md-30 w-lg-40" src={logo_936x905} alt="Logo MeditActive" />
+              <img className="h-auto w-sm-40 w-md-30 w-lg-40" src={logo_936x905} alt="Logo MeditActive" />
             </div>
             <div className="col-12 col-md-4 col-lg-3 align-content-center text-center text-md-start">
               <h1 className="fw-bold secondary-color mb-0 ms-md-3 ">MeditActive</h1>
