@@ -1,5 +1,5 @@
 import type { HomeConceptData } from '../data/homeConcepts';
-
+import { Title } from './title';
 interface HomeConceptProps {
   concept: HomeConceptData;
   imageOnLeft: boolean;
@@ -29,7 +29,7 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
               </div>
 
               <div className="text-justify mb-4">
-                <h2 className="fs-3 secondary-color text-start mb-3">{concept.title}</h2>
+                <Title title={concept.title} />
                 {concept.description}
               </div>
             </div>
