@@ -45,7 +45,7 @@ export default function Home() {
         entries.forEach((entry) => {
           // multiple time animation
           // entry.target.classList.toggle('is-visible', entry.isIntersecting);
-          // One time animation
+          // One time animation implemented with a combination of .add() method and .unobserve method
           if (!entry.isIntersecting) return;
           entry.target.classList.add('is-visible');
           observer.unobserve(entry.target);
