@@ -10,7 +10,7 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
     <section className="reveal">
       <div className="container-fluid mb-5">
         <div className="row justify-content-center mx-3 mx-lg-5">
-          <div className="col-12 mb-3 p-0">
+          <div className="col-12 p-0">
             <div className="row-md-none mb-3">
               <div
                 className={`col-9 col-md-6 col-lg-5 float-none ${
@@ -29,7 +29,7 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
               </div>
 
               <div className="text-justify mb-4">
-                <Title title={concept.title} txtColor={imageOnLeft ? 'secondary-color' : 'black-0x241d18'} />
+                <Title title={concept.title} txtColor={imageOnLeft ? 'var(--bs-dark-green)' : 'var(--bs-secondary)'} />
                 {concept.description}
               </div>
             </div>

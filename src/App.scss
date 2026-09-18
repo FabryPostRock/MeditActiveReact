@@ -26,6 +26,13 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   --bs-secondary: #{colors.$secondary};
   --bs-secondary-rgb: 226, 106, 8;
   --bs-gray-900-rgb: 33, 37, 41;
+
+  /*GREEN*/
+  --bs-dark-green: #{colors.$bs-dark-green-0x3b6a4f};
+  --bs-light-green: #{colors.$bs-light-green-0x7fc87b};
+
+  --bs-dark-green-rgb: #{colors.$bs-dark-green-0x3b6a4f-rgb};
+  --bs-light-green-rgb: #{colors.$bs-light-green-0x7fc87b-rgb};
 }
 
 body {

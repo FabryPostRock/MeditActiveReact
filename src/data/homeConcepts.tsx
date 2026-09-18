@@ -56,9 +56,8 @@ export const homeConceptsData = [
           che accade e il modo in cui decidiamo di reagire. Uno spazio in cui possiamo{' '}
           <strong>osservare pensieri, emozioni e sensazioni</strong>, riconoscere ciò di cui abbiamo bisogno e scegliere
           con maggiore consapevolezza come utilizzare il nostro tempo e le nostre energie. MeditActive nasce per aiutare
-          le persone a costruire questo spazio nella vita quotidiana.'
+          le persone a costruire questo spazio nella vita quotidiana.
         </p>
-        ,
       </>
     ),
     image: {

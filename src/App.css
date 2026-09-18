@@ -12142,6 +12142,11 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   --bs-secondary: #e26a08;
   --bs-secondary-rgb: 226, 106, 8;
   --bs-gray-900-rgb: 33, 37, 41;
+  /*GREEN*/
+  --bs-dark-green: #3b6a4f;
+  --bs-light-green: #7fc87b;
+  --bs-dark-green-rgb: 59, 106, 79;
+  --bs-light-green-rgb: 127, 200, 123;
 }
 
 body {
