@@ -29,7 +29,7 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
               </div>
 
               <div className="text-justify mb-4">
-                <Title title={concept.title} />
+                <Title title={concept.title} txtColor={imageOnLeft ? 'secondary-color' : 'black-0x241d18'} />
                 {concept.description}
               </div>
             </div>

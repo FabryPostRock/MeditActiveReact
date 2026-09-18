@@ -1,12 +1,12 @@
 interface ExerciseTitle {
   title: string;
+  txtColor: string;
 }
 
-export function Title({ title }: ExerciseTitle) {
+export function Title({ title, txtColor }: ExerciseTitle) {
   return (
-    <div>
-      <h2 className="fs-2 secondary-color text-start mb-3">{title}</h2>
-      <div />
-    </div>
+    <>
+      <h2 className={`fw-bold fs-2 ${txtColor} text-start mb-3`}>{title}</h2>
+    </>
   );
 }
