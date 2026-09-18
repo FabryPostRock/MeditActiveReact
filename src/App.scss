@@ -33,6 +33,9 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
 
   --bs-dark-green-rgb: #{colors.$bs-dark-green-0x3b6a4f-rgb};
   --bs-light-green-rgb: #{colors.$bs-light-green-0x7fc87b-rgb};
+
+  /*TRANSITION*/
+  --headingTransition: transform 0.3s ease-in-out;
 }
 
 body {

@@ -13,12 +13,12 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
           <div className="col-12 p-0">
             <div className="row-md-none mb-3">
               <div
-                className={`col-9 col-md-6 col-lg-5 float-none ${
+                className={`col-9 col-md-7 col-xl-6 float-none ${
                   imageOnLeft ? 'float-md-start p-4 pe-md-5 ps-md-0' : 'float-md-end p-4 ps-md-5 pe-md-0'
                 }`}
               >
                 <div className="d-flex flex-row justify-content-center">
-                  <div className="col-10 col-lg-8">
+                  <div className="col-12 col-lg-10">
                     <img
                       className="img-fluid d-block mx-auto concept-image-shadow rounded p-0 h-auto"
                       src={concept.image.src}

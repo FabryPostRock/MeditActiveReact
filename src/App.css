@@ -12129,6 +12129,33 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
     animation: none;
   }
 }
+/*--------------------------------------TEXT---------------------------------------------*/
+.text-underline {
+  position: relative;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding-bottom: 0.15em;
+}
+
+.text-underline::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: currentColor;
+  /*turns the line not visible until hovered*/
+  transform: scaleX(0);
+  /*starts the animation from left*/
+  transform-origin: left;
+  transition: var(--headingTransition);
+}
+
+.text-underline:hover::after {
+  transform: scaleX(1);
+}
+
 :root {
   /* Le variabili CSS Custom qui sotto aggiornano anche i componenti scss importati sopra*/
   --bs-body-font-family: 'Nunito', sans-serif;
@@ -12147,6 +12174,8 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   --bs-light-green: #7fc87b;
   --bs-dark-green-rgb: 59, 106, 79;
   --bs-light-green-rgb: 127, 200, 123;
+  /*TRANSITION*/
+  --headingTransition: transform 0.3s ease-in-out;
 }
 
 body {
