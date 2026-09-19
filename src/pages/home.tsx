@@ -2,6 +2,7 @@ import logo_936x905 from '../assets/img/logo_936x905.png';
 import { homeConceptsData } from '../data/homeConcepts';
 import { HomeConcept } from '../components/homeConcept';
 import { PerspectiveWalls } from '../components/perspectiveWalls';
+import { CursorWake } from '../components/cursorWake';
 import { useEffect, useRef } from 'react';
 
 export default function Home() {
@@ -73,6 +74,7 @@ export default function Home() {
   return (
     <div className="home-page">
       <PerspectiveWalls />
+      <CursorWake />
 
       <div className="home-page__content">
         <section>
