@@ -1,4 +1,4 @@
-import perspectiveWalls from '../assets/img/background_bordi_zen_fiori_di_loto.png';
+import perspectiveWalls from '../assets/img/background_bordi_zen_fiori_di_loto_cartoon_narrow.png';
 
 export function PerspectiveWalls() {
   return (
