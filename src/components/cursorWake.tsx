@@ -11,6 +11,7 @@ interface WakeWave {
   y: number;
   directionX: number;
   directionY: number;
+  // Start from the time when the mouse moves and ends after 'duration' time has been reached.
   age: number;
   duration: number;
   intensity: number;
@@ -36,12 +37,12 @@ export function CursorWake() {
     const canvas = canvasRef.current;
     // get through the DOM Tree from the canvas to the first parent
     const homePage = canvas?.closest<HTMLElement>('.home-page');
-    /* request to canvas his 2d environment. context returns commands use to draw:
+    /* request to canvas its 2d environment. context returns commands use to draw:
       - beginPath() starts new trace
       - moveTo() establish starting point
       - quadraticCurveTo() draw curve waves
       - arc() render the circular ripples
-      - stroke() shows the traces
+      - stroke() shows the previous traces
       - clearRect() deletes the last trace
 
     */
@@ -72,9 +73,12 @@ export function CursorWake() {
      * allocating an unnecessarily large drawing buffer.
      */
     function resizeCanvas() {
+      // for retina screen window.devicePixelRatio can reach 2 and it contains 2 times the pixels
+      // in the same view area.
       const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
       viewportWidth = window.innerWidth;
       viewportHeight = window.innerHeight;
+      // doubles the pixels view and maintains the same coordinates.
       canvas.width = Math.round(viewportWidth * pixelRatio);
       canvas.height = Math.round(viewportHeight * pixelRatio);
       /**
@@ -85,6 +89,7 @@ export function CursorWake() {
         )
        */
       context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      // rounds the drawn junctions
       context.lineCap = 'round';
       context.lineJoin = 'round';
     }
@@ -102,42 +107,76 @@ export function CursorWake() {
      * Draw one expanding pair of curved wake segments. Its stored movement
      * direction determines where the wake trails, while its age controls the
      * spread, distance, line width, and gradual loss of opacity.
+     *       
+         x →
+         y ↓
+
+        P ●  (leftX, leftY)
+           ╲
+            ╲     ramo sinistro della scia
+             ╲
+        C × · · ╲
+          punto   ╲
+          di       ● S  (leftTipX, leftTipY)
+          controllo│
+                   │ tipGap
+                   └──────── ● T  (tipX, tipY)
+                              │
+                              │ tipDynamicOffsetFromOrigin
+                              │
+                              ● O  (wave.x, wave.y)
+                              ↓
+                       movimento del mouse
+       
      */
     function drawWave(wave: WakeWave) {
-      const progress = Math.min(wave.age / wave.duration, 1);
-      const remainingOpacity = Math.pow(1 - progress, 1.6);
+      // From 0 (wave created) to 1 (wave ended)
+      const timeProgressRatio = Math.min(wave.age / wave.duration, 1);
+      // From 1 to 0 with exponent 1.6
+      const remainingOpacity = Math.pow(1 - timeProgressRatio, 1.6);
+      // From 1 (wave created) to 0 (wave ended)
       const opacity = wave.intensity * remainingOpacity;
+      // rotate 90° with respect to mouse direction
       const perpendicularX = -wave.directionY;
       const perpendicularY = wave.directionX;
-      const tipDistance = 8 + progress * 24;
-      const rearDistance = 24 + progress * 105;
-      const spread = 7 + progress * 62;
-      const tipGap = 4 + progress * 2;
-      const controlDistance = tipDistance + (rearDistance - tipDistance) * 0.58;
+      // Distance from the mouse origin point. The tips gradually move away from the point where the wave originated.
+      const waveDistanceMultiplier = Math.pow(1.3 - timeProgressRatio, 2);
+      // Starting line point close to mouse point
+      const tipDynamicOffsetFromOrigin = 8 + timeProgressRatio * 24;
+      // Ending line point coordinate far from mouse point > Starting point
+      const rearDynamicOffsetFromOrigin = 24 + timeProgressRatio * 105;
+      // avoid contact between the ending points
+      const rearGap = 19;
+      // avoid contact between the starting points
+      const tipGap = 6;
+      // It is used to determine the curvature produced by quadraticCurveTo().
+      const controlDistance =
+        tipDynamicOffsetFromOrigin + (rearDynamicOffsetFromOrigin - tipDynamicOffsetFromOrigin) * 0.58;
 
-      const tipX = wave.x - wave.directionX * tipDistance;
-      const tipY = wave.y - wave.directionY * tipDistance;
+      const tipX = wave.x - wave.directionX * tipDynamicOffsetFromOrigin;
+      const tipY = wave.y - wave.directionY * tipDynamicOffsetFromOrigin;
+      // first starting line point coordinates
       const leftTipX = tipX + perpendicularX * tipGap;
       const leftTipY = tipY + perpendicularY * tipGap;
+      // second starting line point coordinates
       const rightTipX = tipX - perpendicularX * tipGap;
       const rightTipY = tipY - perpendicularY * tipGap;
-      const rearCenterX = wave.x - wave.directionX * rearDistance;
-      const rearCenterY = wave.y - wave.directionY * rearDistance;
-      const leftX = rearCenterX + perpendicularX * spread;
-      const leftY = rearCenterY + perpendicularY * spread;
-      const rightX = rearCenterX - perpendicularX * spread;
-      const rightY = rearCenterY - perpendicularY * spread;
-      const leftControlX = wave.x - wave.directionX * controlDistance + perpendicularX * spread * 0.36;
-      const leftControlY = wave.y - wave.directionY * controlDistance + perpendicularY * spread * 0.36;
-      const rightControlX = wave.x - wave.directionX * controlDistance - perpendicularX * spread * 0.36;
-      const rightControlY = wave.y - wave.directionY * controlDistance - perpendicularY * spread * 0.36;
+      const rearCenterX = wave.x - wave.directionX * rearDynamicOffsetFromOrigin;
+      const rearCenterY = wave.y - wave.directionY * rearDynamicOffsetFromOrigin;
+      const leftRearX = rearCenterX + perpendicularX * rearGap;
+      const leftRearY = rearCenterY + perpendicularY * rearGap;
+      const rightRearX = rearCenterX - perpendicularX * rearGap;
+      const rightRearY = rearCenterY - perpendicularY * rearGap;
+      const leftControlX = wave.x - wave.directionX * controlDistance + perpendicularX * rearGap * 0.36;
+      const leftControlY = wave.y - wave.directionY * controlDistance + perpendicularY * rearGap * 0.36;
+      const rightControlX = wave.x - wave.directionX * controlDistance - perpendicularX * rearGap * 0.36;
+      const rightControlY = wave.y - wave.directionY * controlDistance - perpendicularY * rearGap * 0.36;
 
       /*
-       * Create a horizontal color transition across the complete wake, from
-       * the end of the left branch to the end of the right branch. Color-stop
+       * Create a horizontal color transition across the left and right lines. Color-stop
        * positions are normalized: 0 is the start, 0.5 the center, and 1 the end.
        */
-      const wakeGradient = context.createLinearGradient(leftX, leftY, rightX, rightY);
+      const wakeGradient = context.createLinearGradient(leftRearX, leftRearY, rightRearX, rightRearY);
       // Keep the outer end of the left branch softly transparent.
       wakeGradient.addColorStop(0, `rgba(235, 164, 22, ${opacity * 0.15})`);
       // Use the wave's full current opacity at the center of the gradient.
@@ -151,14 +190,14 @@ export function CursorWake() {
       context.beginPath();
       // Draw the left branch from its separated tip to its outer endpoint through a curved control point.
       context.moveTo(leftTipX, leftTipY);
-      context.quadraticCurveTo(leftControlX, leftControlY, leftX, leftY);
+      context.quadraticCurveTo(leftControlX, leftControlY, leftRearX, leftRearY);
       // Move without drawing, then construct the right branch as an independent curved segment.
       context.moveTo(rightTipX, rightTipY);
-      context.quadraticCurveTo(rightControlX, rightControlY, rightX, rightY);
+      context.quadraticCurveTo(rightControlX, rightControlY, rightRearX, rightRearY);
       // Apply the orange gradient to both branches stored in the current path.
       context.strokeStyle = wakeGradient;
       // Make the stroke gradually thinner as the wave expands and approaches the end of its lifetime.
-      context.lineWidth = 1.8 - progress * 0.55;
+      context.lineWidth = 1.8 - timeProgressRatio * 0.55;
       // Add a subtle orange glow whose visibility fades together with the wave.
       context.shadowColor = `rgba(235, 164, 22, ${opacity * 0.55})`;
       context.shadowBlur = 6;
@@ -234,7 +273,6 @@ export function CursorWake() {
       const speed = Math.min(distance / elapsedTime, 2);
       const directionX = movementX / distance;
       const directionY = movementY / distance;
-      const intensity = Math.min(0.34, 0.16 + speed * 0.1);
 
       waves.push({
         x: currentPosition.x,
@@ -242,8 +280,8 @@ export function CursorWake() {
         directionX,
         directionY,
         age: 0,
-        duration: 850 + Math.random() * 150,
-        intensity,
+        duration: 850 + Math.random() * 150, //------------------------------------------------------MEGLIO METTERE UN VALORE FISSO?
+        intensity: 1, //intensity,--------------------------------------INSERITA COSTANTE
       });
 
       const perpendicularX = -directionY;
