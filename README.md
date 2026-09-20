@@ -21,3 +21,5 @@ y ↓
                               ● O  (wave.x, wave.y)
                               ↓
                        movimento del mouse
+
+![alt text](./docs/curvature_regulation.png)

@@ -73,6 +73,7 @@ export function CursorWake() {
      * allocating an unnecessarily large drawing buffer.
      */
     function resizeCanvas() {
+      if (!context || !canvas) return;
       // for retina screen window.devicePixelRatio can reach 2 and it contains 2 times the pixels
       // in the same view area.
       const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
@@ -100,7 +101,7 @@ export function CursorWake() {
      * elements whose appearance is recalculated automatically.
      */
     function clearCanvas() {
-      context.clearRect(0, 0, viewportWidth, viewportHeight);
+      context?.clearRect(0, 0, viewportWidth, viewportHeight);
     }
 
     /**
@@ -111,7 +112,7 @@ export function CursorWake() {
          x →
          y ↓
 
-        P ●  (leftX, leftY)
+        P ●  (leftRearX, leftRearY)
            ╲
             ╲     ramo sinistro della scia
              ╲
@@ -130,6 +131,7 @@ export function CursorWake() {
        
      */
     function drawWave(wave: WakeWave) {
+      if (!context) return;
       // From 0 (wave created) to 1 (wave ended)
       const timeProgressRatio = Math.min(wave.age / wave.duration, 1);
       // From 1 to 0 with exponent 1.6
@@ -140,7 +142,6 @@ export function CursorWake() {
       const perpendicularX = -wave.directionY;
       const perpendicularY = wave.directionX;
       // Distance from the mouse origin point. The tips gradually move away from the point where the wave originated.
-      const waveDistanceMultiplier = Math.pow(1.3 - timeProgressRatio, 2);
       // Starting line point close to mouse point
       const tipDynamicOffsetFromOrigin = 8 + timeProgressRatio * 24;
       // Ending line point coordinate far from mouse point > Starting point
@@ -150,7 +151,7 @@ export function CursorWake() {
       // avoid contact between the starting points
       const tipGap = 6;
       // It is used to determine the curvature produced by quadraticCurveTo().
-      const controlDistance =
+      const controlDynamicOffsetFromOrigin =
         tipDynamicOffsetFromOrigin + (rearDynamicOffsetFromOrigin - tipDynamicOffsetFromOrigin) * 0.58;
 
       const tipX = wave.x - wave.directionX * tipDynamicOffsetFromOrigin;
@@ -167,11 +168,13 @@ export function CursorWake() {
       const leftRearY = rearCenterY + perpendicularY * rearGap;
       const rightRearX = rearCenterX - perpendicularX * rearGap;
       const rightRearY = rearCenterY - perpendicularY * rearGap;
-      const leftControlX = wave.x - wave.directionX * controlDistance + perpendicularX * rearGap * 0.36;
-      const leftControlY = wave.y - wave.directionY * controlDistance + perpendicularY * rearGap * 0.36;
-      const rightControlX = wave.x - wave.directionX * controlDistance - perpendicularX * rearGap * 0.36;
-      const rightControlY = wave.y - wave.directionY * controlDistance - perpendicularY * rearGap * 0.36;
-
+      const leftControlX = wave.x - wave.directionX * controlDynamicOffsetFromOrigin + perpendicularX * rearGap * 0.36;
+      const leftControlY = wave.y - wave.directionY * controlDynamicOffsetFromOrigin + perpendicularY * rearGap * 0.36;
+      const rightControlX = wave.x - wave.directionX * controlDynamicOffsetFromOrigin - perpendicularX * rearGap * 0.36;
+      const rightControlY = wave.y - wave.directionY * controlDynamicOffsetFromOrigin - perpendicularY * rearGap * 0.36;
+      console.log(`wave.directionX ${wave.directionX} - wave.directionY ${wave.directionY}`);
+      console.log(`leftTipX ${leftTipX} - leftTipY ${leftTipY} - leftRearX ${leftRearX} - leftRearY ${leftRearY}`);
+      /*
       /*
        * Create a horizontal color transition across the left and right lines. Color-stop
        * positions are normalized: 0 is the start, 0.5 the center, and 1 the end.
@@ -281,7 +284,7 @@ export function CursorWake() {
         directionY,
         age: 0,
         duration: 850 + Math.random() * 150, //------------------------------------------------------MEGLIO METTERE UN VALORE FISSO?
-        intensity: 1, //intensity,--------------------------------------INSERITA COSTANTE
+        intensity: 1,
       });
 
       const perpendicularX = -directionY;
@@ -307,7 +310,7 @@ export function CursorWake() {
      * effect can actually be displayed.
      */
     function activateEffect() {
-      if (isActive) return;
+      if (isActive || !homePage) return;
       isActive = true;
       resizeCanvas();
       homePage.addEventListener('pointermove', handlePointerMove);
@@ -321,7 +324,7 @@ export function CursorWake() {
      * stale drawings after a media-query change or component unmount.
      */
     function deactivateEffect() {
-      if (!isActive) return;
+      if (!isActive || !homePage) return;
       isActive = false;
       homePage.removeEventListener('pointermove', handlePointerMove);
       homePage.removeEventListener('pointerleave', resetPointerPosition);
