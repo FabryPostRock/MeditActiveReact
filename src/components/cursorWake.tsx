@@ -169,6 +169,7 @@ export function CursorWake() {
      */
     function startAnimation() {
       if (animationFrameId !== null) return;
+      // Before the next view update execute 'animate'
       animationFrameId = window.requestAnimationFrame(animate);
     }
 
