@@ -6,7 +6,7 @@ interface PointerPosition {
   timestamp: number;
 }
 
-interface WakeWave {
+interface FoamRipple {
   x: number;
   y: number;
   directionX: number;
@@ -14,21 +14,11 @@ interface WakeWave {
   // Start from the time when the mouse moves and ends after 'duration' time has been reached.
   age: number;
   duration: number;
-  intensity: number;
+  opacity: number;
 }
 
-interface FoamRipple {
-  x: number;
-  y: number;
-  velocityX: number;
-  velocityY: number;
-  age: number;
-  duration: number;
-}
-
-const MAX_FOAM_RIPPLES = 48;
-const MIN_EMISSION_DISTANCE = 14;
-const MAX_WAVES = 32;
+const MAX_FOAM_RIPPLES = 15;
+const MIN_EMISSION_DISTANCE = 35;
 const MAX_PIXEL_RATIO = 2;
 
 /**
@@ -70,7 +60,6 @@ export function CursorWake() {
     );
 
     let foamRipples: FoamRipple[] = [];
-    let waves: WakeWave[] = [];
     let lastPointerPosition: PointerPosition | null = null;
     let animationFrameId: number | null = null;
     let previousFrameTimestamp = 0;
@@ -116,150 +105,34 @@ export function CursorWake() {
     }
 
     /**
-     * Draw one expanding pair of curved wake segments. Its stored movement
-     * direction determines where the wake trails, while its age controls the
-     * spread, distance, line width, and gradual loss of opacity.
-     *       
-         x →
-         y ↓
-
-        P ●  (leftRearX, leftRearY)
-           ╲
-            ╲     ramo sinistro della scia
-             ╲
-        C × · · ╲
-          punto   ╲
-          di       ● S  (leftTipX, leftTipY)
-          controllo│
-                   │ tipGap
-                   └──────── ● T  (tipX, tipY)
-                              │
-                              │ tipDynamicOffsetFromOrigin
-                              │
-                              ● O  (wave.x, wave.y)
-                              ↓
-                       movimento del mouse
-       
-     */
-    function drawWave(wave: WakeWave) {
-      if (!context) return;
-      // From 0 (wave created) to 1 (wave ended)
-      const timeProgressRatio = Math.min(wave.age / wave.duration, 1);
-      // From 1 to 0 with exponent 1.6
-      const remainingOpacity = Math.pow(1 - timeProgressRatio, 1.6);
-      // From 1 (wave created) to 0 (wave ended)
-      const opacity = wave.intensity * remainingOpacity;
-      // Distance from the mouse origin point. The tips gradually move away from the point where the wave originated.
-      // Starting line point close to mouse point
-      const tipDynamicOffsetFromOrigin = 8 + timeProgressRatio * 24;
-      // Ending line point coordinate far from mouse point > Starting point
-      const rearDynamicOffsetFromOrigin = 24 + timeProgressRatio * 105;
-      // avoid contact between the ending points
-      const rearGapExpansion = Math.pow(1.4 * timeProgressRatio, 1.6);
-      const rearGap = 25 + 25 * rearGapExpansion;
-      // avoid contact between the starting points
-      const tipGapExpansion = Math.pow(2 * timeProgressRatio, 1.6);
-      const tipGap = 3 + 6 * tipGapExpansion;
-      // It is used to determine the curvature produced by quadraticCurveTo().
-      const controlDynamicOffsetFromOrigin =
-        tipDynamicOffsetFromOrigin + (rearDynamicOffsetFromOrigin - tipDynamicOffsetFromOrigin) * 0.58;
-
-      const tipX = wave.x - wave.directionX * tipDynamicOffsetFromOrigin;
-      const tipY = wave.y - wave.directionY * tipDynamicOffsetFromOrigin;
-      // First starting line point coordinates
-      /** 
-       * To calculate the line points, two rotations of 90° are implemented (one for the left line wave and one for the right line wave) 
-       * with respect to mouse direction.
-       * (tipX, tipY) Are the origin point coordinates from where the algorithm starts to determine the first and second starting
-        point in the two perpendicular directions:
-
-                   ● S  (leftTipX, leftTipY) ● S  (rightTipX, rightTipY)
-                   │                         |
-                   │ tipGap                  |
-                   └──────── ● T  (tipX, tipY)
-                              │
-                              │ tipDynamicOffsetFromOrigin
-                              │
-                              ● O  (wave.x, wave.y)
-                              ↓
-                       mouse moving
-
-          -> x incrementing
-          ↓ y incrementing
-      */
-      const leftTipX = tipX - wave.directionY * tipGap;
-      const leftTipY = tipY + wave.directionX * tipGap;
-      // second starting line point coordinates
-      const rightTipX = tipX + wave.directionY * tipGap;
-      const rightTipY = tipY - wave.directionX * tipGap;
-      // first ending line point coordinates
-      const rearCenterX = wave.x - wave.directionX * rearDynamicOffsetFromOrigin;
-      const rearCenterY = wave.y - wave.directionY * rearDynamicOffsetFromOrigin;
-      const leftRearX = rearCenterX - wave.directionY * rearGap * 2;
-      const leftRearY = rearCenterY + wave.directionX * rearGap;
-      // second ending line point coordinates
-      const rightRearX = rearCenterX + wave.directionY * rearGap * 2;
-      const rightRearY = rearCenterY - wave.directionX * rearGap;
-      const leftControlX = wave.x - wave.directionX * controlDynamicOffsetFromOrigin - wave.directionY * rearGap * 0.36;
-      const leftControlY = wave.y - wave.directionY * controlDynamicOffsetFromOrigin + wave.directionX * rearGap * 0.36;
-      const rightControlX =
-        wave.x - wave.directionX * controlDynamicOffsetFromOrigin + wave.directionY * rearGap * 0.36;
-      const rightControlY =
-        wave.y - wave.directionY * controlDynamicOffsetFromOrigin - wave.directionX * rearGap * 0.36;
-      console.log(`wave.directionX ${wave.directionX} - wave.directionY ${wave.directionY}`);
-      console.log(`leftTipX ${leftTipX} - leftTipY ${leftTipY} - leftRearX ${leftRearX} - leftRearY ${leftRearY}`);
-      /*
-      /*
-       * Create a horizontal color transition across the left and right lines. Color-stop
-       * positions are normalized: 0 is the start, 0.5 the center, and 1 the end.
-       */
-      const wakeGradient = context.createLinearGradient(leftRearX, leftRearY, rightRearX, rightRearY);
-      // Keep the outer end of the left branch softly transparent.
-      wakeGradient.addColorStop(0, `rgba(235, 164, 22, ${opacity * 0.15})`);
-      // Use the wave's full current opacity at the center of the gradient.
-      wakeGradient.addColorStop(0.5, `rgba(235, 164, 22, ${opacity})`);
-      // Fade the outer end of the right branch symmetrically with the left one.
-      wakeGradient.addColorStop(1, `rgba(235, 164, 22, ${opacity * 0.15})`);
-
-      // Preserve the current drawing state so temporary wake styles do not affect later canvas drawings.
-      context.save();
-      // Start a new path to prevent this wave from connecting to paths drawn in a previous frame.
-      context.beginPath();
-      // Draw the left branch from its separated tip to its outer endpoint through a curved control point.
-      context.moveTo(leftTipX, leftTipY);
-      context.quadraticCurveTo(leftControlX, leftControlY, leftRearX, leftRearY);
-      // Move without drawing, then construct the right branch as an independent curved segment.
-      context.moveTo(rightTipX, rightTipY);
-      context.quadraticCurveTo(rightControlX, rightControlY, rightRearX, rightRearY);
-      // Apply the orange gradient to both branches stored in the current path.
-      context.strokeStyle = wakeGradient;
-      // Make the stroke gradually thinner as the wave expands and approaches the end of its lifetime.
-      context.lineWidth = 1.8 - timeProgressRatio * 0.55;
-      // Add a subtle orange glow whose visibility fades together with the wave.
-      context.shadowColor = `rgba(235, 164, 22, ${opacity * 0.55})`;
-      context.shadowBlur = 6;
-      // Render both curved branches with the configured stroke and shadow settings.
-      context.stroke();
-      // Restore the drawing state that was active before this individual wave was styled.
-      context.restore();
-    }
-
-    /**
      * Draw one small circular ripple in the disturbed water behind the main
      * wake. These lighter details break up the paired curves and make the
      * result feel less geometrically uniform.
      */
     function drawFoamRipple(ripple: FoamRipple) {
       if (!context) return;
-      const progress = Math.min(ripple.age / ripple.duration, 1);
-      const opacity = 0.2 * Math.pow(1 - progress, 1.8);
-      const radius = 1.5 + progress * 8;
+      // From 0 (circle created) to 1 (circle ended)
+      const timeProgressRatio = Math.min(ripple.age / ripple.duration, 1);
+      // From 1 to 0 with exponent 1.6
+      const negExpFactor = Math.pow(1 - timeProgressRatio, 1.6);
+      // From 1 (wave created) to 0 (wave ended)
+      const opacity = ripple.opacity * negExpFactor;
+      const radius = 6 + negExpFactor * 14;
 
+      // Preserve the current drawing state so temporary wake styles do not affect later canvas drawings.
+      context.save();
       context.beginPath();
+      // The first two parameters are the x and y coordinates of the circle origin
       context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
-      context.strokeStyle = `rgba(235, 164, 22, ${opacity})`;
-      context.lineWidth = 0.8;
+      context.strokeStyle = `rgba(226, 106, 8, ${opacity})`;
+      // Add a subtle orange glow whose visibility fades together with the wave.
+      context.shadowColor = `rgba(226, 106, 8, ${opacity * 0.6})`;
+      context.shadowBlur = 6;
+      context.lineWidth = 1.2;
+      // draw rendering
       context.stroke();
+      // Restore the drawing state that was active before this individual wave was styled.
+      context.restore();
     }
 
     /**
@@ -273,21 +146,14 @@ export function CursorWake() {
 
       clearCanvas();
 
-      waves.forEach((wave) => {
-        wave.age += elapsedTime;
-        drawWave(wave);
-      });
       foamRipples.forEach((ripple) => {
         ripple.age += elapsedTime;
-        ripple.x += ripple.velocityX * elapsedTime;
-        ripple.y += ripple.velocityY * elapsedTime;
         drawFoamRipple(ripple);
       });
 
-      waves = waves.filter((wave) => wave.age < wave.duration);
       foamRipples = foamRipples.filter((ripple) => ripple.age < ripple.duration);
 
-      if (waves.length) {
+      if (foamRipples.length) {
         animationFrameId = window.requestAnimationFrame(animate);
         return;
       }
@@ -329,42 +195,31 @@ export function CursorWake() {
       const movementY = currentPosition.y - lastPointerPosition.y;
       const distance = Math.hypot(movementX, movementY);
 
+      // MIN_EMISSION_DISTANCE : establishes when the next mouse movement is sufficient to trigger the next draw
       if (distance < MIN_EMISSION_DISTANCE) return;
 
       const elapsedTime = Math.max(currentPosition.timestamp - lastPointerPosition.timestamp, 1);
       const speed = Math.min(distance / elapsedTime, 2);
       const directionX = movementX / distance;
       const directionY = movementY / distance;
-
-      waves.push({
-        x: currentPosition.x,
-        y: currentPosition.y,
-        directionX,
-        directionY,
-        age: 0,
-        duration: 2850 + Math.random() * 150, //------------------------------------------------------MEGLIO METTERE UN VALORE FISSO?
-        intensity: 1,
-      });
-
-      const perpendicularX = -directionY;
-      const perpendicularY = directionX;
+      const speedX = directionX * speed;
+      const speedY = directionY * speed;
 
       for (let index = 0; index < 2; index += 1) {
-        const lateralOffset = (Math.random() - 0.5) * 10;
-        const backwardSpeed = 0.014 + Math.random() * 0.012;
-        const lateralSpeed = (Math.random() - 0.5) * 0.014;
-
         foamRipples.push({
-          x: currentPosition.x - directionX * 10 + perpendicularX * lateralOffset,
-          y: currentPosition.y - directionY * 10 + perpendicularY * lateralOffset,
-          velocityX: -directionX * backwardSpeed + perpendicularX * lateralSpeed,
-          velocityY: -directionY * backwardSpeed + perpendicularY * lateralSpeed,
+          x: currentPosition.x,
+          y: currentPosition.y,
+          directionX: directionX,
+          directionY: directionY,
           age: 0,
-          duration: 520 + Math.random() * 220,
+          duration: 1520 + Math.random() * 220,
+          opacity: 1,
         });
+        console.log(
+          `currentPosition.x ${currentPosition.x}   currentPosition.y ${currentPosition.y}  speedX ${speedX}   speedY ${speedY}`,
+        );
       }
 
-      waves = waves.slice(-MAX_WAVES);
       foamRipples = foamRipples.slice(-MAX_FOAM_RIPPLES);
       lastPointerPosition = currentPosition;
       startAnimation();
@@ -412,7 +267,6 @@ export function CursorWake() {
       animationFrameId = null;
       previousFrameTimestamp = 0;
       lastPointerPosition = null;
-      waves = [];
       foamRipples = [];
       clearCanvas();
     }
