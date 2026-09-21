@@ -138,40 +138,63 @@ export function CursorWake() {
       const remainingOpacity = Math.pow(1 - timeProgressRatio, 1.6);
       // From 1 (wave created) to 0 (wave ended)
       const opacity = wave.intensity * remainingOpacity;
-      // rotate 90° with respect to mouse direction
-      const perpendicularX = -wave.directionY;
-      const perpendicularY = wave.directionX;
       // Distance from the mouse origin point. The tips gradually move away from the point where the wave originated.
       // Starting line point close to mouse point
       const tipDynamicOffsetFromOrigin = 8 + timeProgressRatio * 24;
       // Ending line point coordinate far from mouse point > Starting point
       const rearDynamicOffsetFromOrigin = 24 + timeProgressRatio * 105;
       // avoid contact between the ending points
-      const rearGap = 19;
+      const rearGapExpansion = Math.pow(1.4 * timeProgressRatio, 1.6);
+      const rearGap = 25 + 25 * rearGapExpansion;
       // avoid contact between the starting points
-      const tipGap = 6;
+      const tipGapExpansion = Math.pow(2 * timeProgressRatio, 1.6);
+      const tipGap = 3 + 6 * tipGapExpansion;
       // It is used to determine the curvature produced by quadraticCurveTo().
       const controlDynamicOffsetFromOrigin =
         tipDynamicOffsetFromOrigin + (rearDynamicOffsetFromOrigin - tipDynamicOffsetFromOrigin) * 0.58;
 
       const tipX = wave.x - wave.directionX * tipDynamicOffsetFromOrigin;
       const tipY = wave.y - wave.directionY * tipDynamicOffsetFromOrigin;
-      // first starting line point coordinates
-      const leftTipX = tipX + perpendicularX * tipGap;
-      const leftTipY = tipY + perpendicularY * tipGap;
+      // First starting line point coordinates
+      /** 
+       * To calculate the line points, two rotations of 90° are implemented (one for the left line wave and one for the right line wave) 
+       * with respect to mouse direction.
+       * (tipX, tipY) Are the origin point coordinates from where the algorithm starts to determine the first and second starting
+        point in the two perpendicular directions:
+
+                   ● S  (leftTipX, leftTipY) ● S  (rightTipX, rightTipY)
+                   │                         |
+                   │ tipGap                  |
+                   └──────── ● T  (tipX, tipY)
+                              │
+                              │ tipDynamicOffsetFromOrigin
+                              │
+                              ● O  (wave.x, wave.y)
+                              ↓
+                       mouse moving
+
+          -> x incrementing
+          ↓ y incrementing
+      */
+      const leftTipX = tipX - wave.directionY * tipGap;
+      const leftTipY = tipY + wave.directionX * tipGap;
       // second starting line point coordinates
-      const rightTipX = tipX - perpendicularX * tipGap;
-      const rightTipY = tipY - perpendicularY * tipGap;
+      const rightTipX = tipX + wave.directionY * tipGap;
+      const rightTipY = tipY - wave.directionX * tipGap;
+      // first ending line point coordinates
       const rearCenterX = wave.x - wave.directionX * rearDynamicOffsetFromOrigin;
       const rearCenterY = wave.y - wave.directionY * rearDynamicOffsetFromOrigin;
-      const leftRearX = rearCenterX + perpendicularX * rearGap;
-      const leftRearY = rearCenterY + perpendicularY * rearGap;
-      const rightRearX = rearCenterX - perpendicularX * rearGap;
-      const rightRearY = rearCenterY - perpendicularY * rearGap;
-      const leftControlX = wave.x - wave.directionX * controlDynamicOffsetFromOrigin + perpendicularX * rearGap * 0.36;
-      const leftControlY = wave.y - wave.directionY * controlDynamicOffsetFromOrigin + perpendicularY * rearGap * 0.36;
-      const rightControlX = wave.x - wave.directionX * controlDynamicOffsetFromOrigin - perpendicularX * rearGap * 0.36;
-      const rightControlY = wave.y - wave.directionY * controlDynamicOffsetFromOrigin - perpendicularY * rearGap * 0.36;
+      const leftRearX = rearCenterX - wave.directionY * rearGap * 2;
+      const leftRearY = rearCenterY + wave.directionX * rearGap;
+      // second ending line point coordinates
+      const rightRearX = rearCenterX + wave.directionY * rearGap * 2;
+      const rightRearY = rearCenterY - wave.directionX * rearGap;
+      const leftControlX = wave.x - wave.directionX * controlDynamicOffsetFromOrigin - wave.directionY * rearGap * 0.36;
+      const leftControlY = wave.y - wave.directionY * controlDynamicOffsetFromOrigin + wave.directionX * rearGap * 0.36;
+      const rightControlX =
+        wave.x - wave.directionX * controlDynamicOffsetFromOrigin + wave.directionY * rearGap * 0.36;
+      const rightControlY =
+        wave.y - wave.directionY * controlDynamicOffsetFromOrigin - wave.directionX * rearGap * 0.36;
       console.log(`wave.directionX ${wave.directionX} - wave.directionY ${wave.directionY}`);
       console.log(`leftTipX ${leftTipX} - leftTipY ${leftTipY} - leftRearX ${leftRearX} - leftRearY ${leftRearY}`);
       /*
@@ -283,7 +306,7 @@ export function CursorWake() {
         directionX,
         directionY,
         age: 0,
-        duration: 850 + Math.random() * 150, //------------------------------------------------------MEGLIO METTERE UN VALORE FISSO?
+        duration: 2850 + Math.random() * 150, //------------------------------------------------------MEGLIO METTERE UN VALORE FISSO?
         intensity: 1,
       });
 
