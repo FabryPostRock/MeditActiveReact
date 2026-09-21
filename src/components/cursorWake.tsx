@@ -17,6 +17,16 @@ interface WakeWave {
   intensity: number;
 }
 
+interface FoamRipple {
+  x: number;
+  y: number;
+  velocityX: number;
+  velocityY: number;
+  age: number;
+  duration: number;
+}
+
+const MAX_FOAM_RIPPLES = 48;
 const MIN_EMISSION_DISTANCE = 14;
 const MAX_WAVES = 32;
 const MAX_PIXEL_RATIO = 2;
@@ -59,6 +69,7 @@ export function CursorWake() {
       '(min-width: 1200px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
     );
 
+    let foamRipples: FoamRipple[] = [];
     let waves: WakeWave[] = [];
     let lastPointerPosition: PointerPosition | null = null;
     let animationFrameId: number | null = null;
@@ -234,6 +245,24 @@ export function CursorWake() {
     }
 
     /**
+     * Draw one small circular ripple in the disturbed water behind the main
+     * wake. These lighter details break up the paired curves and make the
+     * result feel less geometrically uniform.
+     */
+    function drawFoamRipple(ripple: FoamRipple) {
+      if (!context) return;
+      const progress = Math.min(ripple.age / ripple.duration, 1);
+      const opacity = 0.2 * Math.pow(1 - progress, 1.8);
+      const radius = 1.5 + progress * 8;
+
+      context.beginPath();
+      context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
+      context.strokeStyle = `rgba(235, 164, 22, ${opacity})`;
+      context.lineWidth = 0.8;
+      context.stroke();
+    }
+
+    /**
      * Advance and render every active wave for the current animation frame.
      * Expired items are removed, and the requestAnimationFrame loop stops when
      * nothing remains to draw so an idle page does not perform needless work.
@@ -248,8 +277,15 @@ export function CursorWake() {
         wave.age += elapsedTime;
         drawWave(wave);
       });
+      foamRipples.forEach((ripple) => {
+        ripple.age += elapsedTime;
+        ripple.x += ripple.velocityX * elapsedTime;
+        ripple.y += ripple.velocityY * elapsedTime;
+        drawFoamRipple(ripple);
+      });
 
       waves = waves.filter((wave) => wave.age < wave.duration);
+      foamRipples = foamRipples.filter((ripple) => ripple.age < ripple.duration);
 
       if (waves.length) {
         animationFrameId = window.requestAnimationFrame(animate);
@@ -313,7 +349,23 @@ export function CursorWake() {
       const perpendicularX = -directionY;
       const perpendicularY = directionX;
 
+      for (let index = 0; index < 2; index += 1) {
+        const lateralOffset = (Math.random() - 0.5) * 10;
+        const backwardSpeed = 0.014 + Math.random() * 0.012;
+        const lateralSpeed = (Math.random() - 0.5) * 0.014;
+
+        foamRipples.push({
+          x: currentPosition.x - directionX * 10 + perpendicularX * lateralOffset,
+          y: currentPosition.y - directionY * 10 + perpendicularY * lateralOffset,
+          velocityX: -directionX * backwardSpeed + perpendicularX * lateralSpeed,
+          velocityY: -directionY * backwardSpeed + perpendicularY * lateralSpeed,
+          age: 0,
+          duration: 520 + Math.random() * 220,
+        });
+      }
+
       waves = waves.slice(-MAX_WAVES);
+      foamRipples = foamRipples.slice(-MAX_FOAM_RIPPLES);
       lastPointerPosition = currentPosition;
       startAnimation();
     }
@@ -361,6 +413,7 @@ export function CursorWake() {
       previousFrameTimestamp = 0;
       lastPointerPosition = null;
       waves = [];
+      foamRipples = [];
       clearCanvas();
     }
 
