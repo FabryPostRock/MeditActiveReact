@@ -8,6 +8,8 @@ import Home from './pages/home';
 import Exercises from './pages/exercises';
 import Exercise from './pages/exercise';
 import Error from './pages/error';
+import { PerspectiveWalls } from './components/perspectiveWalls';
+import { CursorWake } from './components/cursorWake';
 
 function App() {
   return (
@@ -16,13 +18,20 @@ function App() {
         <div className="container nav-mt" />
         <Navbar />
         <main className="page-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/exercises" element={<Exercises />} />
-            {/*:slug : è una variabile che permette di aprire un path diverso */}
-            <Route path="/exercise/:sectionId" element={<Exercise />} />
-            <Route path="*" element={<Error />} />
-          </Routes>
+          <div className="home-page">
+            <PerspectiveWalls />
+            <CursorWake />
+
+            <div className="home-page__content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/exercises" element={<Exercises />} />
+                {/*:slug : è una variabile che permette di aprire un path diverso */}
+                <Route path="/exercise/:sectionId" element={<Exercise />} />
+                <Route path="*" element={<Error />} />
+              </Routes>
+            </div>
+          </div>
         </main>
       </div>
     </>
