@@ -49,7 +49,7 @@ export function CursorWake() {
     const context = canvas?.getContext('2d');
 
     if (!canvas || !homePage || !context) return;
-
+    const colorSecondaryRgb = getComputedStyle(document.documentElement).getPropertyValue('--bs-secondary-rgb').trim();
     /**
      * creates a MediaQueryList object that verifies if the device satifies the parameters conditions
      * pointer: fine  defines a precise pointer
@@ -124,9 +124,9 @@ export function CursorWake() {
       context.beginPath();
       // The first two parameters are the x and y coordinates of the circle origin
       context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
-      context.strokeStyle = `rgba(226, 106, 8, ${opacity})`;
+      context.strokeStyle = `rgba(${colorSecondaryRgb}, ${opacity})`;
       // Add a subtle orange glow whose visibility fades together with the wave.
-      context.shadowColor = `rgba(226, 106, 8, ${opacity * 0.6})`;
+      context.shadowColor = `rgba(${colorSecondaryRgb}, ${opacity * 0.6})`;
       context.shadowBlur = 6;
       context.lineWidth = 1.2;
       // draw rendering
@@ -215,9 +215,6 @@ export function CursorWake() {
           duration: 1520 + Math.random() * 220,
           opacity: 1,
         });
-        console.log(
-          `currentPosition.x ${currentPosition.x}   currentPosition.y ${currentPosition.y}  speedX ${speedX}   speedY ${speedY}`,
-        );
       }
 
       foamRipples = foamRipples.slice(-MAX_FOAM_RIPPLES);
@@ -277,6 +274,7 @@ export function CursorWake() {
      * than leaving an invisible animation running in the background.
      */
     function handlePreferenceChange(event: MediaQueryListEvent) {
+      // true only if all window.matchMedia(..conditions) are true
       if (event.matches) {
         activateEffect();
         return;
@@ -299,6 +297,9 @@ export function CursorWake() {
       effectPreference.removeEventListener('change', handlePreferenceChange);
       deactivateEffect();
     };
+    // []:Every time CursorWake is mounted because it installs one time and one time only the animation.
+    // Using nothing instead of '[]' will mount the animation every time before every rendering.
+    // Moreover React only renders the empty canvas. The true animation is managed by Canvas 2D API.
   }, []);
 
   return <canvas ref={canvasRef} className="cursor-wake" aria-hidden="true" />;
