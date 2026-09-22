@@ -51,8 +51,7 @@ $rising-duration-div: 1.5s;
 .home-page {
   // Keep the Home wrapper in the normal document flow while allowing its decorative layer to be stacked locally.
   position: relative;
-  // Create a dedicated stacking context. This keeps the negative z-index wall layer behind the Home content
-  // without allowing it to fall behind the page body or interact with stacking contexts outside the Home page.
+  // Creates a local graphical layer separation.  a dedicated stacking context. z-index became local levels
   isolation: isolate;
   // A positioned element with a non-auto z-index also creates a stacking context. Together with isolation,
   // this makes the intended layer boundary explicit and resilient to future style changes.
