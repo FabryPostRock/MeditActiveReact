@@ -9,6 +9,7 @@ import Exercises from './pages/exercises';
 import Exercise from './pages/exercise';
 import Error from './pages/error';
 import { PerspectiveWalls } from './components/perspectiveWalls';
+import { Footer } from './components/footer';
 import { CursorWake } from './components/cursorWake';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                 <Route path="*" element={<Error />} />
               </Routes>
             </div>
+            <Footer />
           </div>
         </main>
       </div>
