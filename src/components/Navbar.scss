@@ -35,12 +35,12 @@
     a clean solution.
     
     Using position static the nav take space in the viewport. The navbar stays fixed because of the 
-    app-shell that desn't move. The only element that moves is .page-content.
+    app-shell that desn't move. The only element that moves is .page-scroll-container.
 
     */
     position: static !important;
     /* 
-    order: 2 -> modifica l'ordine visivo. a '.page-content' è assegnato order:1. 
+    order: 2 -> modifica l'ordine visivo. a '.page-scroll-container' è assegnato order:1.
     Di conseguenza la nav finisce sotto il contenuto della pagina nella view.
     */
     order: 2;

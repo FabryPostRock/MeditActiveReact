@@ -36,7 +36,7 @@ export function CursorWake() {
   useEffect(() => {
     const canvas = canvasRef.current;
     // get through the DOM Tree from the canvas to the first parent
-    const homePage = canvas?.closest<HTMLElement>('.home-page');
+    const pageIsolation = canvas?.closest<HTMLElement>('.page-isolation');
     /* request to canvas its 2d environment. context returns commands use to draw:
       - beginPath() starts new trace
       - moveTo() establish starting point
@@ -48,7 +48,7 @@ export function CursorWake() {
     */
     const context = canvas?.getContext('2d');
 
-    if (!canvas || !homePage || !context) return;
+    if (!canvas || !pageIsolation || !context) return;
     const colorSecondaryRgb = getComputedStyle(document.documentElement).getPropertyValue('--bs-secondary-rgb').trim();
     /**
      * creates a MediaQueryList object that verifies if the device satifies the parameters conditions
@@ -222,7 +222,7 @@ export function CursorWake() {
     }
 
     /**
-     * Forget the previous sample when the pointer leaves the Home area. This
+     * Forget the previous sample when the pointer leaves the isolated page area. This
      * prevents a long artificial wave from being created between the old exit
      * position and the next position where the pointer re-enters the page.
      */
@@ -236,11 +236,11 @@ export function CursorWake() {
      * effect can actually be displayed.
      */
     function activateEffect() {
-      if (isActive || !homePage) return;
+      if (isActive || !pageIsolation) return;
       isActive = true;
       resizeCanvas();
-      homePage.addEventListener('pointermove', handlePointerMove);
-      homePage.addEventListener('pointerleave', resetPointerPosition);
+      pageIsolation.addEventListener('pointermove', handlePointerMove);
+      pageIsolation.addEventListener('pointerleave', resetPointerPosition);
       window.addEventListener('resize', resizeCanvas);
     }
 
@@ -250,10 +250,10 @@ export function CursorWake() {
      * stale drawings after a media-query change or component unmount.
      */
     function deactivateEffect() {
-      if (!isActive || !homePage) return;
+      if (!isActive || !pageIsolation) return;
       isActive = false;
-      homePage.removeEventListener('pointermove', handlePointerMove);
-      homePage.removeEventListener('pointerleave', resetPointerPosition);
+      pageIsolation.removeEventListener('pointermove', handlePointerMove);
+      pageIsolation.removeEventListener('pointerleave', resetPointerPosition);
       window.removeEventListener('resize', resizeCanvas);
 
       if (animationFrameId !== null) {

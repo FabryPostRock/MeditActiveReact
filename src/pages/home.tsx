@@ -72,11 +72,11 @@ export default function Home() {
   }, []);
 
   return (
-    /*<div className="home-page">
+    /*<div className="page-isolation">
       <PerspectiveWalls />
       <CursorWake />
 
-      <div className="home-page__content">*/
+      <div className="page__content">*/
     <>
       <section>
         <div className="container mb-5">

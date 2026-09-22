@@ -17,12 +17,12 @@ function App() {
       <div className="app-shell">
         <div className="container nav-mt" />
         <Navbar />
-        <main className="page-content">
-          <div className="home-page">
+        <main className="page-scroll-container">
+          <div className="page-isolation">
             <PerspectiveWalls />
             <CursorWake />
 
-            <div className="home-page__content">
+            <div className="page__content">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/exercises" element={<Exercises />} />

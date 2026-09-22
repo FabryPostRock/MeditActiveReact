@@ -27,11 +27,11 @@ function createCanvasContextMock() {
 }
 
 function renderCursorWake() {
-  const result = render(createElement('div', { className: 'home-page' }, createElement(CursorWake)));
+  const result = render(createElement('div', { className: 'page-isolation' }, createElement(CursorWake)));
 
   return {
     ...result,
-    homePage: result.container.querySelector('.home-page'),
+    pageIsolation: result.container.querySelector('.page-isolation'),
   };
 }
 
@@ -100,17 +100,17 @@ afterEach(() => {
 
 describe('CursorWake circle generation', () => {
   it('emits one circle only after the mouse reaches the minimum movement distance', () => {
-    const { homePage } = renderCursorWake();
+    const { pageIsolation } = renderCursorWake();
 
-    dispatchMouseMove(homePage, 0, 0);
-    dispatchMouseMove(homePage, 20, 0);
+    dispatchMouseMove(pageIsolation, 0, 0);
+    dispatchMouseMove(pageIsolation, 20, 0);
 
     // Not called because mouse path is less then 35
     expect(requestAnimationFrameMock).not.toHaveBeenCalled();
     expect(canvasContext.arc).not.toHaveBeenCalled();
 
     // Rejected samples do not replace the emission origin, so movement accumulates from the last accepted point.
-    dispatchMouseMove(homePage, 35, 0);
+    dispatchMouseMove(pageIsolation, 35, 0);
     expect(requestAnimationFrameMock).toHaveBeenCalledTimes(1);
 
     // 100 is the timestamp
@@ -120,13 +120,13 @@ describe('CursorWake circle generation', () => {
   });
 
   it('limits the active circle collection to fifteen items', () => {
-    const { homePage } = renderCursorWake();
+    const { pageIsolation } = renderCursorWake();
 
-    dispatchMouseMove(homePage, 0, 0);
+    dispatchMouseMove(pageIsolation, 0, 0);
 
     // Eight accepted movements create 8 circles, forcing the oldest item out of the capped collection.
     for (let movementIndex = 1; movementIndex <= 8; movementIndex += 1) {
-      dispatchMouseMove(homePage, movementIndex * 35, 0);
+      dispatchMouseMove(pageIsolation, movementIndex * 35, 0);
     }
 
     // A running animation loop must be reused instead of scheduling one loop for every pointer event.
@@ -142,11 +142,11 @@ describe('CursorWake circle generation', () => {
   it('shrinks expired circles and stops scheduling animation frames', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
-    const { homePage } = renderCursorWake();
+    const { pageIsolation } = renderCursorWake();
 
-    dispatchMouseMove(homePage, 0, 0);
-    dispatchMouseMove(homePage, 35, 0);
-    dispatchMouseMove(homePage, 80, 0);
+    dispatchMouseMove(pageIsolation, 0, 0);
+    dispatchMouseMove(pageIsolation, 35, 0);
+    dispatchMouseMove(pageIsolation, 80, 0);
 
     // The first frame establishes the time baseline, while later frames advance by the algorithm's 40 ms cap.
     runNextAnimationFrame(100);

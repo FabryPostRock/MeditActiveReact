@@ -48,8 +48,8 @@ $rising-duration-div: 1.5s;
 
 /*--------------------------------------PERSPECTIVE WALLS---------------------------------------------*/
 
-.home-page {
-  // Keep the Home wrapper in the normal document flow while allowing its decorative layer to be stacked locally.
+.page-isolation {
+  // Keep the page wrapper in the normal document flow while allowing its decorative layer to be stacked locally.
   position: relative;
   // Creates a local graphical layer separation.  a dedicated stacking context. z-index became local levels
   isolation: isolate;
@@ -58,7 +58,7 @@ $rising-duration-div: 1.5s;
   z-index: 0;
 }
 
-.home-page__content {
+.page__content {
   // Position the real page content above the decorative wall layer.
   position: relative;
   z-index: 1;
@@ -67,7 +67,7 @@ $rising-duration-div: 1.5s;
 }
 
 @media only screen and (min-width: 1200px) {
-  .home-page__content {
+  .page__content {
     /*Use as width the smallest value between 55% of the window width and 820px*/
     width: min(65vw, 960px);
     padding-inline: 1rem;

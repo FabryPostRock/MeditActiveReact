@@ -15,13 +15,13 @@ test.describe('PerspectiveWalls integration', () => {
   test('keeps the viewport background behind the page content', async ({ page }) => {
     await page.goto('/exercises');
 
-    const pageContainer = page.locator('.home-page');
+    const pageIsolation = page.locator('.page-isolation');
     const background = page.locator('.perspective-walls');
-    const content = page.locator('.home-page__content');
+    const content = page.locator('.page__content');
     const heading = page.getByRole('heading', { name: 'Corso base di consapevolezza del corpo' });
 
     await expect(background).toBeVisible();
-    await expect(pageContainer).toHaveCSS('isolation', 'isolate');
+    await expect(pageIsolation).toHaveCSS('isolation', 'isolate');
     await expect(background).toHaveCSS('position', 'fixed');
     await expect(background).toHaveCSS('z-index', '-1');
     await expect(background).toHaveCSS('pointer-events', 'none');
@@ -51,7 +51,7 @@ test.describe('PerspectiveWalls integration', () => {
     const hitTest = await heading.evaluate((element) => {
       const bounds = element.getBoundingClientRect();
       const target = document.elementFromPoint(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
-      const contentLayer = element.closest('.home-page__content');
+      const contentLayer = element.closest('.page__content');
       const backgroundLayer = document.querySelector('.perspective-walls');
 
       return {

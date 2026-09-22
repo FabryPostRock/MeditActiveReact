@@ -12032,12 +12032,12 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
     a clean solution.
 
     Using position static the nav take space in the viewport. The navbar stays fixed because of the 
-    app-shell that desn't move. The only element that moves is .page-content.
+    app-shell that desn't move. The only element that moves is .page-scroll-container.
 
     */
     position: static !important;
     /* 
-    order: 2 -> modifica l'ordine visivo. a '.page-content' è assegnato order:1. 
+    order: 2 -> modifica l'ordine visivo. a '.page-scroll-container' è assegnato order:1.
     Di conseguenza la nav finisce sotto il contenuto della pagina nella view.
     */
     order: 2;
@@ -12130,13 +12130,13 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   }
 }
 /*--------------------------------------PERSPECTIVE WALLS---------------------------------------------*/
-.home-page {
+.page-isolation {
   position: relative;
   isolation: isolate;
   z-index: 0;
 }
 
-.home-page__content {
+.page__content {
   position: relative;
   z-index: 1;
   width: 100%;
@@ -12144,7 +12144,7 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
 }
 
 @media only screen and (min-width: 1200px) {
-  .home-page__content {
+  .page__content {
     /*Use as width the smallest value between 55% of the window width and 820px*/
     width: min(65vw, 960px);
     padding-inline: 1rem;
@@ -12481,7 +12481,7 @@ ul {
     height: 100dvh;
     overflow: hidden;
   }
-  .page-content {
+  .page-scroll-container {
     order: 1;
     flex: 1 1 auto;
     min-height: 0;
