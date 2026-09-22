@@ -12464,6 +12464,10 @@ ul {
   color: #e26a08;
 }
 
+.material-symbols-outlined.g-icon-footer-color {
+  color: #e26a08;
+}
+
 /* Mobile Styles */
 @media only screen and (max-width: 578px) {
   .mt-sm-md-9 {

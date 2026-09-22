@@ -69,7 +69,7 @@ $rising-duration-div: 1.5s;
 @media only screen and (min-width: 1200px) {
   .page__content {
     /*Use as width the smallest value between 55% of the window width and 820px*/
-    width: min(65vw, 960px);
+    width: min(65vw, 920px);
     padding-inline: 1rem;
   }
 }

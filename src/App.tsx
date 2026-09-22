@@ -31,8 +31,8 @@ function App() {
                 <Route path="/exercise/:sectionId" element={<Exercise />} />
                 <Route path="*" element={<Error />} />
               </Routes>
+              <Footer />
             </div>
-            <Footer />
           </div>
         </main>
       </div>
