@@ -206,17 +206,15 @@ export function CursorWake() {
       const speedX = directionX * speed;
       const speedY = directionY * speed;
 
-      for (let index = 0; index < 2; index += 1) {
-        foamRipples.push({
-          x: currentPosition.x,
-          y: currentPosition.y,
-          directionX: directionX,
-          directionY: directionY,
-          age: 0,
-          duration: 1520 + Math.random() * 220,
-          opacity: 1,
-        });
-      }
+      foamRipples.push({
+        x: currentPosition.x,
+        y: currentPosition.y,
+        directionX: directionX,
+        directionY: directionY,
+        age: 0,
+        duration: 1520 + Math.random() * 220,
+        opacity: 1,
+      });
 
       foamRipples = foamRipples.slice(-MAX_FOAM_RIPPLES);
       lastPointerPosition = currentPosition;
