@@ -5,19 +5,18 @@
   margin: 2rem 1rem 3rem;
 }
 
-@mixin progress-fill($width-end: 0%) {
-  //created a custom properties
-  --width-end: #{$width-end};
+$progress-anim-duration: 2s;
+
+@mixin progress-fill {
   animation: fill-bar $progress-anim-duration ease-out forwards;
 }
 
-/* anima il width da 0 a 25% senza hover */
 @keyframes fill-bar {
   from {
     width: 0%;
   }
   to {
-    width: var(--width-end);
+    width: var(--progress-value);
   }
 }
 
@@ -34,6 +33,7 @@
   --bs-progress-bar-bg: var(--bs-secondary);
   background-color: var(--bs-progress-bar-bg);
   width: 0; /* Initial state */
+  @include progress-fill;
 }
 
 .milestones {

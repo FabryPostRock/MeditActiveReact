@@ -3,13 +3,12 @@
   margin: 2rem 1rem 3rem;
 }
 
-/* anima il width da 0 a 25% senza hover */
 @keyframes fill-bar {
   from {
     width: 0%;
   }
   to {
-    width: var(--width-end);
+    width: var(--progress-value);
   }
 }
 .progress {
@@ -24,6 +23,7 @@
   --bs-progress-bar-bg: var(--bs-secondary);
   background-color: var(--bs-progress-bar-bg);
   width: 0; /* Initial state */
+  animation: fill-bar 2s ease-out forwards;
 }
 
 .milestones {

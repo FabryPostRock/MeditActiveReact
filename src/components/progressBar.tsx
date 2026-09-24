@@ -20,11 +20,11 @@ export function LessonProgress() {
   const progressStyle: ProgressStyle = {
     '--progress-value': `${progress}%`,
   };
-  // style={progressStyle}
+
   return (
     <div className="lesson-progress">
       <div className="progress" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-        <div className="progress-bar" style={{ width: `${progress}%` }} />
+        <div className="progress-bar" style={progressStyle} />
       </div>
 
       <div className="milestones">

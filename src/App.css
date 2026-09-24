@@ -12224,22 +12224,27 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   margin: 2rem 1rem 3rem;
 }
 
-/*.progress {
-  height: 0.5rem;
-  overflow: visible;
-  --bs-progress-height: 0.2rem;
-    --bs-progress-bg: #241d18;
-    --bs-progress-border-radius: 0.25rem;
-    --bs-progress-box-shadow: none;
-
-
-}*/
+@keyframes fill-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-value);
+  }
+}
 .progress {
   --bs-progress-height: 0.2rem;
   --bs-progress-bar-bg: var(--bs-secondary);
   --bs-progress-border-radius: 0.25rem;
   --bs-progress-box-shadow: none;
   --bs-progress-bg: #fae3c0;
+}
+
+.progress-bar {
+  --bs-progress-bar-bg: var(--bs-secondary);
+  background-color: var(--bs-progress-bar-bg);
+  width: 0; /* Initial state */
+  animation: fill-bar 2s ease-out forwards;
 }
 
 .milestones {
