@@ -12454,6 +12454,48 @@ ul {
   }
 }
 
+@media only screen and (min-width: 767px) {
+  .fs-md-2 {
+    font-size: calc(1.325rem + 0.9vw) !important;
+  }
+}
+
+@media only screen and (min-width: 767px) {
+  .fs-md-3 {
+    font-size: calc(1.3rem + 0.6vw) !important;
+  }
+}
+
+@media only screen and (min-width: 767px) {
+  .fs-md-4 {
+    font-size: calc(1.275rem + 0.3vw) !important;
+  }
+}
+
+@media only screen and (min-width: 767px) {
+  .fs-lg-1 {
+    font-size: calc(1.375rem + 1.5vw) !important;
+  }
+}
+
+@media only screen and (min-width: 767px) {
+  .fs-lg-2 {
+    font-size: calc(1.325rem + 0.9vw) !important;
+  }
+}
+
+@media only screen and (min-width: 767px) {
+  .fs-lg-3 {
+    font-size: calc(1.3rem + 0.6vw) !important;
+  }
+}
+
+@media only screen and (min-width: 767px) {
+  .fs-lg-4 {
+    font-size: calc(1.275rem + 0.3vw) !important;
+  }
+}
+
 /*---------------------------------------- POSITIONING ----------------------------*/
 .container-grid {
   display: grid;

@@ -32,6 +32,7 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
                 <Title
                   title={concept.title}
                   txtColor={imageOnLeft ? 'var(--bs-dark-green)' : 'var(--bs-secondary)'}
+                  txtSize={['fs-2']}
                   headlineType={'h2'}
                   position={'text-start'}
                   underlineOnHover={true}

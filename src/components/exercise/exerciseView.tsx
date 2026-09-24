@@ -157,6 +157,7 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
         <Title
           title={section.title}
           txtColor={'var(--bs-secondary)'}
+          txtSize={['fs-2']}
           headlineType={'h2'}
           position={'text-center'}
           underlineOnHover={true}

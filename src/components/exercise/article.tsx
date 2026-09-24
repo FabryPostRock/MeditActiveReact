@@ -17,12 +17,13 @@ export default function Article({ section, status, videoCompleted, isLocked }: E
       /**pe-none: impedisce interazioni con mouse e touch */
       className={isLocked ? 'pe-none opacity-50' : ''}
     >
-      <div className="container">
+      <div className="container mt-3 mb-3">
         <div className="row d-flex justify-content-center">
-          <div className="col-12 col-md-8 col-lg-6">
+          <div className="col-12">
             <Title
               title={section.title}
               txtColor={'var(--bs-secondary)'}
+              txtSize={['fs-2', 'fs-md-3', 'fs-lg-3']}
               headlineType={'h2'}
               position={'text-center'}
               underlineOnHover={true}
@@ -31,17 +32,17 @@ export default function Article({ section, status, videoCompleted, isLocked }: E
           </div>
           <div className="col-12 d-flex justify-content-center">
             <img
-              className="h-auto w-sm-40 w-md-30 w-lg-30 rounded"
+              className="h-auto w-sm-40 w-lg-40 rounded"
               src={section.thumbnailUrl}
               alt={`Anteprima di ${section.title}`}
             />
           </div>
         </div>
-        <div className="row d-flex justify-content-center">
-          <div className="col-12  col-sm-6">
+        <div className="row d-flex justify-content-center mt-3">
+          <div className="col-12 text-md-center text-lg-start">
             <p>Stato: {status}</p>
           </div>
-          <div className="col-12 col-sm-6">
+          <div className="col-12 text-md-center text-lg-start">
             <p>
               Video:
               {videoCompleted ? ' completato' : ' da vedere'}
