@@ -1,6 +1,7 @@
 import type ExerciseSection from '../../data/learningContent';
 import { Title } from '../title';
 import type { TrainingStatus } from '../../store/trainingProgressSlice';
+import { LessonProgress } from '../progressBar';
 
 interface ExerciseArticleProps {
   section: ExerciseSection;
@@ -31,11 +32,7 @@ export default function Article({ section, status, videoCompleted, isLocked }: E
             />
           </div>
           <div className="col-12 d-flex justify-content-center">
-            <img
-              className="h-auto w-sm-40 w-lg-40 rounded"
-              src={section.thumbnailUrl}
-              alt={`Anteprima di ${section.title}`}
-            />
+            <img className="h-auto w-40 rounded" src={section.thumbnailUrl} alt={`Anteprima di ${section.title}`} />
           </div>
         </div>
         <div className="row d-flex justify-content-center mt-3">
@@ -47,6 +44,9 @@ export default function Article({ section, status, videoCompleted, isLocked }: E
               Video:
               {videoCompleted ? ' completato' : ' da vedere'}
             </p>
+          </div>
+          <div className="">
+            <LessonProgress />
           </div>
         </div>
       </div>

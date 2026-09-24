@@ -1,0 +1,62 @@
+.lesson-progress {
+  position: relative;
+  margin: 2rem 1rem 3rem;
+}
+
+/* anima il width da 0 a 25% senza hover */
+@keyframes fill-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--width-end);
+  }
+}
+.progress {
+  --bs-progress-height: 0.2rem;
+  --bs-progress-bar-bg: var(--bs-secondary);
+  --bs-progress-border-radius: 0.25rem;
+  --bs-progress-box-shadow: none;
+  --bs-progress-bg: #fae3c0;
+}
+
+.progress-bar {
+  --bs-progress-bar-bg: var(--bs-secondary);
+  background-color: var(--bs-progress-bar-bg);
+  width: 0; /* Initial state */
+}
+
+.milestones {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+}
+
+.milestone {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.milestone-dot {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--bs-secondary);
+  border-radius: 50%;
+  background-color: var(--bs-body-bg);
+}
+
+.milestone-dot.completed {
+  background-color: var(--bs-secondary);
+}
+
+.milestone-label {
+  position: absolute;
+  top: 1.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.75rem;
+}/*# sourceMappingURL=CustomElements.css.map */

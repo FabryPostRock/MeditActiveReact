@@ -8,6 +8,7 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
 @use './BootstrapVars' as *;
 @use './components/Navbar.scss';
 @use './Animations.scss';
+@use './CustomElements';
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
@@ -26,6 +27,8 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   --bs-secondary: #{colors.$secondary};
   --bs-secondary-rgb: 226, 106, 8;
   --bs-gray-900-rgb: 33, 37, 41;
+  --light-grey-0xfae3c0: #{colors.$light-grey-0xfae3c0};
+  --light-grey-0xfae3c0-rgb: #{colors.$light-grey-0xfae3c0-rgb};
 
   /*GREEN*/
   --bs-dark-green: #{colors.$bs-dark-green-0x3b6a4f};
@@ -186,6 +189,10 @@ ul {
   padding-left: 0.5rem;
 }
 /*----------------------------------------CUSTOM SIZING----------------------------*/
+.w-40 {
+  width: 40% !important;
+}
+
 .w-sm-20 {
   @media only screen and (max-width: 578px) {
     width: 20% !important;
