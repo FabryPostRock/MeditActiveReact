@@ -186,6 +186,12 @@ ul {
   padding-left: 0.5rem;
 }
 /*----------------------------------------CUSTOM SIZING----------------------------*/
+.w-sm-20 {
+  @media only screen and (max-width: 578px) {
+    width: 20% !important;
+  }
+}
+
 .w-sm-30 {
   @media only screen and (max-width: 578px) {
     width: 30% !important;
@@ -195,6 +201,12 @@ ul {
 .w-sm-40 {
   @media only screen and (max-width: 578px) {
     width: 40% !important;
+  }
+}
+
+.w-md-20 {
+  @media only screen and (min-width: 579px) {
+    width: 20% !important;
   }
 }
 
@@ -210,12 +222,46 @@ ul {
   }
 }
 
-.w-lg-40 {
+.w-lg-20 {
   @media only screen and (min-width: 767px) {
-    width: 50% !important;
+    width: 20% !important;
   }
 }
 
+.w-lg-30 {
+  @media only screen and (min-width: 767px) {
+    width: 30% !important;
+  }
+}
+
+.w-lg-40 {
+  @media only screen and (min-width: 767px) {
+    width: 40% !important;
+  }
+}
+
+/*---------------------------------------- POSITIONING ----------------------------*/
+
+.container-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-rows: auto;
+
+  gap: 1rem;
+
+  // Affect the cell content
+  justify-items: stretch;
+  align-items: stretch;
+
+  // Affect the whole content
+  justify-content: start;
+  align-content: start;
+
+  // defines the order
+  grid-auto-flow: row;
+  grid-auto-rows: auto;
+}
 /*---------------------------------------- FONT ICONS------------------------------*/
 .material-symbols-outlined {
   font-variation-settings:

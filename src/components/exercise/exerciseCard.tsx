@@ -1,4 +1,4 @@
-import Title from './title';
+import { Title } from '../title';
 import { Link } from 'react-router-dom';
 import type ExerciseSection from '../../data/learningContent';
 import { exerciseSections } from '../../data/learningContent';

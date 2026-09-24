@@ -29,7 +29,14 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
               </div>
 
               <div className="text-justify mb-4">
-                <Title title={concept.title} txtColor={imageOnLeft ? 'var(--bs-dark-green)' : 'var(--bs-secondary)'} />
+                <Title
+                  title={concept.title}
+                  txtColor={imageOnLeft ? 'var(--bs-dark-green)' : 'var(--bs-secondary)'}
+                  headlineType={'h2'}
+                  position={'text-start'}
+                  underlineOnHover={true}
+                  scaleOnHover={false}
+                />
                 {concept.description}
               </div>
             </div>

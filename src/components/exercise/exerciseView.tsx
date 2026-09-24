@@ -1,4 +1,4 @@
-import Title from './title';
+import { Title } from '../title';
 import { Link } from 'react-router-dom';
 import type ExerciseSection from '../../data/learningContent';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -154,7 +154,14 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   return !isLocked ? (
     <article>
       <div>
-        <Title title={section.title} />
+        <Title
+          title={section.title}
+          txtColor={'var(--bs-secondary)'}
+          headlineType={'h2'}
+          position={'text-center'}
+          underlineOnHover={true}
+          scaleOnHover={false}
+        />
         <div>
           {/**<iframe> doesn't not allow any video control. With <video> you can but
            * you must use a real video format not an html page that wraps a video.
