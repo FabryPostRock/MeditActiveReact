@@ -24,9 +24,21 @@ export default function ExerciseCard({ section }: ExerciseCardProps) {
       className="d-block h-100 text-decoration-none text-reset"
       aria-label={`Apri la lezione ${section.title}`}
     >
-      <Article section={section} status={status} videoCompleted={videoCompleted} isLocked={progress.isLocked} />
+      <Article
+        section={section}
+        status={status}
+        videoCompleted={videoCompleted}
+        isLocked={progress.isLocked}
+        trainingCompleted={progress.trainingCompleted}
+      />
     </Link>
   ) : (
-    <Article section={section} status={status} videoCompleted={videoCompleted} isLocked={progress.isLocked} />
+    <Article
+      section={section}
+      status={status}
+      videoCompleted={videoCompleted}
+      isLocked={progress.isLocked}
+      trainingCompleted={progress.trainingCompleted}
+    />
   );
 }

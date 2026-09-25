@@ -16,6 +16,7 @@ $progress-anim-duration: 2s;
     width: 0%;
   }
   to {
+    // gathered from React
     width: var(--progress-value);
   }
 }
