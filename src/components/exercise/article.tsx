@@ -26,7 +26,7 @@ export default function Article({
        * h-100: 100% dell'altezza del parent-> cella grid
        *
        */
-      className={` h-100 ${isLocked ? 'pe-none opacity-50' : ''}`}
+      className={` section-enlarge h-100 ${isLocked ? 'pe-none opacity-50' : ''}`}
     >
       {' '}
       {/**d-flex flex-column : enables the chance to manage the progress bar verical spacing with mt-auto*/}

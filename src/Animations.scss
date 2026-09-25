@@ -1,3 +1,12 @@
+@use './Colors.scss' as colors;
+
+:root {
+  /*TRANSITION*/
+  --headingTransition: transform 0.3s ease-in-out;
+  // forwards: maintain the last animation state
+  --sectionTransition: sectionEnlarge 0.7s ease-in-out forwards;
+}
+
 $rising-start-div: 200px;
 $rising-mid-div: 20px;
 $rising-duration-div: 1.5s;
@@ -127,6 +136,7 @@ $rising-duration-div: 1.5s;
 
 /*--------------------------------------TEXT---------------------------------------------*/
 
+//-------------TEXT UNDERLINE
 .text-underline {
   position: relative;
   display: block;
@@ -152,4 +162,21 @@ $rising-duration-div: 1.5s;
 
 .text-underline:hover::after {
   transform: scaleX(1);
+}
+
+//-------------TEXT ENALRGE
+
+@keyframes sectionEnlarge {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+    box-shadow: 0 1.5rem 3rem rgba(colors.$bs-light-green-0x7fc87b, 0.6);
+  }
+}
+
+/* classe che attiva l'ingrandimento */
+.section-enlarge:hover {
+  animation: var(--sectionTransition);
 }

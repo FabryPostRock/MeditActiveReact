@@ -1,3 +1,9 @@
+:root {
+  /*TRANSITION*/
+  --headingTransition: transform 0.3s ease-in-out;
+  --sectionTransition: sectionEnlarge 0.7s ease-in-out forwards;
+}
+
 @keyframes textSlideFromBot {
   0% {
     opacity: 0;
@@ -122,4 +128,18 @@
 
 .text-underline:hover::after {
   transform: scaleX(1);
+}
+
+@keyframes sectionEnlarge {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+    box-shadow: 0 1.5rem 3rem rgba(127, 200, 123, 0.6);
+  }
+}
+/* classe che attiva l'ingrandimento */
+.section-enlarge:hover {
+  animation: var(--sectionTransition);
 }/*# sourceMappingURL=Animations.css.map */
