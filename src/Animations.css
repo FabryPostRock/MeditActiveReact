@@ -100,8 +100,8 @@
 /*--------------------------------------TEXT---------------------------------------------*/
 .text-underline {
   position: relative;
-  width: -moz-fit-content;
-  width: fit-content;
+  display: block;
+  width: 100%;
   padding-bottom: 0.15em;
 }
 
@@ -109,8 +109,8 @@
   content: "";
   position: absolute;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  left: 10%;
+  width: 80%;
   height: 3px;
   background-color: currentColor;
   /*turns the line not visible until hovered*/

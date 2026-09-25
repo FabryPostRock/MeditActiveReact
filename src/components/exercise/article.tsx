@@ -36,7 +36,7 @@ export default function Article({
             <Title
               title={section.title}
               txtColor={'var(--bs-secondary)'}
-              txtSize={['fs-2', 'fs-md-3', 'fs-lg-3']}
+              txtSize={['fs-3', 'fs-md-3', 'fs-lg-3']}
               headlineType={'h2'}
               position={'text-center'}
               underlineOnHover={true}
