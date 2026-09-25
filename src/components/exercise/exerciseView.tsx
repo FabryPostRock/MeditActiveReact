@@ -17,6 +17,7 @@ import {
 
 import { useRef, useEffect, type SyntheticEvent } from 'react';
 import { store } from '../../store/store';
+import { ProgressBar } from '../progressBar';
 
 /**
  * Definizione props con le caratteristiche statiche passate dal padre
@@ -59,7 +60,7 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   const dispatch = useAppDispatch();
   // Using useAppSelector is quite more secure then store.getState because in the former
   // case the state is subscribed to changes.
-  const activeSectionId = useAppSelector((state) => state.trainingProgress.activeSectionId);
+  const state = useAppSelector((state) => state);
 
   useEffect(() => {
     const releaseActiveSection = () => {
@@ -123,7 +124,9 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   };
 
   const handleVideoPlay = (event: SyntheticEvent<HTMLVideoElement>) => {
-    console.log(`handleVideoPlay activeSectionId : ${activeSectionId}  section.id: ${section.id}`);
+    console.log(
+      `handleVideoPlay activeSectionId : ${state.trainingProgress.activeSectionId}  section.id: ${section.id}`,
+    );
     dispatch(
       startVideoPlayback({
         sectionId: section.id,
@@ -150,105 +153,130 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
 
   const status = progress?.status ?? 'idle';
   const videoCompleted = progress?.videoCompleted ?? false;
+  const trainingCompleted = progress?.trainingCompleted ?? false;
   console.log(`ExerciseView - currentSessionMs: ${currentSessionMs}   totalElapsedMs: ${totalElapsedMs}`);
   return !isLocked ? (
     <article>
-      <div>
-        <Title
-          title={section.title}
-          txtColor={'var(--bs-secondary)'}
-          txtSize={['fs-2']}
-          headlineType={'h2'}
-          position={'text-center'}
-          underlineOnHover={true}
-          scaleOnHover={false}
-        />
-        <div>
-          {/**<iframe> doesn't not allow any video control. With <video> you can but
-           * you must use a real video format not an html page that wraps a video.
-           */}
-          <video
-            src={section.videoUrl}
-            controls
-            //timeupdate, ended, play, pause are standards DOM events for <video> tag but in react turn into CamelCase properties
-            onTimeUpdate={handleVideoTimeUpdate}
-            onEnded={handleVideoEnded}
-            onPlay={handleVideoPlay}
-            onPause={handleVideoPause}
-            aria-label={`Video: ${section.title}`}
+      <div className="row">
+        <div className="col-12 d-flex justify-content-center">
+          <Title
+            title={section.title}
+            txtColor={'var(--bs-secondary)'}
+            txtSize={['fs-2']}
+            headlineType={'h2'}
+            position={'text-center'}
+            underlineOnHover={true}
+            scaleOnHover={false}
           />
-          <p>{section.description}</p>
         </div>
-        <div>
-          <p>Stato: {status}</p>
+        <div className="col-12 mt-3">
+          <div className="row d-flex justify-content-center">
+            <div className="col-12 d-flex justify-content-center">
+              {/**<iframe> doesn't not allow any video control. With <video> you can but
+               * you must use a real video format not an html page that wraps a video.
+               */}
+              <video
+                className="h-auto w-sm-80 w-md-40 rounded"
+                src={section.videoUrl}
+                controls
+                //timeupdate, ended, play, pause are standards DOM events for <video> tag but in react turn into CamelCase properties
+                onTimeUpdate={handleVideoTimeUpdate}
+                onEnded={handleVideoEnded}
+                onPlay={handleVideoPlay}
+                onPause={handleVideoPause}
+                aria-label={`Video: ${section.title}`}
+              />
+            </div>
+            <div className="col-12 d-flex justify-content-center text-justify mt-3">
+              <p>{section.description}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-12">
+          <div className="row d-flex justify-content-center">
+            <ProgressBar status={status} trainingCompleted={trainingCompleted} videoCompleted={videoCompleted} />
+          </div>
+        </div>
+        <div className="col d-flex justify-content-center">
+          <div className="row w-100 d-flex justify-content-center">
+            <div className="col-12 d-flex justify-content-center text-justify mt-5">
+              <p>{formatDuration(totalElapsedMs)}</p>
+            </div>
+            <div className="col-12 col-sm-4 d-flex  justify-content-center m-3 mx-md-0">
+              <div className="row w-100 d-flex justify-content-center">
+                <div className="col-6 col-sm-12 col-lg-9">
+                  <button
+                    className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${videoCompleted && status !== 'readyToComplete' ? '' : 'disabled'}`}
+                    aria-disabled={videoCompleted && status !== 'readyToComplete' ? undefined : true}
+                    onClick={
+                      status === 'running'
+                        ? () =>
+                            dispatch(
+                              pauseTraining({
+                                sectionId: section.id,
+                                elapsedTrainingMs: Date.now(),
+                              }),
+                            )
+                        : () =>
+                            dispatch(
+                              !progress.startedAtMs
+                                ? // The start time is absolute and is needed only at the first start
+                                  startTraining({ sectionId: section.id, startedAtMs: Date.now() })
+                                : startTraining({ sectionId: section.id }),
+                            )
+                    }
+                  >
+                    {' '}
+                    <span className="material-symbols-outlined g-icon-2em g-icon-lg-3em g-icon-color">
+                      {status === 'running' ? 'pause' : 'play_arrow'}
+                    </span>{' '}
+                  </button>
+                </div>
+              </div>
+            </div>
 
-          <p>
-            Video:
-            {videoCompleted ? ' completato' : ' da vedere'}
-          </p>
-        </div>
-        <div>
-          <p>{formatDuration(totalElapsedMs)}</p>
-          <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
-            <button
-              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${videoCompleted && status !== 'readyToComplete' ? '' : 'disabled'}`}
-              aria-disabled={videoCompleted && status !== 'readyToComplete' ? undefined : true}
-              onClick={
-                status === 'running'
-                  ? () =>
+            <div className="col-12 col-sm-4 d-flex justify-content-center m-3 mx-md-0">
+              <div className="row w-100 d-flex justify-content-center">
+                <div className="col-6 col-sm-12 col-lg-9">
+                  <button
+                    className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${status === 'completed' || status === 'readyToComplete' ? '' : 'disabled'}`}
+                    aria-disabled={status === 'completed' || status === 'readyToComplete' ? undefined : true}
+                    onClick={() =>
                       dispatch(
-                        pauseTraining({
+                        resetTraining({
                           sectionId: section.id,
-                          elapsedTrainingMs: Date.now(),
                         }),
                       )
-                  : () =>
+                    }
+                  >
+                    {' '}
+                    <span className="material-symbols-outlined g-icon-2em g-icon-lg-3em g-icon-lg-3em g-icon-color">
+                      history
+                    </span>{' '}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-sm-4 d-flex justify-content-center m-3 mx-md-0">
+              <div className="row w-100 d-flex justify-content-center">
+                <div className="col-6 col-sm-12 col-lg-9">
+                  <button
+                    className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${status === 'readyToComplete' && !progress.trainingCompleted ? '' : 'disabled'}`}
+                    aria-disabled={status === 'readyToComplete' && !progress.trainingCompleted ? undefined : true}
+                    onClick={() =>
                       dispatch(
-                        !progress.startedAtMs
-                          ? // The start time is absolute and is needed only at the first start
-                            startTraining({ sectionId: section.id, startedAtMs: Date.now() })
-                          : startTraining({ sectionId: section.id }),
+                        completeTraining({
+                          sectionId: section.id,
+                        }),
                       )
-              }
-            >
-              {' '}
-              <span className="material-symbols-outlined g-icon-sm-2em g-icon-color">
-                {status === 'running' ? 'pause' : 'play_arrow'}
-              </span>{' '}
-            </button>
-          </div>
-
-          <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
-            <button
-              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${status === 'completed' || status === 'readyToComplete' ? '' : 'disabled'}`}
-              aria-disabled={status === 'completed' || status === 'readyToComplete' ? undefined : true}
-              onClick={() =>
-                dispatch(
-                  resetTraining({
-                    sectionId: section.id,
-                  }),
-                )
-              }
-            >
-              {' '}
-              <span className="material-symbols-outlined g-icon-sm-2em g-icon-color">history</span>{' '}
-            </button>
-          </div>
-          <div className="d-flex col-3 justify-content-center m-3 m-lg-5">
-            <button
-              className={`btn-big btn btn-secondary btn-icons-secondary d-inline-flex align-items-center justify-content-center w-100 rounded-5 ${status === 'readyToComplete' && !progress.trainingCompleted ? '' : 'disabled'}`}
-              aria-disabled={status === 'readyToComplete' && !progress.trainingCompleted ? undefined : true}
-              onClick={() =>
-                dispatch(
-                  completeTraining({
-                    sectionId: section.id,
-                  }),
-                )
-              }
-            >
-              <span className="material-symbols-outlined g-icon-sm-2em g-icon-color">check</span>
-              Esercizio Completato{' '}
-            </button>
+                    }
+                  >
+                    <span className="material-symbols-outlined g-icon-2em g-icon-lg-3em g-icon-color">check</span>
+                    Esercizio Completato{' '}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

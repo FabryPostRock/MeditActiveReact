@@ -12241,7 +12241,14 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
 
 .lesson-progress {
   position: relative;
-  margin: 2rem 1rem 3rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  width: 100%;
+}
+
+.progress-track {
+  position: relative;
+  width: 100%;
 }
 
 @keyframes fill-bar {
@@ -12253,6 +12260,7 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   }
 }
 .progress {
+  width: 100%;
   --bs-progress-height: 0.2rem;
   --bs-progress-bar-bg: var(--bs-secondary);
   --bs-progress-border-radius: 0.25rem;
@@ -12404,6 +12412,10 @@ strong {
   --bs-btn-disabled-border-color: #fff;
 }
 
+.btn-min-h {
+  min-height: 4rem !important;
+}
+
 .form-control {
   --bs-body-color: #241d18;
   --bs-border-color: #241d18;
@@ -12505,6 +12517,18 @@ ul {
   }
 }
 
+@media only screen and (max-width: 578px) {
+  .w-sm-60 {
+    width: 60% !important;
+  }
+}
+
+@media only screen and (max-width: 578px) {
+  .w-sm-80 {
+    width: 80% !important;
+  }
+}
+
 @media only screen and (min-width: 579px) {
   .w-md-20 {
     width: 20% !important;
@@ -12514,6 +12538,12 @@ ul {
 @media only screen and (min-width: 579px) {
   .w-md-30 {
     width: 30% !important;
+  }
+}
+
+@media only screen and (min-width: 579px) {
+  .w-md-40 {
+    width: 40% !important;
   }
 }
 
@@ -12583,6 +12613,10 @@ ul {
   }
 }
 
+.lh-0 {
+  line-height: 0;
+}
+
 /*---------------------------------------- POSITIONING ----------------------------*/
 .container-grid {
   display: grid;
@@ -12625,6 +12659,60 @@ ul {
 
 .material-symbols-outlined.g-icon-7em {
   font-size: 7rem;
+}
+
+@media only screen and (max-width: 578px) {
+  .material-symbols-outlined.g-icon-sm-1em {
+    font-size: 1rem;
+  }
+}
+
+@media only screen and (max-width: 578px) {
+  .material-symbols-outlined.g-icon-sm-2em {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (max-width: 578px) {
+  .material-symbols-outlined.g-icon-sm-3em {
+    font-size: 3rem;
+  }
+}
+
+@media only screen and (min-width: 579px) {
+  .material-symbols-outlined.g-icon-md-1em {
+    font-size: 1rem;
+  }
+}
+
+@media only screen and (min-width: 579px) {
+  .material-symbols-outlined.g-icon-md-2em {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .material-symbols-outlined.g-icon-md-3em {
+    font-size: 3rem;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .material-symbols-outlined.g-icon-lg-1em {
+    font-size: 1rem;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .material-symbols-outlined.g-icon-lg-2em {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .material-symbols-outlined.g-icon-lg-3em {
+    font-size: 3rem;
+  }
 }
 
 .btn-icons-secondary:hover .material-symbols-outlined.g-icon-color {

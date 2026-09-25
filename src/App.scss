@@ -118,6 +118,10 @@ strong {
   --bs-btn-disabled-border-color: #fff;
 }
 
+.btn-min-h {
+  min-height: 4rem !important;
+}
+
 .form-control {
   --bs-body-color: #{colors.$bs-black-0x241d18};
   --bs-border-color: #{colors.$bs-black-0x241d18};
@@ -208,6 +212,18 @@ ul {
   }
 }
 
+.w-sm-60 {
+  @media only screen and (max-width: 578px) {
+    width: 60% !important;
+  }
+}
+
+.w-sm-80 {
+  @media only screen and (max-width: 578px) {
+    width: 80% !important;
+  }
+}
+
 .w-md-20 {
   @media only screen and (min-width: 579px) {
     width: 20% !important;
@@ -217,6 +233,12 @@ ul {
 .w-md-30 {
   @media only screen and (min-width: 579px) {
     width: 30% !important;
+  }
+}
+
+.w-md-40 {
+  @media only screen and (min-width: 579px) {
+    width: 40% !important;
   }
 }
 
@@ -286,6 +308,10 @@ ul {
   }
 }
 
+.lh-0 {
+  line-height: 0;
+}
+
 /*---------------------------------------- POSITIONING ----------------------------*/
 
 .container-grid {
@@ -336,7 +362,51 @@ ul {
 .material-symbols-outlined.g-icon-7em {
   font-size: 7rem;
 }
-
+.material-symbols-outlined.g-icon-sm-1em {
+  @media only screen and (max-width: 578px) {
+    font-size: 1rem;
+  }
+}
+.material-symbols-outlined.g-icon-sm-2em {
+  @media only screen and (max-width: 578px) {
+    font-size: 2rem;
+  }
+}
+.material-symbols-outlined.g-icon-sm-3em {
+  @media only screen and (max-width: 578px) {
+    font-size: 3rem;
+  }
+}
+.material-symbols-outlined.g-icon-md-1em {
+  @media only screen and (min-width: 579px) {
+    font-size: 1rem;
+  }
+}
+.material-symbols-outlined.g-icon-md-2em {
+  @media only screen and (min-width: 579px) {
+    font-size: 2rem;
+  }
+}
+.material-symbols-outlined.g-icon-md-3em {
+  @media only screen and (min-width: 769px) {
+    font-size: 3rem;
+  }
+}
+.material-symbols-outlined.g-icon-lg-1em {
+  @media only screen and (min-width: 769px) {
+    font-size: 1rem;
+  }
+}
+.material-symbols-outlined.g-icon-lg-2em {
+  @media only screen and (min-width: 769px) {
+    font-size: 2rem;
+  }
+}
+.material-symbols-outlined.g-icon-lg-3em {
+  @media only screen and (min-width: 769px) {
+    font-size: 3rem;
+  }
+}
 .btn-icons-secondary:hover .material-symbols-outlined.g-icon-color {
   color: colors.$secondary;
 }

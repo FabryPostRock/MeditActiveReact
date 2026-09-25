@@ -38,25 +38,29 @@ export function ProgressBar({ status, trainingCompleted, videoCompleted }: UserP
   };
 
   return (
-    <div className="lesson-progress">
-      <div className="progress" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-        <div className="progress-bar" style={progressStyle} />
-      </div>
-
-      <div className="milestones">
-        {MILESTONES.map((milestone) => (
-          <div
-            key={milestone.label}
-            className="milestone"
-            style={{
-              left: `${milestone.percent}%`,
-            }}
-          >
-            <span className={`milestone-dot ${progress >= milestone.percent ? 'completed' : ''}`} />
-
-            <span className="milestone-label">{milestone.label}</span>
+    <div className="col-10 col-md-8 col-lg-6">
+      <div className="lesson-progress">
+        <div className="progress-track">
+          <div className="progress" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
+            <div className="progress-bar" style={progressStyle} />
           </div>
-        ))}
+
+          <div className="milestones">
+            {MILESTONES.map((milestone) => (
+              <div
+                key={milestone.label}
+                className="milestone"
+                style={{
+                  left: `${milestone.percent}%`,
+                }}
+              >
+                <span className={`milestone-dot ${progress >= milestone.percent ? 'completed' : ''}`} />
+
+                <span className="milestone-label">{milestone.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,13 @@
 .lesson-progress {
   position: relative;
-  margin: 2rem 1rem 3rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  width: 100%;
+}
+
+.progress-track {
+  position: relative;
+  width: 100%;
 }
 
 @keyframes fill-bar {
@@ -12,6 +19,7 @@
   }
 }
 .progress {
+  width: 100%;
   --bs-progress-height: 0.2rem;
   --bs-progress-bar-bg: var(--bs-secondary);
   --bs-progress-border-radius: 0.25rem;

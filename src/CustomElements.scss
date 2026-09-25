@@ -2,7 +2,17 @@
 
 .lesson-progress {
   position: relative;
-  margin: 2rem 1rem 3rem;
+  //padding-inline: 2rem;
+  // necessary because position:absolute configured for the circles, removes them from the
+  // layout spacing
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  width: 100%;
+}
+
+.progress-track {
+  position: relative;
+  width: 100%;
 }
 
 $progress-anim-duration: 2s;
@@ -23,6 +33,7 @@ $progress-anim-duration: 2s;
 
 .progress {
   //overflow: visible;
+  width: 100%;
   --bs-progress-height: 0.2rem;
   --bs-progress-bar-bg: var(--bs-secondary);
   --bs-progress-border-radius: 0.25rem;
