@@ -25,11 +25,15 @@ interface UserProgress {
 export function ProgressBar({ status, trainingCompleted, videoCompleted }: UserProgress) {
   let progress = 0;
   // 'progress' value changes with props change, therefore useState is not necessary
-  if (videoCompleted && status == 'idle') {
-    progress = 33;
-  } else if (videoCompleted && status == 'readyToComplete' && !trainingCompleted) {
-    progress = 66;
-  } else if (trainingCompleted) {
+
+  if (!trainingCompleted) {
+    if (videoCompleted && status == 'idle') {
+      progress = 33;
+    } else if (videoCompleted && status == 'readyToComplete') {
+      progress = 66;
+    }
+  }
+  if (trainingCompleted) {
     progress = 100;
   }
 

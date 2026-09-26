@@ -202,9 +202,9 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
             <div className="col-12 d-flex justify-content-center text-justify mt-5">
               <p>{formatDuration(totalElapsedMs)}</p>
             </div>
-            <div className="col-12 col-sm-4 d-flex  justify-content-center m-3 mx-md-0">
+            <div className="col-6 col-sm-4 d-flex  justify-content-center m-3 mx-md-0">
               <div className="row w-100 d-flex justify-content-center">
-                <div className="col-6 col-sm-12 col-lg-9">
+                <div className="col-12 col-sm-12 col-lg-9 p-0">
                   <button
                     className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${videoCompleted && status !== 'readyToComplete' ? '' : 'disabled'}`}
                     aria-disabled={videoCompleted && status !== 'readyToComplete' ? undefined : true}
@@ -235,9 +235,9 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
               </div>
             </div>
 
-            <div className="col-12 col-sm-4 d-flex justify-content-center m-3 mx-md-0">
+            <div className="col-6 col-sm-4 d-flex justify-content-center m-3 mx-md-0">
               <div className="row w-100 d-flex justify-content-center">
-                <div className="col-6 col-sm-12 col-lg-9">
+                <div className="col-12 col-sm-12 col-lg-9 p-0">
                   <button
                     className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${status === 'completed' || status === 'readyToComplete' ? '' : 'disabled'}`}
                     aria-disabled={status === 'completed' || status === 'readyToComplete' ? undefined : true}
@@ -257,9 +257,9 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-sm-4 d-flex justify-content-center m-3 mx-md-0">
+            <div className="col-6 col-sm-4 d-flex justify-content-center m-3 mx-md-0">
               <div className="row w-100 d-flex justify-content-center">
-                <div className="col-6 col-sm-12 col-lg-9">
+                <div className="col-12 col-sm-12 col-lg-9 p-0">
                   <button
                     className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${status === 'readyToComplete' && !progress.trainingCompleted ? '' : 'disabled'}`}
                     aria-disabled={status === 'readyToComplete' && !progress.trainingCompleted ? undefined : true}
