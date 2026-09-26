@@ -42,7 +42,7 @@ export function ProgressBar({ status, trainingCompleted, videoCompleted }: UserP
   };
 
   return (
-    <div className="col-10 col-md-8 col-lg-6">
+    <div className="col-10">
       <div className="lesson-progress">
         <div className="progress-track">
           <div className="progress" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>

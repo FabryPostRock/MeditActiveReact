@@ -26,7 +26,7 @@ export default function Article({
        * h-100: 100% dell'altezza del parent-> cella grid
        *
        */
-      className={` section-enlarge h-100 ${isLocked ? 'pe-none opacity-50' : ''}`}
+      className={` section-enlarge h-100 rounded pb-5 ${isLocked ? 'pe-none opacity-50' : ''}`}
     >
       {' '}
       {/**d-flex flex-column : enables the chance to manage the progress bar verical spacing with mt-auto*/}
@@ -48,9 +48,7 @@ export default function Article({
           </div>
         </div>
         <div className="row d-flex justify-content-center mt-auto">
-          <div className="">
-            <ProgressBar status={status} trainingCompleted={trainingCompleted} videoCompleted={videoCompleted} />
-          </div>
+          <ProgressBar status={status} trainingCompleted={trainingCompleted} videoCompleted={videoCompleted} />
         </div>
       </div>
     </article>
