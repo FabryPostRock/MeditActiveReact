@@ -37,6 +37,7 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
                   position={'text-start'}
                   underlineOnHover={true}
                   scaleOnHover={false}
+                  underlineTxtFit={true}
                 />
                 {concept.description}
               </div>

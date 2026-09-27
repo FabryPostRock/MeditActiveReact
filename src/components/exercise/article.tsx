@@ -41,6 +41,7 @@ export default function Article({
               position={'text-center'}
               underlineOnHover={true}
               scaleOnHover={false}
+              underlineTxtFit={false}
             />
           </div>
           <div className="col-12 d-flex justify-content-center mt-auto">

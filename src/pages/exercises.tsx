@@ -13,6 +13,7 @@ export default function Exercises() {
         position={'text-center'}
         underlineOnHover={false}
         scaleOnHover={false}
+        underlineTxtFit={false}
       />
       <div className="container-grid">
         {exerciseSections.map((section) => (

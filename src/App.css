@@ -12224,6 +12224,33 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   transform: scaleX(1);
 }
 
+.text-underline-fit {
+  position: relative;
+  display: block;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding-bottom: 0.15em;
+}
+
+.text-underline-fit::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0%;
+  width: 100%;
+  height: 3px;
+  background-color: currentColor;
+  /*turns the line not visible until hovered*/
+  transform: scaleX(0);
+  /*starts the animation from left*/
+  transform-origin: left;
+  transition: var(--headingTransition);
+}
+
+.text-underline-fit:hover::after {
+  transform: scaleX(1);
+}
+
 @keyframes sectionEnlarge {
   0% {
     transform: scale(1);

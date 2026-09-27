@@ -12,17 +12,38 @@ interface ExerciseTitle {
   headlineType: HeadingTag;
   position: Position;
   underlineOnHover: boolean;
+  underlineTxtFit: boolean;
   scaleOnHover: boolean;
 }
 
 // headlineType: Tag inside a destructuring means 'rename' it's not a type assignment
-export function Title({ title, txtColor, headlineType: Tag, position, underlineOnHover, txtSize }: ExerciseTitle) {
+export function Title({
+  title,
+  txtColor,
+  txtSize,
+  headlineType: Tag,
+  position,
+  underlineOnHover,
+  underlineTxtFit,
+}: ExerciseTitle) {
+  function renderTitleContent() {
+    if (!underlineOnHover) {
+      return title;
+    }
+    if (underlineOnHover && underlineTxtFit) {
+      return <span className="text-underline-fit">{title}</span>;
+    } else if (underlineOnHover && !underlineTxtFit) {
+      return <span className="text-underline">{title}</span>;
+    }
+  }
   return (
     <Tag className={`fw-bold ${txtSize.join(' ')} ${position} mb-3`} style={{ color: txtColor }}>
       {/*'width: fit-content' used for the animation pourposes disrupts the floating behaviour of the text content if used directly 
         in the h2 */}
-
-      {underlineOnHover ? <span className="text-underline">{title}</span> : title}
+      {
+        /**In JSX you can only return something you can't write js code directly with if and other statement */
+        renderTitleContent()
+      }
     </Tag>
   );
 }
