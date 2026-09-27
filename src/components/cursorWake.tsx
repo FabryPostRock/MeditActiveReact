@@ -56,7 +56,7 @@ export function CursorWake() {
      * prefers-reduced-motion: no-preference  the user has not requested animations reduction
      */
     const effectPreference = window.matchMedia(
-      '(min-width: 1200px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
+      '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
     );
 
     let foamRipples: FoamRipple[] = [];

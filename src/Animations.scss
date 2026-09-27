@@ -122,8 +122,7 @@ $rising-duration-div: 1.5s;
 }
 
 @media only screen and (max-width: 1199px) {
-  .perspective-walls,
-  .cursor-wake {
+  .perspective-walls {
     display: none;
   }
 }
@@ -164,7 +163,7 @@ $rising-duration-div: 1.5s;
   transform: scaleX(1);
 }
 
-//-------------TEXT ENALRGE
+//-------------SECTION ENALRGE
 
 @keyframes sectionEnlarge {
   0% {

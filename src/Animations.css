@@ -93,8 +93,7 @@
 }
 
 @media only screen and (max-width: 1199px) {
-  .perspective-walls,
-  .cursor-wake {
+  .perspective-walls {
     display: none;
   }
 }
