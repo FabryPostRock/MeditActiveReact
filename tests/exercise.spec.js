@@ -212,6 +212,44 @@ async function prepareSectionForCompletion(page, section) {
   );
 }
 
+async function checkProgressBar(page, checkValue) {
+  const progressbar = page.getByRole('progressbar');
+  const progressFill = progressbar.locator('.progress-bar');
+
+  const progressValue = await progressFill.evaluate((element) =>
+    getComputedStyle(element).getPropertyValue('--progress-value').trim(),
+  );
+
+  expect(progressValue).toBe(checkValue);
+  /* 
+  Alternative 1
+  await expect(progressbar).toHaveAttribute('aria-valuenow', '100');
+  Alternative 2
+  await expect(progressFill).toHaveCSS('--progress-value', '100%');
+  */
+  await expect
+    .poll(
+      async () =>
+        progressFill.evaluate((element) => {
+          const progressbar = element.parentElement;
+
+          if (!progressbar) {
+            throw new Error('Progress fill has no progressbar parent.');
+          }
+
+          const totalWidth = progressbar.getBoundingClientRect().width;
+          const filledWidth = element.getBoundingClientRect().width;
+
+          return Math.round((filledWidth / totalWidth) * 100);
+        }),
+      {
+        timeout: 5000,
+      },
+    )
+    // expect.poll() return an int not a string
+    .toBe(parseInt(checkValue));
+}
+
 test.describe('Exercise lesson page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(`/exercise/${exerciseSections[0].id}`);
@@ -246,7 +284,7 @@ test.describe('Exercise lesson page', () => {
   test('does not start training before the video is completed', async ({ page }) => {
     const startTrainingButton = page.locator('main article button').first();
 
-    await expect(page.getByText('Video: da vedere', { exact: true })).toBeVisible();
+    await checkProgressBar(page, '0%');
     await expect(startTrainingButton).toHaveAttribute('aria-disabled', 'true');
 
     /**
@@ -256,7 +294,6 @@ test.describe('Exercise lesson page', () => {
      */
     await startTrainingButton.dispatchEvent('click');
 
-    await expect(page.getByText('Stato: idle', { exact: true })).toBeVisible();
     await expect(startTrainingButton).toHaveAttribute('aria-disabled', 'true');
   });
 
@@ -304,13 +341,10 @@ test.describe('Exercise lesson page', () => {
       // Therefore the handleVideoEnded is called when the video is ended.
       mediaElement.dispatchEvent(new Event('ended', { bubbles: true }));
     });
-
-    await expect(page.getByText('Video: completato', { exact: true })).toBeVisible();
+    await checkProgressBar(page, '33%');
     await expect(startTrainingButton).not.toHaveAttribute('aria-disabled', 'true');
 
     await startTrainingButton.click();
-
-    await expect(page.getByText('Stato: running', { exact: true })).toBeVisible();
   });
 });
 
@@ -419,10 +453,11 @@ test.describe('Timer startup and stop', () => {
     await page.clock.pauseAt(new Date('2026-01-01T10:00:00'));
 
     const startTrainingButton = page.locator('main article button').first();
-    const timer = page.locator('main article div p').nth(3);
+    const timer = page.locator('main article div p').nth(1);
 
     await startTrainingButton.click();
-    await expect(page.getByText('Stato: running', { exact: true })).toBeVisible();
+    let trainingProgress = await getTrainingProgress(page);
+    expect(trainingProgress.progressBySectionId[exerciseSections[1].id].status).toBe('running');
 
     await page.clock.runFor(1_000);
     await expect(timer).toHaveText('00:01');
@@ -432,7 +467,8 @@ test.describe('Timer startup and stop', () => {
     await page.clock.setSystemTime(new Date('2026-01-01T10:00:03'));
     await page.reload();
 
-    await expect(page.getByText('Stato: running', { exact: true })).toBeVisible();
+    trainingProgress = await getTrainingProgress(page);
+    expect(trainingProgress.progressBySectionId[exerciseSections[1].id].status).toBe('running');
     await expect(timer).toHaveText('00:03');
   });
 });

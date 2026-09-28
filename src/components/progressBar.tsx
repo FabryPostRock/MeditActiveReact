@@ -8,18 +8,36 @@ type ProgressStyle = CSSProperties & {
   '--progress-value': string;
 };
 
+type MilestoneLabel = 'Inizio' | 'Video' | 'Pratica' | 'Verifica' | 'Completato';
+
+type Milestone = {
+  label: MilestoneLabel;
+  percent: number;
+};
+
 const MILESTONES = [
   // percent value is used for label positioning
-  { label: 'Video', percent: 0 },
-  { label: 'Pratica', percent: 33 },
-  { label: 'Verifica', percent: 66 },
+  { label: 'Inizio', percent: 0 },
+  { label: 'Video', percent: 33 },
+  { label: 'Pratica', percent: 66 },
   { label: 'Completato', percent: 100 },
-];
+] as const satisfies readonly Milestone[];
 
 interface UserProgress {
   status: TrainingStatus;
   trainingCompleted: boolean;
   videoCompleted: boolean;
+}
+
+function getMilestonePercent(label: MilestoneLabel) {
+  let percent = 0;
+  const videoMilestone = MILESTONES.find((item) => item.label === label);
+
+  if (!videoMilestone) {
+    throw new Error('Video milestone not found.');
+  }
+
+  return (percent = videoMilestone.percent);
 }
 
 export function ProgressBar({ status, trainingCompleted, videoCompleted }: UserProgress) {
@@ -28,13 +46,13 @@ export function ProgressBar({ status, trainingCompleted, videoCompleted }: UserP
 
   if (!trainingCompleted) {
     if (videoCompleted && status == 'idle') {
-      progress = 33;
+      progress = getMilestonePercent('Video');
     } else if (videoCompleted && status == 'readyToComplete') {
-      progress = 66;
+      progress = getMilestonePercent('Pratica');
     }
   }
   if (trainingCompleted) {
-    progress = 100;
+    progress = getMilestonePercent('Completato');
   }
 
   const progressStyle: ProgressStyle = {
