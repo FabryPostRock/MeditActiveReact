@@ -1,3 +1,11 @@
+import { PageMetadata } from '../components/pageMetadata';
+import { errorPageMetadata } from '../data/pageMetadata';
+
 export default function Error() {
-  return <div>Pagina Errore</div>;
+  return (
+    <>
+      <PageMetadata metadata={errorPageMetadata} />
+      <div>Pagina Errore</div>
+    </>
+  );
 }

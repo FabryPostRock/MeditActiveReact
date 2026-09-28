@@ -3,6 +3,8 @@ import { homeConceptsData } from '../data/homeConcepts';
 import { HomeConcept } from '../components/homeConcept';
 import { PerspectiveWalls } from '../components/perspectiveWalls';
 import { CursorWake } from '../components/cursorWake';
+import { PageMetadata } from '../components/pageMetadata';
+import { homePageMetadata } from '../data/pageMetadata';
 import { useEffect, useRef } from 'react';
 
 export default function Home() {
@@ -78,6 +80,8 @@ export default function Home() {
 
       <div className="page__content">*/
     <>
+      <PageMetadata metadata={homePageMetadata} />
+
       <section>
         <div className="container mb-5">
           <div className="row flex-row d-flex justify-content-center mb-3">
