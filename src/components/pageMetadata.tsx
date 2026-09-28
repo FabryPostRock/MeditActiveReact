@@ -57,6 +57,7 @@ export function PageMetadata({ metadata }: PageMetadataProps) {
       {/* aggiunge il canonical url se esiste*/}
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
       <meta property="og:title" content={metadata.title} />
+      {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
       <meta property="og:description" content={metadata.description} />
       <meta property="og:type" content={metadata.openGraph.type} />
       <meta property="og:image" content={openGraphImageUrl} />
