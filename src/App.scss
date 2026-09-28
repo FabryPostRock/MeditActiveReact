@@ -415,6 +415,21 @@ ul {
   color: colors.$secondary;
 }
 
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.page-scroll-container {
+  display: flex;
+  // expands at maximum
+  flex: 1 1 auto;
+  flex-direction: column;
+  // allows content to shrink
+  min-height: 0;
+}
+
 /* Mobile Styles */
 @media only screen and (max-width: 578px) {
   .mt-sm-md-9 {
@@ -426,21 +441,19 @@ ul {
   }
 
   body {
+    // doesn't show the scroll bar if some element overflows
     overflow: hidden;
   }
 
   .app-shell {
-    display: flex;
-    flex-direction: column;
     height: 100dvh;
     overflow: hidden;
   }
 
   .page-scroll-container {
     order: 1;
-    // si espande il più possibile
-    flex: 1 1 auto;
-    min-height: 0;
+    // with 'overflow: hidden' the content outside the pageview will not be shown.
+    // 'overflow-y: auto' allows to scroll with the navbar fixed-bot
     overflow-y: auto;
   }
 }

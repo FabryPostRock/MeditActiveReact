@@ -65,6 +65,9 @@ $rising-duration-div: 1.5s;
   // A positioned element with a non-auto z-index also creates a stacking context. Together with isolation,
   // this makes the intended layer boundary explicit and resilient to future style changes.
   z-index: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
 }
 
 .page__content {
@@ -73,6 +76,10 @@ $rising-duration-div: 1.5s;
   z-index: 1;
   width: 100%;
   margin-inline: auto;
+
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
 }
 
 @media only screen and (min-width: 1200px) {

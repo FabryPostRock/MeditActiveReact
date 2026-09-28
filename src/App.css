@@ -12140,6 +12140,9 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   position: relative;
   isolation: isolate;
   z-index: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
 }
 
 .page__content {
@@ -12147,6 +12150,9 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   z-index: 1;
   width: 100%;
   margin-inline: auto;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
 }
 
 @media only screen and (min-width: 1200px) {
@@ -12749,6 +12755,19 @@ ul {
   color: #e26a08;
 }
 
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.page-scroll-container {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
 /* Mobile Styles */
 @media only screen and (max-width: 578px) {
   .mt-sm-md-9 {
@@ -12761,15 +12780,11 @@ ul {
     overflow: hidden;
   }
   .app-shell {
-    display: flex;
-    flex-direction: column;
     height: 100dvh;
     overflow: hidden;
   }
   .page-scroll-container {
     order: 1;
-    flex: 1 1 auto;
-    min-height: 0;
     overflow-y: auto;
   }
 }
