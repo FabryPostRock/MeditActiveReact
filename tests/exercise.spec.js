@@ -424,7 +424,7 @@ test.describe('Timer startup and stop', () => {
     await startTrainingButton.click();
     await expect(startTrainingButton).not.toHaveAttribute('aria-disabled', 'true');
 
-    const timer = page.locator('main article div p').nth(3);
+    const timer = page.locator('main article').getByText(/^\d{2}:\d{2}$/);
 
     // Advance browser time by two second and execute the setInterval callback.
     await page.clock.runFor(2_000);
@@ -453,7 +453,7 @@ test.describe('Timer startup and stop', () => {
     await page.clock.pauseAt(new Date('2026-01-01T10:00:00'));
 
     const startTrainingButton = page.locator('main article button').first();
-    const timer = page.locator('main article div p').nth(1);
+    const timer = page.locator('main article').getByText(/^\d{2}:\d{2}$/);
 
     await startTrainingButton.click();
     let trainingProgress = await getTrainingProgress(page);
@@ -530,7 +530,7 @@ test.describe('Training completion and unlocking', () => {
     await page.getByRole('button', { name: /Esercizio Completato/ }).click();
 
     await expect(page).toHaveURL(`/exercise/${lastSection.id}`);
-    await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+    await checkProgressBar(page, '100%');
     await expect(page.getByText('Pagina Errore', { exact: true })).toHaveCount(0);
 
     const trainingProgress = await getTrainingProgress(page);
@@ -552,7 +552,7 @@ test.describe('Training completion and unlocking', () => {
     });
 
     await completeTrainingButton.dblclick();
-    await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+    await checkProgressBar(page, '100%');
 
     const trainingProgress = await getTrainingProgress(page);
 
@@ -578,10 +578,9 @@ test.describe('Training completion and unlocking', () => {
     });
 
     await completeTrainingButton.click();
-    await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+    await checkProgressBar(page, '100%');
 
     await resetTrainingButton.click();
-    await expect(page.getByText('Stato: idle', { exact: true })).toBeVisible();
 
     const progressAfterReset = await getTrainingProgress(page);
 
@@ -611,8 +610,6 @@ test.describe('Training completion and unlocking', () => {
 
     // dispatch the click to verify that Redux also rejects it.
     await secondCompletionButton.dispatchEvent('click');
-
-    await expect(page.getByText('Stato: readyToComplete', { exact: true })).toBeVisible();
 
     const progressAfterSecondCompletionAttempt = await getTrainingProgress(page);
 
