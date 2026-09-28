@@ -485,10 +485,12 @@ test.describe('Training completion and unlocking', () => {
       const completeTrainingButton = page.getByRole('button', {
         name: /Esercizio Completato/,
       });
+      let trainingProgress = await getTrainingProgress(page);
+      expect(trainingProgress.progressBySectionId[section.id].status).toBe('readyToComplete');
 
-      await expect(page.getByText('Stato: readyToComplete', { exact: true })).toBeVisible();
       await completeTrainingButton.click();
-      await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+      trainingProgress = await getTrainingProgress(page);
+      expect(trainingProgress.progressBySectionId[section.id].status).toBe('completed');
 
       // jump back to exercises page to see locked and unlocked sections updates.
       // 'page.goto' wait 'load' therfore images and other things. Webkit is still waiting when the 30s timeout
