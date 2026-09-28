@@ -50,7 +50,19 @@ async function completeVideo(page, section) {
     mediaElement.dispatchEvent(new Event('ended', { bubbles: true }));
   });
 
-  await expect(page.getByText('Video: completato', { exact: true })).toBeVisible();
+  await expectProgressBar(page, 33);
+}
+
+async function expectProgressBar(root, expectedProgress) {
+  const progressbar = root.getByRole('progressbar');
+  const progressFill = progressbar.locator('.progress-bar');
+
+  /**
+   * Lesson status is exposed through the semantic progressbar and its CSS fill
+   * value, so the test does not depend on presentation text or a specific tag.
+   */
+  await expect(progressbar).toHaveAttribute('aria-valuenow', String(expectedProgress));
+  await expect(progressFill).toHaveCSS('--progress-value', `${expectedProgress}%`);
 }
 
 async function expectInitialTrainingState(page) {
@@ -58,7 +70,7 @@ async function expectInitialTrainingState(page) {
 
   await expect(sectionCards).toHaveCount(EXERCISE_SECTION_COUNT);
   await expect(sectionCards.first()).not.toHaveAttribute('aria-disabled', 'true');
-  await expect(sectionCards.first().locator('p').first()).toHaveText('Stato: idle');
+  await expectProgressBar(sectionCards.first(), 0);
 
   for (let sectionIndex = 1; sectionIndex < EXERCISE_SECTION_COUNT; sectionIndex += 1) {
     await expect(sectionCards.nth(sectionIndex)).toHaveAttribute('aria-disabled', 'true');
@@ -103,25 +115,24 @@ test.describe('localStorage persistence', () => {
     await completeVideo(page, firstSection);
 
     const startTrainingButton = page.locator('main article button').first();
-    const timer = page.locator('main article div p').nth(3);
+    const timer = page.locator('main article').getByText(/^\d{2}:\d{2}$/);
 
     await startTrainingButton.click();
-    await expect(page.getByText('Stato: running', { exact: true })).toBeVisible();
+    await expectProgressBar(page, 0);
 
     await page.clock.runFor(firstSection.requiredTrainingMs);
 
-    await expect(page.getByText('Stato: readyToComplete', { exact: true })).toBeVisible();
+    await expectProgressBar(page, 66);
     await expect(timer).toHaveText('00:05');
     await page.getByRole('button', { name: /Esercizio Completato/ }).click();
-    await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+    await expectProgressBar(page, 100);
 
     // After the previous test the clock is still paused and that can cause a page block during loading.
     // That's why we need to resume the clock.
     await page.clock.resume();
     await page.reload({ waitUntil: 'domcontentloaded' });
 
-    await expect(page.getByText('Video: completato', { exact: true })).toBeVisible();
-    await expect(page.getByText('Stato: completed', { exact: true })).toBeVisible();
+    await expectProgressBar(page, 100);
     await expect(timer).toHaveText('00:05');
 
     const trainingProgress = await getStoredTrainingProgress(page);
@@ -154,7 +165,7 @@ test.describe('localStorage persistence', () => {
     const reopenedPage = await context.newPage();
     await reopenedPage.goto(`${appOrigin}/exercise/${firstSection.id}`);
 
-    await expect(reopenedPage.getByText('Video: completato', { exact: true })).toBeVisible();
+    await expectProgressBar(reopenedPage, 33);
 
     const trainingProgress = await getStoredTrainingProgress(reopenedPage);
 
@@ -208,8 +219,7 @@ test.describe('localStorage persistence', () => {
     await page.evaluate((storageKey) => localStorage.removeItem(storageKey), TRAINING_PROGRESS_STORAGE_KEY);
     await page.reload();
 
-    await expect(page.getByText('Video: da vedere', { exact: true })).toBeVisible();
-    await expect(page.getByText('Stato: idle', { exact: true })).toBeVisible();
+    await expectProgressBar(page, 0);
 
     await page.goto('/exercises');
     await expectInitialTrainingState(page);
