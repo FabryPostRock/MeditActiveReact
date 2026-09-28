@@ -76,6 +76,22 @@ const exerciseSections = [
   },
 ];
 
+function getExpectedProgress(sectionProgress) {
+  if (sectionProgress.trainingCompleted) {
+    return 100;
+  }
+
+  if (sectionProgress.videoCompleted && sectionProgress.status === 'readyToComplete') {
+    return 66;
+  }
+
+  if (sectionProgress.videoCompleted && sectionProgress.status === 'idle') {
+    return 33;
+  }
+
+  return 0;
+}
+
 test.describe('Section list', () => {
   test('Verify if /exercises show course title', async ({ page }) => {
     await page.goto('/exercises');
@@ -115,8 +131,18 @@ test.describe('Section list', () => {
 
       // Verifies that the image resource was successfully loaded.
       await expect.poll(() => image.evaluate((element) => element.complete && element.naturalWidth > 0)).toBe(true);
-      // first(): get the first p element
-      await expect(sectionCard.locator('p').first()).toHaveText(`Stato: ${currentSection.status}`);
+
+      const expectedProgress = getExpectedProgress(currentSection);
+      const progressbar = sectionCard.getByRole('progressbar');
+      const progressFill = progressbar.locator('.progress-bar');
+
+      /**
+       * The lesson status is represented by the semantic progressbar instead
+       * of presentation text, so both its accessible value and CSS fill value
+       * must reflect the section state stored in Redux.
+       */
+      await expect(progressbar).toHaveAttribute('aria-valuenow', String(expectedProgress));
+      await expect(progressFill).toHaveCSS('--progress-value', `${expectedProgress}%`);
     }
   });
 
