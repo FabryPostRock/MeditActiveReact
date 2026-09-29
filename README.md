@@ -183,16 +183,18 @@ flowchart TD
 
 ### Responsabilità principali
 
-| Livello          | Responsabilità                                            |
-| ---------------- | --------------------------------------------------------- |
-| `main.tsx`       | Monta React, Redux e React Router                         |
-| `App.tsx`        | Definisce shell, decorazioni, navigazione, rotte e footer |
-| `pages/`         | Compone le pagine associate alle rotte                    |
-| `components/`    | Contiene UI e comportamenti riutilizzabili                |
-| `data/`          | Contiene lezioni statiche, contenuti Home e metadata      |
-| `store/`         | Gestisce stato, timer, persistenza e hook Redux tipizzati |
-| `public/videos/` | Espone i video delle lezioni come asset pubblici          |
-| `tests/`         | Contiene i test end-to-end Playwright                     |
+| Livello               | Responsabilità                                           |
+| --------------------- | -------------------------------------------------------- |
+| `main.tsx`            | Monta React, Redux e React Router                        |
+| `App.tsx`             | Definisce shell, decorazioni, navigazione, rotte e footer |
+| `pages/`              | Compone le pagine associate alle rotte                   |
+| `components/`         | Contiene UI e comportamenti riutilizzabili               |
+| `data/`               | Contiene lezioni statiche, contenuti Home e metadata     |
+| `store/`              | Gestisce stato, timer, persistenza e hook Redux tipizzati |
+| `public/videos/`      | Espone i video delle lezioni come asset pubblici         |
+| `public/robots.txt`   | Definisce le regole di scansione per i crawler           |
+| `public/sitemap.xml`  | Elenca le pagine pubbliche proposte ai motori di ricerca |
+| `tests/`              | Contiene i test end-to-end Playwright                    |
 
 ---
 
@@ -203,7 +205,9 @@ MeditActiveReact/
 ├── docs/
 │   └── curvature_regulation.png
 ├── public/
-│   └── videos/
+│   ├── videos/
+│   ├── robots.txt
+│   └── sitemap.xml
 ├── scripts/
 │   └── ensure-linux-install.mjs
 ├── skills/
@@ -547,6 +551,43 @@ Ogni pagina definisce metadata dedicati:
 
 La Home aggiunge inoltre dati strutturati `Organization` in formato JSON-LD.
 
+### Dominio canonico
+
+Gli URL assoluti dei metadata usano come origine di produzione:
+
+```text
+https://medit-active.web.app
+```
+
+Il dominio viene utilizzato per canonical URL, `og:url`, immagini Open Graph e URL presenti nel JSON-LD. Durante lo sviluppo l'app continua a funzionare su `http://localhost:5173`: navigazione e risorse locali restano sulla macchina dello sviluppatore, mentre i metadata SEO dichiarano intenzionalmente il sito di produzione come versione canonica.
+
+Se viene configurato un dominio personalizzato, l'origine in `src/components/pageMetadata.tsx`, `public/robots.txt` e `public/sitemap.xml` deve essere aggiornata in modo coerente.
+
+### Robots e sitemap
+
+`public/robots.txt` viene copiato da Vite nella root del bundle e contiene:
+
+```text
+User-agent: *
+Allow: /
+
+Sitemap: https://medit-active.web.app/sitemap.xml
+```
+
+- `User-agent: *` applica le regole a tutti i crawler;
+- `Allow: /` consente la scansione dell'intero sito;
+- `Sitemap` comunica la posizione della sitemap XML.
+
+L'autorizzazione alla scansione non obbliga un motore di ricerca a indicizzare tutte le pagine e non annulla un metadata `noindex`. Le pagine di errore e le lezioni bloccate continuano quindi a dichiarare `noindex, nofollow`.
+
+`public/sitemap.xml` elenca solamente le pagine accessibili e indicizzabili per un nuovo visitatore:
+
+- `https://medit-active.web.app/`;
+- `https://medit-active.web.app/exercises`;
+- `https://medit-active.web.app/exercise/breathing-section-1`.
+
+Le lezioni successive non sono incluse perché richiedono lo sblocco progressivo salvato nel browser. Se in futuro diventeranno pubblicamente accessibili, dovranno essere aggiunte alla sitemap. Dopo il deploy è possibile inviare `https://medit-active.web.app/sitemap.xml` tramite Google Search Console.
+
 Tra le caratteristiche di accessibilità già presenti:
 
 - heading configurabili semanticamente;
@@ -637,19 +678,90 @@ http://localhost:5173/
 | `npm run test:watch`   | Mantiene Vitest in watch mode            |
 | `npm run test:e2e`     | Esegue Playwright                        |
 | `npm run check`        | Esegue typecheck, lint e format check    |
+| `npm run build`        | Genera il bundle Vite in `dist/`         |
 | `npm run build:watch`  | Mantiene TypeScript in modalità watch    |
 | `npm run preview`      | Avvia la preview Vite sulla porta `4173` |
 
 ### Build di produzione
 
-Il bundle può essere generato usando la dipendenza Vite già installata:
+Il bundle può essere generato usando lo script Vite già configurato:
 
 ```bash
-npx vite build
+npm run build
 npm run preview
 ```
 
 L'output viene scritto in `dist/` e la preview usa `http://localhost:4173/`.
+
+### Deploy su Firebase Hosting
+
+Firebase Hosting pubblica il contenuto di `dist/`. La configurazione in `firebase.json` include inoltre una rewrite verso `/index.html`, necessaria affinché React Router possa gestire direttamente URL come `/exercises` e `/exercise/breathing-section-1`.
+
+Il sito di produzione è disponibile all'indirizzo:
+
+```text
+https://medit-active.web.app/
+```
+
+#### Prima inizializzazione
+
+La Firebase CLI deve essere disponibile e autenticata:
+
+```bash
+npm install -g firebase-tools
+firebase login
+firebase projects:list
+```
+
+Dalla root del repository si inizializza Hosting con:
+
+```bash
+firebase init hosting
+```
+
+Risposte previste durante la configurazione:
+
+- progetto: `Use an existing project` e selezione del progetto MeditActive;
+- public directory: `dist`;
+- single-page application: `Yes`;
+- build e deploy automatici con GitHub: `No`, finché il deploy resta manuale;
+- sovrascrittura di `dist/index.html`: `No`, perché il file è generato da Vite.
+
+L'inizializzazione crea `firebase.json` e `.firebaserc`. L'`index.html` nella root del repository è invece l'entry point sorgente di Vite e non deve essere eliminato.
+
+#### Deploy manuale
+
+Prima della pubblicazione:
+
+```bash
+nvm use
+npm run check
+npm run test
+npm run build
+```
+
+La build può essere verificata localmente con:
+
+```bash
+npm run preview
+```
+
+Controllare quindi il progetto Firebase attivo e distribuire solamente Hosting:
+
+```bash
+firebase use
+firebase deploy --only hosting
+```
+
+Dopo il deploy vanno verificati almeno:
+
+```text
+https://medit-active.web.app/
+https://medit-active.web.app/robots.txt
+https://medit-active.web.app/sitemap.xml
+```
+
+Per i deploy successivi non è necessario ripetere `firebase init hosting`: è sufficiente eseguire nuovamente controlli, build e `firebase deploy --only hosting`.
 
 ---
 
@@ -721,7 +833,7 @@ sblocco nextSectionId
 
 ### Script di build
 
-Lo script `build` dovrebbe includere `vite build` se l'obiettivo è produrre direttamente il bundle frontend tramite `npm run build`.
+Lo script `build` esegue `vite build` e genera il bundle frontend in `dist/`. Il typecheck resta un controllo separato incluso in `npm run check` e deve essere eseguito prima della pubblicazione.
 
 ### Dipendenze
 
