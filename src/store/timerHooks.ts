@@ -30,15 +30,15 @@ export default function useTrainingTimer(section: ExerciseSection) {
         const currentTime = Date.now();
 
         setNow(currentTime);
-        console.log(
+        /* console.log(
           `updateTimer  currentTime: ${currentTime}  progress.startedAtMs: ${progress.startedAtMs}   status: ${progress.status}`,
-        );
+        ); */
         const currentSessionMs = currentTime - progress.startedAtMs!;
 
         const totalElapsedMs = progress.elapsedTrainingMs + currentSessionMs;
 
         if (totalElapsedMs >= progress.requiredTrainingMs) {
-          console.log('setReadyToBeCompleted will be called!');
+          // console.log('setReadyToBeCompleted will be called!');
           dispatch(
             setReadyToBeCompleted({
               sectionId: section.id,
@@ -56,7 +56,7 @@ export default function useTrainingTimer(section: ExerciseSection) {
       return () => {
         // setInterval has to be cleared only when a new action is performed on start e pause buttons
         window.clearInterval(intervalId);
-        console.log('Timer Cleared');
+        // console.log('Timer Cleared');
       };
     },
     // Here is specified that the useEffect will be executed when the following
@@ -75,9 +75,9 @@ export default function useTrainingTimer(section: ExerciseSection) {
     progress.startedAtMs && now && progress.status === 'running' ? Math.max(now - progress.startedAtMs!, 0) : 0;
 
   const totalElapsedMs = Math.min(progress.elapsedTrainingMs + currentSessionMs, progress.requiredTrainingMs);
-  console.log(`useTrainingTimer progress.elapsedTrainingMs: ${progress.elapsedTrainingMs}`);
+  // console.log(`useTrainingTimer progress.elapsedTrainingMs: ${progress.elapsedTrainingMs}`);
   const remainingTrainingMs = Math.max(progress.requiredTrainingMs - totalElapsedMs, 0);
-  console.log(`useTrainingTimer currentSessionMs: ${currentSessionMs}  now: ${now}`);
+  // console.log(`useTrainingTimer currentSessionMs: ${currentSessionMs}  now: ${now}`);
   return {
     progress,
     totalElapsedMs,

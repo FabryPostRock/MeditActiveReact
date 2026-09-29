@@ -99,9 +99,9 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
     }
 
     lastRecordedInterval.current = currentInterval;
-    console.log(
+    /* console.log(
       `handleVideoTimeUpdate  - playedSeconds: ${Math.floor(getPlayedSeconds(video))} currentSecond: ${currentSecond}  currentInterval: ${currentInterval}`,
-    );
+    ); */
     dispatch(
       setVideoProgress({
         sectionId: section.id,
@@ -124,9 +124,9 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   };
 
   const handleVideoPlay = (event: SyntheticEvent<HTMLVideoElement>) => {
-    console.log(
+    /* console.log(
       `handleVideoPlay activeSectionId : ${state.trainingProgress.activeSectionId}  section.id: ${section.id}`,
-    );
+    ); */
     dispatch(
       startVideoPlayback({
         sectionId: section.id,
@@ -154,7 +154,7 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
   const status = progress?.status ?? 'idle';
   const videoCompleted = progress?.videoCompleted ?? false;
   const trainingCompleted = progress?.trainingCompleted ?? false;
-  console.log(`ExerciseView - currentSessionMs: ${currentSessionMs}   totalElapsedMs: ${totalElapsedMs}`);
+  // console.log(`ExerciseView - currentSessionMs: ${currentSessionMs}   totalElapsedMs: ${totalElapsedMs}`);
   return !isLocked ? (
     <article>
       <div className="row">

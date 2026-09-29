@@ -102,7 +102,7 @@ const progressSlice = createSlice({
       }
 
       state.activeSectionId = sectionId;
-      console.log(`startVideoPlayback state.activeSectionId : ${state.activeSectionId}`);
+      // console.log(`startVideoPlayback state.activeSectionId : ${state.activeSectionId}`);
     },
 
     stopVideoPlayback: (
@@ -112,11 +112,11 @@ const progressSlice = createSlice({
       }>,
     ) => {
       const { sectionId } = action.payload;
-      console.log(`stopVideoPlayback before state.activeSectionId : ${state.activeSectionId}`);
+      // console.log(`stopVideoPlayback before state.activeSectionId : ${state.activeSectionId}`);
       if (state.activeSectionId === sectionId) {
         state.activeSectionId = null;
       }
-      console.log(`stopVideoPlayback after state.activeSectionId : ${state.activeSectionId}`);
+      // console.log(`stopVideoPlayback after state.activeSectionId : ${state.activeSectionId}`);
     },
 
     setVideoCompleted: (
@@ -205,9 +205,9 @@ const progressSlice = createSlice({
       }
       // At this point progress.startedAtMs is for sure not null or undefined
       progress.elapsedTrainingMs = elapsedTrainingMs - progress.startedAtMs!;
-      console.log(
+      /* console.log(
         `pauseTraining elapsedTrainingMs : ${progress.elapsedTrainingMs}   startedAtMs : ${progress.startedAtMs}`,
-      );
+      ); */
       progress.status = progress.elapsedTrainingMs >= progress.requiredTrainingMs ? 'readyToComplete' : 'paused';
 
       // If the training is not running no active Section is valid
@@ -228,20 +228,20 @@ const progressSlice = createSlice({
     ) => {
       const { sectionId, elapsedTrainingMs } = action.payload;
       const progress = state.progressBySectionId[sectionId];
-      console.log(`setReadyToBeCompleted status before: ${progress.status}`);
+      // console.log(`setReadyToBeCompleted status before: ${progress.status}`);
       if (progress.status !== 'running') {
         return;
       }
-      console.log(
+      /* console.log(
         `setReadyToBeCompleted progress.elapsedTrainingMs: ${progress.elapsedTrainingMs}  elapsedTrainingMs:${elapsedTrainingMs} `,
-      );
+      ); */
       if (elapsedTrainingMs < progress.requiredTrainingMs) {
         return;
       }
 
       progress.elapsedTrainingMs = progress.requiredTrainingMs;
       progress.status = 'readyToComplete';
-      console.log(`setReadyToBeCompleted status after: ${progress.status}`);
+      // console.log(`setReadyToBeCompleted status after: ${progress.status}`);
       if (state.activeSectionId === sectionId) {
         state.activeSectionId = null;
       }
@@ -270,9 +270,9 @@ const progressSlice = createSlice({
         : null;
       if (progressNextSection) progressNextSection.isLocked = false;
 
-      console.log(
+      /* console.log(
         `completeTraining - sectionId: ${action.payload.sectionId} trainingCompleted: ${progress.trainingCompleted}  status: ${progress.status}  progressNextSection.isLocked: ${progressNextSection?.isLocked}`,
-      );
+      ); */
     },
 
     resetTraining: (

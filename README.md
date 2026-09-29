@@ -75,21 +75,21 @@ Il progetto è anche un esercizio pratico su:
 
 ## 2. Tecnologie utilizzate
 
-| Tecnologia | Ruolo nel progetto |
-|---|---|
-| React 19 | Componenti funzionali e rendering dell'interfaccia |
-| TypeScript | Tipizzazione di componenti, dati, Redux e utility |
-| Vite | Development server e tooling frontend |
-| React Router DOM | Navigazione SPA e rotte dinamiche |
-| Redux Toolkit | Stato condiviso del percorso di allenamento |
-| React Redux | Collegamento tipizzato tra store e componenti |
-| Bootstrap 5 | Griglia, utility responsive e componenti visuali |
-| Sass / CSS | Variabili, media query, animazioni e personalizzazione Bootstrap |
-| Canvas 2D API | Effetto decorativo associato al movimento del puntatore |
-| Web Storage API | Persistenza locale e sincronizzazione tra schede |
-| Vitest | Unit test in ambiente `jsdom` |
-| Testing Library | Rendering e interazione nei test |
-| Playwright | Test end-to-end su più browser |
+| Tecnologia       | Ruolo nel progetto                                               |
+| ---------------- | ---------------------------------------------------------------- |
+| React 19         | Componenti funzionali e rendering dell'interfaccia               |
+| TypeScript       | Tipizzazione di componenti, dati, Redux e utility                |
+| Vite             | Development server e tooling frontend                            |
+| React Router DOM | Navigazione SPA e rotte dinamiche                                |
+| Redux Toolkit    | Stato condiviso del percorso di allenamento                      |
+| React Redux      | Collegamento tipizzato tra store e componenti                    |
+| Bootstrap 5      | Griglia, utility responsive e componenti visuali                 |
+| Sass / CSS       | Variabili, media query, animazioni e personalizzazione Bootstrap |
+| Canvas 2D API    | Effetto decorativo associato al movimento del puntatore          |
+| Web Storage API  | Persistenza locale e sincronizzazione tra schede                 |
+| Vitest           | Unit test in ambiente `jsdom`                                    |
+| Testing Library  | Rendering e interazione nei test                                 |
+| Playwright       | Test end-to-end su più browser                                   |
 
 Il `package.json` contiene anche dipendenze previste per evoluzioni future. La tabella riporta solamente le tecnologie effettivamente utilizzate dal codice attuale.
 
@@ -183,16 +183,16 @@ flowchart TD
 
 ### Responsabilità principali
 
-| Livello | Responsabilità |
-|---|---|
-| `main.tsx` | Monta React, Redux e React Router |
-| `App.tsx` | Definisce shell, decorazioni, navigazione, rotte e footer |
-| `pages/` | Compone le pagine associate alle rotte |
-| `components/` | Contiene UI e comportamenti riutilizzabili |
-| `data/` | Contiene lezioni statiche, contenuti Home e metadata |
-| `store/` | Gestisce stato, timer, persistenza e hook Redux tipizzati |
-| `public/videos/` | Espone i video delle lezioni come asset pubblici |
-| `tests/` | Contiene i test end-to-end Playwright |
+| Livello          | Responsabilità                                            |
+| ---------------- | --------------------------------------------------------- |
+| `main.tsx`       | Monta React, Redux e React Router                         |
+| `App.tsx`        | Definisce shell, decorazioni, navigazione, rotte e footer |
+| `pages/`         | Compone le pagine associate alle rotte                    |
+| `components/`    | Contiene UI e comportamenti riutilizzabili                |
+| `data/`          | Contiene lezioni statiche, contenuti Home e metadata      |
+| `store/`         | Gestisce stato, timer, persistenza e hook Redux tipizzati |
+| `public/videos/` | Espone i video delle lezioni come asset pubblici          |
+| `tests/`         | Contiene i test end-to-end Playwright                     |
 
 ---
 
@@ -269,12 +269,12 @@ Il routing è definito in `App.tsx` tramite `Routes` e `Route`.
 </Routes>
 ```
 
-| Rotta | Componente | Funzione |
-|---|---|---|
-| `/` | `Home` | Presentazione di MeditActive |
-| `/exercises` | `Exercises` | Elenco delle lezioni e stato del percorso |
-| `/exercise/:sectionId` | `Exercise` | Lezione dinamica identificata dalla sezione |
-| `*` | `Error` | Pagina per rotte inesistenti |
+| Rotta                  | Componente  | Funzione                                    |
+| ---------------------- | ----------- | ------------------------------------------- |
+| `/`                    | `Home`      | Presentazione di MeditActive                |
+| `/exercises`           | `Exercises` | Elenco delle lezioni e stato del percorso   |
+| `/exercise/:sectionId` | `Exercise`  | Lezione dinamica identificata dalla sezione |
+| `*`                    | `Error`     | Pagina per rotte inesistenti                |
 
 La pagina `Exercise` valida `sectionId` tramite `isSectionId()`. Se l'identificativo non esiste o la sezione è ancora bloccata, viene mostrata la pagina di errore.
 
@@ -293,18 +293,18 @@ interface TrainingProgressState {
 
 ### Stato di una sezione
 
-| Proprietà | Significato |
-|---|---|
-| `videoCompleted` | Indica se il video è stato guardato interamente |
-| `videoCurrentSecond` | Posizione corrente salvata del video |
-| `videoWatchedSeconds` | Tempo realmente riprodotto |
-| `videoDurationSeconds` | Durata rilevata del video |
-| `elapsedTrainingMs` | Tempo di pratica già accumulato |
-| `requiredTrainingMs` | Durata richiesta dalla configurazione |
-| `startedAtMs` | Timestamp di avvio della sessione corrente |
-| `status` | Stato della pratica |
-| `trainingCompleted` | Completamento definitivo della lezione |
-| `isLocked` | Disponibilità della lezione nel percorso |
+| Proprietà              | Significato                                     |
+| ---------------------- | ----------------------------------------------- |
+| `videoCompleted`       | Indica se il video è stato guardato interamente |
+| `videoCurrentSecond`   | Posizione corrente salvata del video            |
+| `videoWatchedSeconds`  | Tempo realmente riprodotto                      |
+| `videoDurationSeconds` | Durata rilevata del video                       |
+| `elapsedTrainingMs`    | Tempo di pratica già accumulato                 |
+| `requiredTrainingMs`   | Durata richiesta dalla configurazione           |
+| `startedAtMs`          | Timestamp di avvio della sessione corrente      |
+| `status`               | Stato della pratica                             |
+| `trainingCompleted`    | Completamento definitivo della lezione          |
+| `isLocked`             | Disponibilità della lezione nel percorso        |
 
 Gli stati possibili sono:
 
@@ -314,18 +314,18 @@ idle → running → paused → running → readyToComplete → completed
 
 ### Azioni principali
 
-| Azione | Responsabilità |
-|---|---|
-| `setVideoProgress` | Salva posizione, tempo riprodotto e durata |
-| `setVideoCompleted` | Valida il completamento effettivo del video |
-| `startVideoPlayback` | Registra la sezione multimediale attiva |
-| `stopVideoPlayback` | Libera la sezione attiva |
-| `startTraining` | Avvia o riprende la pratica |
-| `pauseTraining` | Salva il tempo della sessione corrente |
-| `setReadyToBeCompleted` | Porta la pratica alla fase di conferma |
-| `completeTraining` | Completa la lezione e sblocca la successiva |
-| `resetTraining` | Azzera il timer di una pratica completabile o completata |
-| `synchronizeTrainingProgress` | Applica uno stato ricevuto da un'altra scheda |
+| Azione                        | Responsabilità                                           |
+| ----------------------------- | -------------------------------------------------------- |
+| `setVideoProgress`            | Salva posizione, tempo riprodotto e durata               |
+| `setVideoCompleted`           | Valida il completamento effettivo del video              |
+| `startVideoPlayback`          | Registra la sezione multimediale attiva                  |
+| `stopVideoPlayback`           | Libera la sezione attiva                                 |
+| `startTraining`               | Avvia o riprende la pratica                              |
+| `pauseTraining`               | Salva il tempo della sessione corrente                   |
+| `setReadyToBeCompleted`       | Porta la pratica alla fase di conferma                   |
+| `completeTraining`            | Completa la lezione e sblocca la successiva              |
+| `resetTraining`               | Azzera il timer di una pratica completabile o completata |
+| `synchronizeTrainingProgress` | Applica uno stato ricevuto da un'altra scheda            |
 
 `activeSectionId` impedisce l'esecuzione contemporanea di più sezioni nello stesso stato condiviso.
 
@@ -504,25 +504,25 @@ Gestisce rotte inesistenti, identificativi non validi e accessi diretti a sezion
 
 Gli stili sono organizzati in sorgenti Sass e corrispondenti file CSS:
 
-| File | Responsabilità |
-|---|---|
-| `Colors.scss` | Palette principale |
-| `BootstrapVars.scss` | Personalizzazione e inclusione Bootstrap |
-| `Navbar.scss` | Navigazione desktop e mobile |
+| File                  | Responsabilità                                 |
+| --------------------- | ---------------------------------------------- |
+| `Colors.scss`         | Palette principale                             |
+| `BootstrapVars.scss`  | Personalizzazione e inclusione Bootstrap       |
+| `Navbar.scss`         | Navigazione desktop e mobile                   |
 | `CustomElements.scss` | Card, progress bar e componenti personalizzati |
-| `Animations.scss` | Reveal, livelli decorativi e animazioni |
-| `App.scss` | Utility e regole globali |
-| `App.css` | CSS importato dall'applicazione |
+| `Animations.scss`     | Reveal, livelli decorativi e animazioni        |
+| `App.scss`            | Utility e regole globali                       |
+| `App.css`             | CSS importato dall'applicazione                |
 
 ### Palette
 
-| Colore | Valore | Uso |
-|---|---|---|
-| Arancione | `#e26a08` | Colore secondario e azioni |
-| Verde scuro | `#3b6a4f` | Testi, immagini e atmosfera naturale |
-| Verde chiaro | `#7fc87b` | Accenti e illustrazioni |
-| Crema | `#fae3c0` | Sfondi e progress bar |
-| Nero caldo | `#241d18` | Testo e contrasto |
+| Colore       | Valore    | Uso                                  |
+| ------------ | --------- | ------------------------------------ |
+| Arancione    | `#e26a08` | Colore secondario e azioni           |
+| Verde scuro  | `#3b6a4f` | Testi, immagini e atmosfera naturale |
+| Verde chiaro | `#7fc87b` | Accenti e illustrazioni              |
+| Crema        | `#fae3c0` | Sfondi e progress bar                |
+| Nero caldo   | `#241d18` | Testo e contrasto                    |
 
 ### Layout mobile
 
@@ -628,20 +628,20 @@ http://localhost:5173/
 
 ### Script principali
 
-| Comando | Funzione |
-|---|---|
-| `npm run dev` | Avvia Vite in sviluppo |
-| `npm run typecheck` | Controlla TypeScript senza generare file |
-| `npm run lint` | Esegue ESLint |
-| `npm run lint:fix` | Applica le correzioni ESLint disponibili |
-| `npm run format` | Formatta il repository con Prettier |
-| `npm run format:check` | Controlla la formattazione |
-| `npm run test` | Esegue una volta i test Vitest |
-| `npm run test:watch` | Mantiene Vitest in watch mode |
-| `npm run test:e2e` | Esegue Playwright |
-| `npm run check` | Esegue typecheck, lint e format check |
-| `npm run build:watch` | Mantiene TypeScript in modalità watch |
-| `npm run preview` | Avvia la preview Vite sulla porta `4173` |
+| Comando                | Funzione                                 |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | Avvia Vite in sviluppo                   |
+| `npm run typecheck`    | Controlla TypeScript senza generare file |
+| `npm run lint`         | Esegue ESLint                            |
+| `npm run lint:fix`     | Applica le correzioni ESLint disponibili |
+| `npm run format`       | Formatta il repository con Prettier      |
+| `npm run format:check` | Controlla la formattazione               |
+| `npm run test`         | Esegue una volta i test Vitest           |
+| `npm run test:watch`   | Mantiene Vitest in watch mode            |
+| `npm run test:e2e`     | Esegue Playwright                        |
+| `npm run check`        | Esegue typecheck, lint e format check    |
+| `npm run build:watch`  | Mantiene TypeScript in modalità watch    |
+| `npm run preview`      | Avvia la preview Vite sulla porta `4173` |
 
 ### Build di produzione
 
@@ -732,10 +732,6 @@ sblocco nextSectionId
 
 Lo script `build` dovrebbe includere `vite build` se l'obiettivo è produrre direttamente il bundle frontend tramite `npm run build`.
 
-### Messaggi dello script preinstall
-
-`scripts/ensure-linux-install.mjs` contiene ancora alcuni riferimenti testuali al precedente progetto “Tongue”. Il controllo della piattaforma è valido, ma i messaggi e i percorsi suggeriti dovrebbero essere aggiornati a MeditActive.
-
 ### Copy della pagina errore nei test
 
 Alcune asserzioni Playwright cercano ancora il precedente testo “Pagina Errore”, mentre la UI corrente mostra “Ops... qualcosa è andato storto...”. I test interessati devono essere riallineati al nuovo contenuto.
@@ -748,24 +744,9 @@ Il manifest include librerie non ancora importate dal codice corrente. Una revis
 
 La durata richiesta è attualmente configurata con un valore breve, utile durante sviluppo e test. Per un rilascio pubblico dovrebbe essere definita in base alla durata reale di ogni esercizio.
 
-### Logging
-
-Sono presenti `console.log()` diagnostici nel timer, nei reducer e nei componenti delle lezioni. Prima di una release pubblica conviene rimuoverli o limitarli all'ambiente di sviluppo.
-
 ### Sincronizzazione
 
 La sincronizzazione tra schede può essere ulteriormente protetta con controlli espliciti contro aggiornamenti esterni equivalenti e cicli di riscrittura non necessari.
-
-### Evoluzioni possibili
-
-- profili utente e sincronizzazione remota;
-- percorsi multipli di meditazione;
-- durate configurabili;
-- statistiche e storico delle sessioni;
-- notifiche e promemoria;
-- contenuti audio oltre ai video;
-- pipeline CI per controlli e test multi-browser;
-- audit periodici di accessibilità e prestazioni.
 
 ---
 

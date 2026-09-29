@@ -16,7 +16,7 @@ export default function ExerciseCard({ section }: ExerciseCardProps) {
   const progress = useAppSelector((state) => state.trainingProgress.progressBySectionId[section.id]);
   const status = progress?.status ?? 'idle';
   const videoCompleted = progress?.videoCompleted;
-  console.log(`ExerciseCard - isLocked: ${progress.isLocked}  sectionId: ${section.id}  status: ${status}`);
+  // console.log(`ExerciseCard - isLocked: ${progress.isLocked}  sectionId: ${section.id}  status: ${status}`);
 
   return !progress.isLocked ? (
     <Link

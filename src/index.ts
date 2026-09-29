@@ -8,4 +8,4 @@ const greeting: Greeting = {
   message: 'TypeScript è configurato correttamente',
 };
 
-console.log(`${greeting.message} per ${greeting.recipient}.`);
+// console.log(`${greeting.message} per ${greeting.recipient}.`);
