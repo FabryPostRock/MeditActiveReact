@@ -8,5 +8,24 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: 'AIzaSyAN8_I9j8VgLUwpmchgU_vV9gcbMyUZIYk',
+        authDomain: 'medit-active.firebaseapp.com',
+        projectId: 'medit-active',
+        storageBucket: 'medit-active.firebasestorage.app',
+        messagingSenderId: '92268636763',
+        appId: '1:92268636763:web:819919042ba9c5543bad7e',
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+    </script>
   </body>
 </html>

@@ -7,7 +7,7 @@
     "preinstall": "node scripts/ensure-linux-install.mjs",
     "dev": "vite",
     "dev:node": "tsx watch --include \"src/**/*.ts\" src/index.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
