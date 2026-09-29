@@ -531,7 +531,7 @@ test.describe('Training completion and unlocking', () => {
 
     await expect(page).toHaveURL(`/exercise/${lastSection.id}`);
     await checkProgressBar(page, '100%');
-    await expect(page.getByText('Pagina Errore', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('Ops... qualcosa è andato storto...', { exact: true })).toHaveCount(0);
 
     const trainingProgress = await getTrainingProgress(page);
 

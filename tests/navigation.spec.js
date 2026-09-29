@@ -83,21 +83,21 @@ test.describe('Navigation and routing', () => {
 
     /**
      * `getByText` locates an element from its rendered text. With `exact: true`,
-     * the complete normalized text must match `Pagina Errore`; a longer string
-     * that merely contains those words is not accepted. Playwright still trims
-     * surrounding whitespace and normalizes repeated whitespace before matching.
+     * the complete normalized text must match the current error-page title; a
+     * longer string that merely contains those words is not accepted. Playwright
+     * still trims surrounding whitespace and normalizes repeated whitespace.
      */
-    await expect(page.getByText('Pagina Errore', { exact: true })).toBeVisible();
+    await expect(page.getByText('Ops... qualcosa è andato storto...', { exact: true })).toBeVisible();
   });
 
   test('shows the error page for an unknown route', async ({ page }) => {
     await page.goto('/unknown-route');
-    await expect(page.getByText('Pagina Errore', { exact: true })).toBeVisible();
+    await expect(page.getByText('Ops... qualcosa è andato storto...', { exact: true })).toBeVisible();
   });
 
   test('shows the error page when directly opening a locked section', async ({ page }) => {
     await page.goto('/exercise/breathing-section-2');
 
-    await expect(page.getByText('Pagina Errore', { exact: true })).toBeVisible();
+    await expect(page.getByText('Ops... qualcosa è andato storto...', { exact: true })).toBeVisible();
   });
 });

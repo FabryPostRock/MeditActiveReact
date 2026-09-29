@@ -732,10 +732,6 @@ sblocco nextSectionId
 
 Lo script `build` dovrebbe includere `vite build` se l'obiettivo è produrre direttamente il bundle frontend tramite `npm run build`.
 
-### Copy della pagina errore nei test
-
-Alcune asserzioni Playwright cercano ancora il precedente testo “Pagina Errore”, mentre la UI corrente mostra “Ops... qualcosa è andato storto...”. I test interessati devono essere riallineati al nuovo contenuto.
-
 ### Dipendenze
 
 Il manifest include librerie non ancora importate dal codice corrente. Una revisione periodica può ridurre dimensione dell'installazione e superficie di manutenzione.
