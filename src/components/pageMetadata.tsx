@@ -17,8 +17,10 @@ interface OrganizationStructuredData {
   sameAs: readonly string[];
 }
 
+const SITE_ORIGIN = 'https://medit-active.web.app';
+
 function createAbsoluteUrl(path: string) {
-  return new URL(path, window.location.origin).href;
+  return new URL(path, SITE_ORIGIN).href;
 }
 
 function createOrganizationStructuredData(organization: OrganizationMetadataData): OrganizationStructuredData {

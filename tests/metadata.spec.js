@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+const SITE_ORIGIN = 'https://medit-active.web.app';
+
 test.describe('Page metadata', () => {
   test('exposes Home SEO metadata and Organization structured data', async ({ page }) => {
     await page.goto('/');
@@ -7,14 +9,14 @@ test.describe('Page metadata', () => {
     await expect(page).toHaveTitle('MeditActive | Meditazione e crescita personale');
     await expect(page.locator('head meta[name="description"]')).toHaveAttribute('content', /meditazione/i);
     await expect(page.locator('head meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
-    await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', new URL('/', page.url()).href);
+    await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', new URL('/', SITE_ORIGIN).href);
     await expect(page.locator('head meta[property="og:title"]')).toHaveAttribute(
       'content',
       'MeditActive | Meditazione e crescita personale',
     );
     await expect(page.locator('head meta[property="og:url"]')).toHaveAttribute(
       'content',
-      new URL('/', page.url()).href,
+      new URL('/', SITE_ORIGIN).href,
     );
     await expect(page.locator('head meta[property="og:image"]')).toHaveAttribute('content', /^https?:\/\//);
 
@@ -27,7 +29,7 @@ test.describe('Page metadata', () => {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       name: 'MeditActive',
-      url: new URL('/', page.url()).href,
+      url: new URL('/', SITE_ORIGIN).href,
       email: 'info@meditactive.com',
       telephone: '+39 3456879998',
     });
@@ -47,7 +49,7 @@ test.describe('Page metadata', () => {
     );
     await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute(
       'href',
-      new URL('/exercises', page.url()).href,
+      new URL('/exercises', SITE_ORIGIN).href,
     );
     await expect(page.locator('head #organization-structured-data')).toHaveCount(0);
     await expect(page.locator('head title')).toHaveCount(1);
@@ -60,7 +62,7 @@ test.describe('Page metadata', () => {
     await expect(page).toHaveTitle('Respirazione da sdraiato con mani sulla pancia | MeditActive');
     await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute(
       'href',
-      new URL('/exercise/breathing-section-1', page.url()).href,
+      new URL('/exercise/breathing-section-1', SITE_ORIGIN).href,
     );
     await expect(page.locator('head meta[property="og:image:alt"]')).toHaveAttribute(
       'content',

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://medit-active.web.app/sitemap.xml
