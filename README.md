@@ -645,13 +645,7 @@ http://localhost:5173/
 
 ### Build di produzione
 
-Attualmente `npm run build` esegue:
-
-```bash
-tsc -p tsconfig.json
-```
-
-Poiché `tsconfig.json` usa `noEmit: true`, il comando effettua il controllo TypeScript ma non produce il bundle Vite. Con la configurazione attuale, il bundle può essere generato usando la dipendenza Vite già installata:
+Il bundle può essere generato usando la dipendenza Vite già installata:
 
 ```bash
 npx vite build
