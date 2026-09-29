@@ -599,12 +599,9 @@ La configurazione esegue i test su Chromium, Firefox e WebKit usando `http://loc
 
 ### Prerequisiti
 
-- ambiente Linux o WSL;
 - Node.js;
 - npm;
 - browser moderno.
-
-Lo script `preinstall` interrompe l'installazione eseguita direttamente con Node per Windows, evitando dipendenze native incompatibili con l'ambiente Linux del progetto.
 
 ### Clonazione e installazione
 
