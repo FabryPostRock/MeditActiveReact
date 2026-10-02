@@ -5,6 +5,7 @@
   --headingTransition: transform 0.3s ease-in-out;
   // forwards: maintain the last animation state
   --sectionTransition: sectionEnlarge 0.7s ease-in-out forwards;
+  --videoTransition: videoEnlarge 4s ease-in-out infinite;
 }
 
 $rising-start-div: 200px;
@@ -199,17 +200,43 @@ $rising-duration-div: 1.5s;
 
 //-------------SECTION ENALRGE
 
+$sectionScaleValue: 1.1;
+$videoScaleValue: 1.1;
+$sectionAnimation: sectionEnlarge 0.7s ease-in-out forwards;
+$videoAnimation: videoEnlarge 4s ease-in-out infinite;
+
+@mixin enlarge($scaleValue: 1.1, $animationType) {
+  --scale-value: #{$scaleValue};
+  animation: #{$animationType};
+}
 @keyframes sectionEnlarge {
   0% {
     transform: scale(1);
   }
   100% {
-    transform: scale(1.1);
+    transform: scale(var(--scale-value));
     box-shadow: 0 1.5rem 3rem rgba(colors.$bs-light-green-0x7fc87b, 0.6);
   }
 }
 
 /* classe che attiva l'ingrandimento */
 .section-enlarge:hover {
-  animation: var(--sectionTransition);
+  @include enlarge($sectionScaleValue, $sectionAnimation);
+}
+
+@keyframes videoEnlarge {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(var(--scale-value));
+    filter: brightness(1.3);
+    box-shadow: 0 1.5rem 3rem rgba(colors.$bs-light-green-0x7fc87b, 0.6);
+  }
+}
+
+/* classe che attiva l'ingrandimento */
+.video-enlarge {
+  @include enlarge($videoScaleValue, $videoAnimation);
 }

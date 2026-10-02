@@ -12097,6 +12097,7 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
   /*TRANSITION*/
   --headingTransition: transform 0.3s ease-in-out;
   --sectionTransition: sectionEnlarge 0.7s ease-in-out forwards;
+  --videoTransition: videoEnlarge 4s ease-in-out infinite;
 }
 
 @keyframes textSlideFromBot {
@@ -12262,13 +12263,30 @@ Usare '*' evita di inserire un prefisso alle variabili Sass '$'
     transform: scale(1);
   }
   100% {
-    transform: scale(1.1);
+    transform: scale(var(--scale-value));
     box-shadow: 0 1.5rem 3rem rgba(127, 200, 123, 0.6);
   }
 }
 /* classe che attiva l'ingrandimento */
 .section-enlarge:hover {
-  animation: var(--sectionTransition);
+  --scale-value: 1.1;
+  animation: sectionEnlarge 0.7s ease-in-out forwards;
+}
+
+@keyframes videoEnlarge {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(var(--scale-value));
+    filter: brightness(1.3);
+    box-shadow: 0 1.5rem 3rem rgba(127, 200, 123, 0.6);
+  }
+}
+/* classe che attiva l'ingrandimento */
+.video-enlarge {
+  --scale-value: 1.1;
+  animation: videoEnlarge 4s ease-in-out infinite;
 }
 
 .lesson-progress {
