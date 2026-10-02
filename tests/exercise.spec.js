@@ -281,6 +281,22 @@ test.describe('Exercise lesson page', () => {
     await expect(video).toHaveJSProperty('controls', true);
   });
 
+  test('removes the video animation class on the first play and does not restore it', async ({ page }) => {
+    const video = page.getByLabel(`Video: ${exerciseSections[0].title}`);
+
+    await expect(video).toHaveClass(/\bvideo-enlarge\b/);
+
+    await installControllablePlayback(video);
+    await video.evaluate((mediaElement) => mediaElement.play());
+
+    await expect(video).not.toHaveClass(/\bvideo-enlarge\b/);
+
+    await video.evaluate((mediaElement) => mediaElement.pause());
+    await video.evaluate((mediaElement) => mediaElement.play());
+
+    await expect(video).not.toHaveClass(/\bvideo-enlarge\b/);
+  });
+
   test('does not start training before the video is completed', async ({ page }) => {
     const startTrainingButton = page.locator('main article button').first();
 
