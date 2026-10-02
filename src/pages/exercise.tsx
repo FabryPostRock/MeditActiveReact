@@ -26,7 +26,7 @@ export default function Exercise() {
         <PageMetadata metadata={pageMetadata} />
 
         <div className="container">
-          <ExerciseView section={section} isLocked={false} />
+          <ExerciseView section={section} isLocked={false} videoBlink={progress.videoBlink} />
         </div>
       </>
     );

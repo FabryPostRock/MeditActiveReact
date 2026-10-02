@@ -25,6 +25,7 @@ import { ProgressBar } from '../progressBar';
 interface ExerciseCardProps {
   section: ExerciseSection;
   isLocked: boolean;
+  videoBlink: boolean;
 }
 
 function formatDuration(durationMs: number) {
@@ -56,11 +57,8 @@ function getPlayedSeconds(video: HTMLVideoElement) {
   return playedSeconds;
 }
 
-export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
+export default function ExerciseView({ section, isLocked, videoBlink }: ExerciseCardProps) {
   const dispatch = useAppDispatch();
-  // Using useAppSelector is quite more secure then store.getState because in the former
-  // case the state is subscribed to changes.
-  const state = useAppSelector((state) => state);
 
   useEffect(() => {
     const releaseActiveSection = () => {
@@ -177,7 +175,7 @@ export default function ExerciseView({ section, isLocked }: ExerciseCardProps) {
                * you must use a real video format not an html page that wraps a video.
                */}
               <video
-                className="h-auto w-sm-80 w-md-40 rounded"
+                className={`h-auto w-sm-80 w-md-40 rounded ${videoBlink ? 'video-enlarge' : ''}`}
                 src={section.videoUrl}
                 controls
                 //timeupdate, ended, play, pause are standards DOM events for <video> tag but in react turn into CamelCase properties

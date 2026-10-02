@@ -8,7 +8,7 @@ interface SectionTrainingProgress {
   videoCurrentSecond: number;
   videoWatchedSeconds: number;
   videoDurationSeconds: number | null;
-
+  videoBlink: boolean;
   elapsedTrainingMs: number;
   requiredTrainingMs: number;
   startedAtMs: number | null | undefined;
@@ -33,6 +33,7 @@ const initialProgressBySectionId = Object.fromEntries(
       videoCurrentSecond: 0,
       videoWatchedSeconds: 0,
       videoDurationSeconds: null,
+      videoBlink: true,
       elapsedTrainingMs: 0,
       requiredTrainingMs: section.requiredTrainingMs,
       startedAtMs: null,
@@ -101,6 +102,7 @@ const progressSlice = createSlice({
         return;
       }
 
+      state.progressBySectionId[sectionId].videoBlink = false;
       state.activeSectionId = sectionId;
       // console.log(`startVideoPlayback state.activeSectionId : ${state.activeSectionId}`);
     },
