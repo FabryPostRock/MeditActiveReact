@@ -10,145 +10,147 @@
 [![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
 
 <p align="center">
-  <img src="./src/assets/img/logo_936x905.png" alt="Logo MeditActive" width="180" />
+  <img src="./src/assets/img/logo_936x905.png" alt="MeditActive logo" width="180" />
 </p>
 
-Applicazione React dedicata alla meditazione, alla consapevolezza corporea e alla costruzione graduale di una pratica personale.
+A React application dedicated to meditation, body awareness, and the gradual development of a personal practice.
 
-MeditActive è una **Single Page Application** responsive che propone lezioni video progressive, pratica temporizzata, controllo del completamento e persistenza locale dei progressi. L'interfaccia combina contenuti educativi, feedback visivo e un percorso sequenziale nel quale ogni esercizio sblocca il successivo.
+MeditActive is a responsive **Single Page Application** that provides progressive video lessons, timed practice, completion tracking, and local progress persistence. The interface combines educational content, visual feedback, and a sequential path in which each exercise unlocks the next one.
 
 ---
 
-## Indice
+## Table of contents
 
-1. [Panoramica del progetto](#1-panoramica-del-progetto)
-2. [Tecnologie utilizzate](#2-tecnologie-utilizzate)
-3. [Funzionalità principali](#3-funzionalità-principali)
-4. [Architettura generale](#4-architettura-generale)
-5. [Struttura delle directory](#5-struttura-delle-directory)
-6. [Routing dell'applicazione](#6-routing-dellapplicazione)
-7. [Gestione dello stato con Redux](#7-gestione-dello-stato-con-redux)
-8. [Modello dati degli esercizi](#8-modello-dati-degli-esercizi)
-9. [Flusso di una lezione](#9-flusso-di-una-lezione)
-10. [Persistenza e sincronizzazione](#10-persistenza-e-sincronizzazione)
-11. [Componenti principali](#11-componenti-principali)
-12. [Pagine principali](#12-pagine-principali)
-13. [Stili, responsive design e animazioni](#13-stili-responsive-design-e-animazioni)
-14. [Metadata e accessibilità](#14-metadata-e-accessibilità)
+1. [Project overview](#1-project-overview)
+2. [Technology stack](#2-technology-stack)
+3. [Core features](#3-core-features)
+4. [High-level architecture](#4-high-level-architecture)
+5. [Directory structure](#5-directory-structure)
+6. [Application routing](#6-application-routing)
+7. [Redux state management](#7-redux-state-management)
+8. [Exercise data model](#8-exercise-data-model)
+9. [Lesson flow](#9-lesson-flow)
+10. [Persistence and synchronization](#10-persistence-and-synchronization)
+11. [Main components](#11-main-components)
+12. [Main pages](#12-main-pages)
+13. [Styling, responsive design, and animations](#13-styling-responsive-design-and-animations)
+14. [Metadata and accessibility](#14-metadata-and-accessibility)
 15. [Testing](#15-testing)
-16. [Installazione e comandi](#16-installazione-e-comandi)
-17. [Flussi applicativi](#17-flussi-applicativi)
-18. [Note tecniche e possibili miglioramenti](#18-note-tecniche-e-possibili-miglioramenti)
-19. [Appendice: effetto Canvas](#appendice-effetto-canvas)
+16. [Installation and commands](#16-installation-and-commands)
+17. [Application flows](#17-application-flows)
+18. [Technical notes and possible improvements](#18-technical-notes-and-possible-improvements)
+19. [Appendix: Canvas effect](#appendix-canvas-effect)
 
 ---
 
-## 1. Panoramica del progetto
+## 1. Project overview
 
-**MeditActive** nasce per combinare meditazione, consapevolezza e strumenti di crescita personale in un'esperienza semplice da utilizzare.
+**MeditActive** combines meditation, awareness, and personal-growth tools in an experience designed to be easy to use.
 
-L'app permette all'utente di:
+The application allows users to:
 
-- conoscere obiettivi, visione e missione del progetto;
-- consultare un corso base di consapevolezza del corpo;
-- seguire esercizi video dedicati a respirazione, postura e appoggio dei piedi;
-- accedere alle lezioni secondo un ordine progressivo;
-- avviare, mettere in pausa e riprendere una sessione temporizzata;
-- verificare lo stato della lezione tramite una barra di avanzamento;
-- conservare i progressi tra ricaricamenti e sessioni del browser;
-- sincronizzare lo stato tra più schede dello stesso browser;
-- ricevere una pagina di errore dedicata per rotte inesistenti o lezioni bloccate.
+- learn about the project's goals, vision, and mission;
+- browse a foundational body-awareness course;
+- follow video exercises focused on breathing, posture, and foot placement;
+- access lessons in a progressive order;
+- start, pause, and resume a timed practice session;
+- check lesson status through a progress bar;
+- preserve progress across reloads and browser sessions;
+- synchronize state across multiple tabs in the same browser;
+- see a dedicated error page for unknown routes or locked lessons.
 
-Il progetto è anche un esercizio pratico su:
+The project is also a practical exercise in:
 
-- composizione di componenti React;
-- routing statico e dinamico;
-- modellazione dello stato con Redux Toolkit;
-- side effect e timer tramite hook;
-- persistenza nel browser;
-- TypeScript e dati tipizzati;
-- layout responsive con Bootstrap e Sass;
-- testing unitario, d'integrazione ed end-to-end;
-- accessibilità, metadata social e dati strutturati.
-
----
-
-## 2. Tecnologie utilizzate
-
-| Tecnologia       | Ruolo nel progetto                                               |
-| ---------------- | ---------------------------------------------------------------- |
-| React 19         | Componenti funzionali e rendering dell'interfaccia               |
-| TypeScript       | Tipizzazione di componenti, dati, Redux e utility                |
-| Vite             | Development server e tooling frontend                            |
-| React Router DOM | Navigazione SPA e rotte dinamiche                                |
-| Redux Toolkit    | Stato condiviso del percorso di allenamento                      |
-| React Redux      | Collegamento tipizzato tra store e componenti                    |
-| Bootstrap 5      | Griglia, utility responsive e componenti visuali                 |
-| Sass / CSS       | Variabili, media query, animazioni e personalizzazione Bootstrap |
-| Canvas 2D API    | Effetto decorativo associato al movimento del puntatore          |
-| Web Storage API  | Persistenza locale e sincronizzazione tra schede                 |
-| Vitest           | Unit test in ambiente `jsdom`                                    |
-| Testing Library  | Rendering e interazione nei test                                 |
-| Playwright       | Test end-to-end su più browser                                   |
-
-Il `package.json` contiene anche dipendenze previste per evoluzioni future. La tabella riporta solamente le tecnologie effettivamente utilizzate dal codice attuale.
+- React component composition;
+- static and dynamic routing;
+- state modeling with Redux Toolkit;
+- side effects and timers implemented through hooks;
+- browser persistence;
+- TypeScript and typed data;
+- responsive layouts with Bootstrap and Sass;
+- unit, integration, and end-to-end testing;
+- accessibility, social metadata, and structured data.
 
 ---
 
-## 3. Funzionalità principali
+## 2. Technology stack
+
+| Technology       | Role in the project                                      |
+| ---------------- | -------------------------------------------------------- |
+| React 19         | Functional components and UI rendering                   |
+| TypeScript       | Typing for components, data, Redux, and utilities        |
+| Vite             | Development server and frontend tooling                  |
+| React Router DOM | SPA navigation and dynamic routes                        |
+| Redux Toolkit    | Shared state for the training path                       |
+| React Redux      | Typed connection between the store and components        |
+| Bootstrap 5      | Grid, responsive utilities, and visual components        |
+| Sass / CSS       | Variables, media queries, animations, and customization  |
+| Canvas 2D API    | Decorative effect associated with pointer movement       |
+| Web Storage API  | Local persistence and cross-tab synchronization          |
+| Vitest           | Unit tests in a `jsdom` environment                      |
+| Testing Library  | Rendering and interaction in component and hook tests    |
+| Playwright       | End-to-end tests across multiple browsers                |
+
+The `package.json` file also contains dependencies intended for future development. This table lists only the technologies currently used by the application.
+
+---
+
+## 3. Core features
 
 ### Home page
 
-La pagina iniziale presenta:
+The landing page presents:
 
-- identità e obiettivo di MeditActive;
-- problema affrontato, vision e mission;
-- illustrazioni responsive;
-- animazioni di ingresso attivate tramite `IntersectionObserver`.
+- the identity and purpose of MeditActive;
+- the problem being addressed, the vision, and the mission;
+- responsive illustrations;
+- entrance animations activated through `IntersectionObserver`.
 
-### Percorso di esercizi
+### Exercise path
 
-Il corso contiene cinque sezioni ordinate. La prima è disponibile immediatamente, mentre le successive vengono sbloccate al completamento della lezione precedente.
+The course contains five ordered sections. The first one is immediately available, while each subsequent section is unlocked by completing the previous lesson.
 
-Le card mostrano:
+The cards display:
 
-- titolo e anteprima della lezione;
-- stato di blocco;
-- stato del video;
-- stato della pratica;
-- completamento dell'esercizio.
+- the lesson title and preview;
+- lock status;
+- video status;
+- practice status;
+- exercise completion.
 
-### Video e pratica temporizzata
+### Video and timed practice
 
-Ogni lezione richiede due fasi:
+Each lesson requires two stages:
 
-1. visione completa del video;
-2. pratica temporizzata con possibilità di pausa e ripresa.
+1. watching the complete video;
+2. completing a timed practice that can be paused and resumed.
 
-L'app registra il tempo realmente riprodotto dal video tramite `HTMLMediaElement.played`, così un semplice spostamento del cursore temporale non equivale automaticamente al completamento.
+The application measures the video time that was actually played through `HTMLMediaElement.played`, so seeking along the timeline does not automatically count as completion.
 
-### Progressione sequenziale
+Before its first playback, each lesson video uses a slow, non-intrusive attention animation. The Redux `videoBlink` flag starts as `true`; the first accepted `startVideoPlayback` action changes it to `false`, removes the `video-enlarge` class, and prevents the animation from being restored during later playback sessions.
 
-Il completamento di una sezione:
+### Sequential progression
 
-- aggiorna lo stato a `completed`;
-- mantiene lo storico della lezione;
-- sblocca esclusivamente la sezione indicata da `nextSectionId`;
-- gestisce correttamente anche l'ultima sezione del corso.
+Completing a section:
 
-### Esperienza responsive
+- changes its status to `completed`;
+- preserves the lesson history;
+- unlocks only the section identified by `nextSectionId`;
+- handles the final course section correctly.
 
-Su schermi piccoli l'app usa una shell alta quanto la viewport:
+### Responsive experience
 
-- la navbar rimane in basso;
-- il contenuto centrale gestisce lo scroll verticale;
-- il layout si adatta tramite griglia Bootstrap e media query dedicate.
+On small screens, the application uses a shell as tall as the viewport:
+
+- the navbar remains at the bottom;
+- the central content area handles vertical scrolling;
+- the layout adapts through the Bootstrap grid and dedicated media queries.
 
 ---
 
-## 4. Architettura generale
+## 4. High-level architecture
 
-L'applicazione segue un'architettura frontend organizzata per pagine, componenti, dati e stato condiviso.
+The frontend architecture is organized around pages, components, data, and shared state.
 
 ```mermaid
 flowchart TD
@@ -181,24 +183,24 @@ flowchart TD
     S --> T[localStorage]
 ```
 
-### Responsabilità principali
+### Main responsibilities
 
-| Livello               | Responsabilità                                           |
-| --------------------- | -------------------------------------------------------- |
-| `main.tsx`            | Monta React, Redux e React Router                        |
-| `App.tsx`             | Definisce shell, decorazioni, navigazione, rotte e footer |
-| `pages/`              | Compone le pagine associate alle rotte                   |
-| `components/`         | Contiene UI e comportamenti riutilizzabili               |
-| `data/`               | Contiene lezioni statiche, contenuti Home e metadata     |
-| `store/`              | Gestisce stato, timer, persistenza e hook Redux tipizzati |
-| `public/videos/`      | Espone i video delle lezioni come asset pubblici         |
-| `public/robots.txt`   | Definisce le regole di scansione per i crawler           |
-| `public/sitemap.xml`  | Elenca le pagine pubbliche proposte ai motori di ricerca |
-| `tests/`              | Contiene i test end-to-end Playwright                    |
+| Layer                  | Responsibility                                                |
+| ---------------------- | ------------------------------------------------------------- |
+| `main.tsx`             | Mounts React, Redux, and React Router                         |
+| `App.tsx`              | Defines the shell, decorations, navigation, routes, and footer |
+| `pages/`               | Composes the pages associated with routes                     |
+| `components/`          | Contains reusable UI and behavior                             |
+| `data/`                | Contains static lessons, Home content, and metadata           |
+| `store/`               | Manages state, timers, persistence, and typed Redux hooks     |
+| `public/videos/`       | Exposes lesson videos as public assets                        |
+| `public/robots.txt`    | Defines crawler rules                                         |
+| `public/sitemap.xml`   | Lists public pages proposed to search engines                 |
+| `tests/`               | Contains Playwright end-to-end tests                          |
 
 ---
 
-## 5. Struttura delle directory
+## 5. Directory structure
 
 ```text
 MeditActiveReact/
@@ -256,13 +258,13 @@ MeditActiveReact/
 └── vitest.config.js
 ```
 
-Le directory `node_modules/`, `dist/`, `test-results/` e `playwright-report/` sono generate dagli strumenti di sviluppo e non fanno parte del codice sorgente.
+The `node_modules/`, `dist/`, `test-results/`, and `playwright-report/` directories are generated by development tools and are not part of the source code.
 
 ---
 
-## 6. Routing dell'applicazione
+## 6. Application routing
 
-Il routing è definito in `App.tsx` tramite `Routes` e `Route`.
+Routing is defined in `App.tsx` through `Routes` and `Route`.
 
 ```tsx
 <Routes>
@@ -273,20 +275,20 @@ Il routing è definito in `App.tsx` tramite `Routes` e `Route`.
 </Routes>
 ```
 
-| Rotta                  | Componente  | Funzione                                    |
-| ---------------------- | ----------- | ------------------------------------------- |
-| `/`                    | `Home`      | Presentazione di MeditActive                |
-| `/exercises`           | `Exercises` | Elenco delle lezioni e stato del percorso   |
-| `/exercise/:sectionId` | `Exercise`  | Lezione dinamica identificata dalla sezione |
-| `*`                    | `Error`     | Pagina per rotte inesistenti                |
+| Route                  | Component   | Purpose                                       |
+| ---------------------- | ----------- | --------------------------------------------- |
+| `/`                    | `Home`      | Introduces MeditActive                        |
+| `/exercises`           | `Exercises` | Lists lessons and path status                 |
+| `/exercise/:sectionId` | `Exercise`  | Displays the lesson identified by the section |
+| `*`                    | `Error`     | Handles unknown routes                        |
 
-La pagina `Exercise` valida `sectionId` tramite `isSectionId()`. Se l'identificativo non esiste o la sezione è ancora bloccata, viene mostrata la pagina di errore.
+The `Exercise` page validates `sectionId` through `isSectionId()`. If the identifier does not exist or the section is still locked, the error page is displayed.
 
 ---
 
-## 7. Gestione dello stato con Redux
+## 7. Redux state management
 
-Lo stato condiviso è gestito da Redux Toolkit nel dominio `trainingProgress`.
+Shared state is managed by Redux Toolkit in the `trainingProgress` domain.
 
 ```ts
 interface TrainingProgressState {
@@ -295,49 +297,50 @@ interface TrainingProgressState {
 }
 ```
 
-### Stato di una sezione
+### Section state
 
-| Proprietà              | Significato                                     |
-| ---------------------- | ----------------------------------------------- |
-| `videoCompleted`       | Indica se il video è stato guardato interamente |
-| `videoCurrentSecond`   | Posizione corrente salvata del video            |
-| `videoWatchedSeconds`  | Tempo realmente riprodotto                      |
-| `videoDurationSeconds` | Durata rilevata del video                       |
-| `elapsedTrainingMs`    | Tempo di pratica già accumulato                 |
-| `requiredTrainingMs`   | Durata richiesta dalla configurazione           |
-| `startedAtMs`          | Timestamp di avvio della sessione corrente      |
-| `status`               | Stato della pratica                             |
-| `trainingCompleted`    | Completamento definitivo della lezione          |
-| `isLocked`             | Disponibilità della lezione nel percorso        |
+| Property               | Meaning                                                 |
+| ---------------------- | ------------------------------------------------------- |
+| `videoCompleted`       | Whether the complete video has been watched             |
+| `videoCurrentSecond`   | Saved current video position                            |
+| `videoWatchedSeconds`  | Time that was actually played                           |
+| `videoDurationSeconds` | Detected video duration                                 |
+| `videoBlink`           | Whether the initial video attention animation is active |
+| `elapsedTrainingMs`    | Practice time already accumulated                       |
+| `requiredTrainingMs`   | Duration required by the lesson configuration           |
+| `startedAtMs`          | Start timestamp of the current session                  |
+| `status`               | Current practice status                                 |
+| `trainingCompleted`    | Permanent lesson-completion flag                        |
+| `isLocked`             | Whether the lesson is unavailable in the path           |
 
-Gli stati possibili sono:
+Possible practice states are:
 
 ```text
 idle → running → paused → running → readyToComplete → completed
 ```
 
-### Azioni principali
+### Main actions
 
-| Azione                        | Responsabilità                                           |
-| ----------------------------- | -------------------------------------------------------- |
-| `setVideoProgress`            | Salva posizione, tempo riprodotto e durata               |
-| `setVideoCompleted`           | Valida il completamento effettivo del video              |
-| `startVideoPlayback`          | Registra la sezione multimediale attiva                  |
-| `stopVideoPlayback`           | Libera la sezione attiva                                 |
-| `startTraining`               | Avvia o riprende la pratica                              |
-| `pauseTraining`               | Salva il tempo della sessione corrente                   |
-| `setReadyToBeCompleted`       | Porta la pratica alla fase di conferma                   |
-| `completeTraining`            | Completa la lezione e sblocca la successiva              |
-| `resetTraining`               | Azzera il timer di una pratica completabile o completata |
-| `synchronizeTrainingProgress` | Applica uno stato ricevuto da un'altra scheda            |
+| Action                        | Responsibility                                             |
+| ----------------------------- | ---------------------------------------------------------- |
+| `setVideoProgress`            | Saves position, played time, and duration                  |
+| `setVideoCompleted`           | Validates actual video completion                          |
+| `startVideoPlayback`          | Records the active section and disables `videoBlink`       |
+| `stopVideoPlayback`           | Releases the active section                                |
+| `startTraining`               | Starts or resumes practice                                 |
+| `pauseTraining`               | Saves the elapsed time for the current session             |
+| `setReadyToBeCompleted`       | Moves the practice to the confirmation stage               |
+| `completeTraining`            | Completes the lesson and unlocks the next one               |
+| `resetTraining`               | Resets the timer of a completable or completed practice    |
+| `synchronizeTrainingProgress` | Applies state received from another tab                    |
 
-`activeSectionId` impedisce l'esecuzione contemporanea di più sezioni nello stesso stato condiviso.
+`activeSectionId` prevents multiple sections from running concurrently in the same shared state.
 
 ---
 
-## 8. Modello dati degli esercizi
+## 8. Exercise data model
 
-I contenuti statici sono definiti in `src/data/learningContent.ts` e rimangono separati dallo stato Redux.
+Static content is defined in `src/data/learningContent.ts` and remains separate from Redux state.
 
 ```ts
 interface ExerciseSection {
@@ -352,78 +355,78 @@ interface ExerciseSection {
 }
 ```
 
-### Scelte di modellazione
+### Modeling decisions
 
-- `as const` conserva gli identificativi come literal type;
-- `SectionId` viene derivato direttamente dai dati;
-- `exerciseSectionById` permette un accesso rapido tramite identificativo;
-- `isSectionId()` agisce come type predicate;
-- `nextSectionId` descrive la progressione senza duplicare la logica;
-- dati statici e progresso utente restano separati.
+- `as const` preserves identifiers as literal types;
+- `SectionId` is derived directly from the data;
+- `exerciseSectionById` provides fast lookup by identifier;
+- `isSectionId()` acts as a type predicate;
+- `nextSectionId` describes progression without duplicating logic;
+- static content and user progress remain separate.
 
-Il percorso corrente comprende esercizi di respirazione da sdraiato, respirazione in piedi e consapevolezza dell'appoggio dei piedi.
+The current path includes exercises for breathing while lying down, breathing while standing, and awareness of foot placement.
 
 ---
 
-## 9. Flusso di una lezione
+## 9. Lesson flow
 
 ```mermaid
 flowchart LR
-    A[Lezione sbloccata] --> B[Visione video]
-    B --> C{Video completato?}
+    A[Unlocked lesson] --> B[Watch video]
+    B --> C{Video completed?}
     C -- No --> B
-    C -- Sì --> D[Avvio pratica]
-    D --> E[Pausa o ripresa]
+    C -- Yes --> D[Start practice]
+    D --> E[Pause or resume]
     E --> D
-    D --> F{Durata raggiunta?}
+    D --> F{Required duration reached?}
     F -- No --> D
-    F -- Sì --> G[readyToComplete]
-    G --> H[Conferma completamento]
-    H --> I[Lezione completata]
-    I --> J[Sblocco lezione successiva]
+    F -- Yes --> G[readyToComplete]
+    G --> H[Confirm completion]
+    H --> I[Lesson completed]
+    I --> J[Unlock next lesson]
 ```
 
 ### Timer
 
-L'hook `useTrainingTimer()`:
+The `useTrainingTimer()` hook:
 
-- crea un intervallo soltanto durante lo stato `running`;
-- aggiorna il tempo una volta al secondo;
-- combina il tempo già salvato con la sessione corrente;
-- limita il totale alla durata richiesta;
-- invia `setReadyToBeCompleted` quando viene raggiunta la soglia;
-- rimuove l'intervallo in pausa, al cambio sezione e allo smontaggio.
+- creates an interval only while the status is `running`;
+- updates elapsed time once per second;
+- combines previously saved time with the current session;
+- caps the total at the required duration;
+- dispatches `setReadyToBeCompleted` when the threshold is reached;
+- clears the interval when paused, when switching sections, and when unmounted.
 
-### Barra di avanzamento
+### Progress bar
 
-`ProgressBar` visualizza quattro milestone:
+`ProgressBar` displays four milestones:
 
 ```text
-Inizio → Video → Pratica → Completato
+Start → Video → Practice → Completed
 ```
 
-Il valore viene passato al CSS tramite la custom property `--progress-value`.
+The value is passed to CSS through the `--progress-value` custom property.
 
 ---
 
-## 10. Persistenza e sincronizzazione
+## 10. Persistence and synchronization
 
-Il progresso viene salvato nella chiave:
+Progress is stored under the following key:
 
 ```text
 meditactive-training-progress
 ```
 
-### Scrittura
+### Writing
 
-Lo store registra un subscriber che serializza `trainingProgress` dopo ogni cambiamento significativo.
+The store registers a subscriber that serializes `trainingProgress` after each meaningful change.
 
 ```text
 dispatch
   ↓
 reducer
   ↓
-nuovo stato Redux
+new Redux state
   ↓
 store.subscribe
   ↓
@@ -432,140 +435,145 @@ JSON.stringify
 localStorage
 ```
 
-Gli errori di scrittura vengono intercettati per evitare che un problema del browser impedisca l'aggiornamento dell'interfaccia.
+Write errors are caught so that a browser storage problem does not prevent the interface from updating.
 
-### Lettura
+### Reading
 
-All'avvio, `loadTrainingProgress()` recupera il JSON salvato. Se la chiave è assente o il contenuto non è valido, Redux usa lo stato iniziale.
+At startup, `loadTrainingProgress()` retrieves the saved JSON. If the key is missing or its content is invalid, Redux uses the initial state.
 
-### Schede multiple
+### Multiple tabs
 
-Il listener dell'evento `storage` intercetta gli aggiornamenti provenienti dalle altre schede e invia `synchronizeTrainingProgress()`.
+The `storage` event listener receives updates from other tabs and dispatches `synchronizeTrainingProgress()`.
 
 ---
 
-## 11. Componenti principali
+## 11. Main components
 
 ### `Navbar`
 
-Gestisce la navigazione verso Home ed Exercises tramite `NavLink`, inclusi stato attivo e `aria-current`. Su mobile viene collocata nella parte inferiore della shell.
+Handles navigation to Home and Exercises through `NavLink`, including active state and `aria-current`. On mobile, it is positioned at the bottom of the shell.
 
 ### `Footer`
 
-Contiene contatti e collegamenti social. È condiviso da tutte le rotte.
+Contains contact information and social links. It is shared by every route.
 
 ### `Title`
 
-Uniforma heading, colore, dimensione, allineamento e decorazioni animate, mantenendo configurabile il livello semantico da `h1` a `h6`.
+Standardizes headings, colors, size, alignment, and animated decorations while keeping the semantic level configurable from `h1` to `h6`.
 
-### `ExerciseCard` e `Article`
+### `ExerciseCard` and `Article`
 
-Rappresentano una sezione del corso. Le lezioni sbloccate diventano link accessibili; quelle bloccate restano elementi informativi non navigabili.
+Represent a course section. Unlocked lessons become accessible links, while locked lessons remain non-navigable informational elements.
 
 ### `ExerciseView`
 
-Coordina:
+Coordinates:
 
-- video e relativi eventi DOM;
-- verifica del tempo realmente guardato;
-- stato Redux;
-- timer di pratica;
-- pulsanti di avvio, pausa, reset e completamento;
-- progress bar;
-- navigazione alla sezione successiva.
+- the video and its DOM events;
+- verification of the time actually watched;
+- the one-time video attention animation;
+- Redux state;
+- the practice timer;
+- start, pause, reset, and completion buttons;
+- the progress bar;
+- navigation to the next section.
 
 ### `PageMetadata`
 
-Aggiorna titolo, description, robots, canonical URL, Open Graph e JSON-LD dell'organizzazione.
+Updates the title, description, robots directive, canonical URL, Open Graph metadata, and organization JSON-LD.
 
-### `PerspectiveWalls` e `CursorWake`
+### `PerspectiveWalls` and `CursorWake`
 
-Creano il livello decorativo dell'app. Le pareti prospettiche sono puramente visuali; il canvas reagisce al puntatore senza causare re-render React per ogni frame.
+Create the application's decorative layer. The perspective walls are purely visual; the canvas responds to pointer movement without causing a React re-render on every frame.
 
 ---
 
-## 12. Pagine principali
+## 12. Main pages
 
 ### `Home`
 
-Presenta MeditActive tramite contenuti strutturati in dati. Le sezioni vengono animate una sola volta quando entrano nella viewport; in assenza di `IntersectionObserver` restano comunque visibili.
+Introduces MeditActive through data-driven content. Sections are animated once when they enter the viewport; they remain visible when `IntersectionObserver` is unavailable.
 
 ### `Exercises`
 
-Mostra il corso e genera le card partendo da `exerciseSections`.
+Displays the course and generates cards from `exerciseSections`.
 
 ### `Exercise`
 
-Legge `sectionId` dalla URL, valida la sezione, controlla il blocco e crea metadata specifici prima di renderizzare `ExerciseView`.
+Reads `sectionId` from the URL, validates the section, checks its lock, and creates lesson-specific metadata before rendering `ExerciseView`.
 
 ### `Error`
 
-Gestisce rotte inesistenti, identificativi non validi e accessi diretti a sezioni bloccate. Utilizza un'illustrazione coerente con lo stile MeditActive e metadata `noindex, nofollow`.
+Handles unknown routes, invalid identifiers, and direct access to locked sections. It uses an illustration consistent with the MeditActive style and `noindex, nofollow` metadata.
 
 ---
 
-## 13. Stili, responsive design e animazioni
+## 13. Styling, responsive design, and animations
 
-Gli stili sono organizzati in sorgenti Sass e corrispondenti file CSS:
+Styles are organized into Sass source files and their corresponding CSS files:
 
-| File                  | Responsabilità                                 |
-| --------------------- | ---------------------------------------------- |
-| `Colors.scss`         | Palette principale                             |
-| `BootstrapVars.scss`  | Personalizzazione e inclusione Bootstrap       |
-| `Navbar.scss`         | Navigazione desktop e mobile                   |
-| `CustomElements.scss` | Card, progress bar e componenti personalizzati |
-| `Animations.scss`     | Reveal, livelli decorativi e animazioni        |
-| `App.scss`            | Utility e regole globali                       |
-| `App.css`             | CSS importato dall'applicazione                |
+| File                  | Responsibility                                  |
+| --------------------- | ----------------------------------------------- |
+| `Colors.scss`         | Main color palette                              |
+| `BootstrapVars.scss`  | Bootstrap customization and inclusion          |
+| `Navbar.scss`         | Desktop and mobile navigation                   |
+| `CustomElements.scss` | Cards, progress bar, and custom components      |
+| `Animations.scss`     | Reveals, decorative layers, and animations      |
+| `App.scss`            | Utilities and global rules                      |
+| `App.css`             | CSS imported by the application                 |
 
 ### Palette
 
-| Colore       | Valore    | Uso                                  |
-| ------------ | --------- | ------------------------------------ |
-| Arancione    | `#e26a08` | Colore secondario e azioni           |
-| Verde scuro  | `#3b6a4f` | Testi, immagini e atmosfera naturale |
-| Verde chiaro | `#7fc87b` | Accenti e illustrazioni              |
-| Crema        | `#fae3c0` | Sfondi e progress bar                |
-| Nero caldo   | `#241d18` | Testo e contrasto                    |
+| Color       | Value     | Usage                                |
+| ----------- | --------- | ------------------------------------ |
+| Orange      | `#e26a08` | Secondary color and actions          |
+| Dark green  | `#3b6a4f` | Text, images, and natural atmosphere |
+| Light green | `#7fc87b` | Accents and illustrations            |
+| Cream       | `#fae3c0` | Backgrounds and progress bar         |
+| Warm black  | `#241d18` | Text and contrast                    |
 
-### Layout mobile
+### Video attention animation
 
-Su mobile `.app-shell` occupa `100dvh`; la navbar è un elemento flex non comprimibile e `.page-scroll-container` gestisce lo scroll verticale. Questa struttura mantiene la navigazione visibile senza sovrapporla ai contenuti.
+The `video-enlarge` class applies the slow `videoEnlarge` scale animation before a lesson video is played for the first time. The class is driven by `videoBlink` and removed after the first accepted play event. Pausing or replaying the video does not restore it.
 
-### Riduzione del movimento
+### Mobile layout
 
-Le animazioni rispettano `prefers-reduced-motion`. Il canvas viene attivato solamente quando sono disponibili puntatore preciso, hover e consenso alle animazioni.
+On mobile, `.app-shell` occupies `100dvh`; the navbar is a non-shrinking flex item and `.page-scroll-container` handles vertical scrolling. This structure keeps navigation visible without covering the content.
+
+### Reduced motion
+
+Animations respect `prefers-reduced-motion`. The canvas is activated only when a precise pointer and hover are available and the user has not requested reduced motion.
 
 ---
 
-## 14. Metadata e accessibilità
+## 14. Metadata and accessibility
 
-Ogni pagina definisce metadata dedicati:
+Each page defines dedicated metadata:
 
-- titolo;
+- title;
 - description;
-- direttiva robots;
-- canonical URL quando applicabile;
-- proprietà Open Graph;
-- immagine e testo alternativo social.
+- robots directive;
+- canonical URL when applicable;
+- Open Graph properties;
+- social image and alternative text.
 
-La Home aggiunge inoltre dati strutturati `Organization` in formato JSON-LD.
+The Home page also adds `Organization` structured data in JSON-LD format.
 
-### Dominio canonico
+### Canonical domain
 
-Gli URL assoluti dei metadata usano come origine di produzione:
+Absolute metadata URLs use the following production origin:
 
 ```text
 https://medit-active.web.app
 ```
 
-Il dominio viene utilizzato per canonical URL, `og:url`, immagini Open Graph e URL presenti nel JSON-LD. Durante lo sviluppo l'app continua a funzionare su `http://localhost:5173`: navigazione e risorse locali restano sulla macchina dello sviluppatore, mentre i metadata SEO dichiarano intenzionalmente il sito di produzione come versione canonica.
+The domain is used for canonical URLs, `og:url`, Open Graph images, and URLs inside JSON-LD. During development, the application continues to run at `http://localhost:5173`: navigation and local resources stay on the developer's machine, while SEO metadata intentionally declares the production site as the canonical version.
 
-Se viene configurato un dominio personalizzato, l'origine in `src/components/pageMetadata.tsx`, `public/robots.txt` e `public/sitemap.xml` deve essere aggiornata in modo coerente.
+If a custom domain is configured, the origin in `src/components/pageMetadata.tsx`, `public/robots.txt`, and `public/sitemap.xml` must be updated consistently.
 
-### Robots e sitemap
+### Robots and sitemap
 
-`public/robots.txt` viene copiato da Vite nella root del bundle e contiene:
+Vite copies `public/robots.txt` to the bundle root. It contains:
 
 ```text
 User-agent: *
@@ -574,138 +582,141 @@ Allow: /
 Sitemap: https://medit-active.web.app/sitemap.xml
 ```
 
-- `User-agent: *` applica le regole a tutti i crawler;
-- `Allow: /` consente la scansione dell'intero sito;
-- `Sitemap` comunica la posizione della sitemap XML.
+- `User-agent: *` applies the rules to every crawler;
+- `Allow: /` permits crawling of the entire site;
+- `Sitemap` communicates the XML sitemap location.
 
-L'autorizzazione alla scansione non obbliga un motore di ricerca a indicizzare tutte le pagine e non annulla un metadata `noindex`. Le pagine di errore e le lezioni bloccate continuano quindi a dichiarare `noindex, nofollow`.
+Crawl permission does not require a search engine to index every page and does not override a `noindex` directive. Error pages and locked lessons therefore continue to declare `noindex, nofollow`.
 
-`public/sitemap.xml` elenca solamente le pagine accessibili e indicizzabili per un nuovo visitatore:
+`public/sitemap.xml` lists only pages that are accessible and indexable for a new visitor:
 
 - `https://medit-active.web.app/`;
 - `https://medit-active.web.app/exercises`;
 - `https://medit-active.web.app/exercise/breathing-section-1`.
 
-Le lezioni successive non sono incluse perché richiedono lo sblocco progressivo salvato nel browser. Se in futuro diventeranno pubblicamente accessibili, dovranno essere aggiunte alla sitemap. Dopo il deploy è possibile inviare `https://medit-active.web.app/sitemap.xml` tramite Google Search Console.
+Later lessons are omitted because they require progressive unlocking stored in the browser. If they become publicly accessible in the future, they should be added to the sitemap. After deployment, `https://medit-active.web.app/sitemap.xml` can be submitted through Google Search Console.
 
-Tra le caratteristiche di accessibilità già presenti:
+Current accessibility features include:
 
-- heading configurabili semanticamente;
-- testi alternativi per le immagini informative;
-- `aria-label` per lezioni e video;
-- `aria-current` per la navigazione;
-- `role="progressbar"` e valori ARIA;
-- `aria-hidden` per decorazioni e icone non informative;
-- supporto a `prefers-reduced-motion`;
-- lezioni bloccate non rese come link interattivi.
+- semantically configurable headings;
+- alternative text for informative images;
+- `aria-label` attributes for lessons and videos;
+- `aria-current` for navigation;
+- `role="progressbar"` and ARIA values;
+- `aria-hidden` for decorations and non-informative icons;
+- support for `prefers-reduced-motion`;
+- locked lessons that are not rendered as interactive links.
 
 ---
 
 ## 15. Testing
 
-### Unit test con Vitest
+### Unit tests with Vitest
 
-I test in `src/**/*.test.js` coprono:
+Tests under `src/**/*.test.js` cover:
 
-- integrità e relazioni dei dati didattici;
-- stato iniziale Redux;
-- avanzamento e completamento video;
-- transizioni del timer;
-- pausa, ripresa, reset e completamento;
-- sblocco sequenziale;
-- comportamento di `useTrainingTimer`;
-- lifecycle e preferenze del canvas decorativo.
+- educational data integrity and relationships;
+- the initial Redux state;
+- video progress and completion;
+- the one-time `videoBlink` transition;
+- timer transitions;
+- pause, resume, reset, and completion behavior;
+- sequential unlocking;
+- `useTrainingTimer` behavior;
+- the decorative canvas lifecycle and preferences.
 
-L'ambiente è `jsdom`, con setup condiviso in `vitest.setup.js`.
+The environment is `jsdom`, with shared setup in `vitest.setup.js`.
 
-### Test end-to-end con Playwright
+### End-to-end tests with Playwright
 
-I test in `tests/` verificano:
+Tests under `tests/` verify:
 
-- navigazione e routing;
-- elenco e blocco delle lezioni;
-- pagina esercizio e risorse video;
-- esclusione della riproduzione simultanea;
-- timer e completamento;
-- progressione tra sezioni;
-- persistenza nel `localStorage`;
-- sincronizzazione e comportamento su reload;
-- metadata e livelli decorativi.
+- navigation and routing;
+- lesson listing and locking;
+- the exercise page and video resources;
+- removal of the `video-enlarge` class on the first play;
+- simultaneous playback exclusion;
+- timer and completion behavior;
+- progression across sections;
+- `localStorage` persistence;
+- synchronization and reload behavior;
+- metadata and decorative layers.
 
-La configurazione esegue i test su Chromium, Firefox e WebKit usando `http://localhost:5173`.
+The configuration runs tests on Chromium, Firefox, and WebKit against `http://localhost:5173`.
 
 ---
 
-## 16. Installazione e comandi
+## 16. Installation and commands
 
-### Prerequisiti
+### Prerequisites
 
-- Node.js;
+- Node.js LTS, as selected by `.nvmrc`;
 - npm;
-- browser moderno.
+- a modern browser.
 
-### Clonazione e installazione
+### Clone and install
 
 ```bash
 git clone https://github.com/FabryPostRock/MeditActiveReact.git
 cd MeditActiveReact
+nvm use
 npm install
 ```
 
-### Avvio in sviluppo
+### Start development
 
 ```bash
 npm run dev
 ```
 
-Vite usa la porta fissa:
+Vite uses the fixed port:
 
 ```text
 http://localhost:5173/
 ```
 
-### Script principali
+### Main scripts
 
-| Comando                | Funzione                                 |
-| ---------------------- | ---------------------------------------- |
-| `npm run dev`          | Avvia Vite in sviluppo                   |
-| `npm run typecheck`    | Controlla TypeScript senza generare file |
-| `npm run lint`         | Esegue ESLint                            |
-| `npm run lint:fix`     | Applica le correzioni ESLint disponibili |
-| `npm run format`       | Formatta il repository con Prettier      |
-| `npm run format:check` | Controlla la formattazione               |
-| `npm run test`         | Esegue una volta i test Vitest           |
-| `npm run test:watch`   | Mantiene Vitest in watch mode            |
-| `npm run test:e2e`     | Esegue Playwright                        |
-| `npm run check`        | Esegue typecheck, lint e format check    |
-| `npm run build`        | Genera il bundle Vite in `dist/`         |
-| `npm run build:watch`  | Mantiene TypeScript in modalità watch    |
-| `npm run preview`      | Avvia la preview Vite sulla porta `4173` |
+| Command                | Purpose                                        |
+| ---------------------- | ---------------------------------------------- |
+| `npm run dev`          | Starts the Vite development server             |
+| `npm run typecheck`    | Checks TypeScript without emitting files       |
+| `npm run lint`         | Runs ESLint                                    |
+| `npm run lint:fix`     | Applies available ESLint fixes                 |
+| `npm run format`       | Formats the repository with Prettier           |
+| `npm run format:check` | Checks formatting                              |
+| `npm run test`         | Runs the Vitest suite once                     |
+| `npm run test:watch`   | Keeps Vitest running in watch mode             |
+| `npm run test:e2e`     | Runs Playwright                                |
+| `npm run check`        | Runs type checking, linting, and format checks |
+| `npm run build`        | Generates the Vite bundle in `dist/`           |
+| `npm run build:watch`  | Keeps TypeScript running in watch mode         |
+| `npm run preview`      | Starts the Vite preview on port `4173`         |
 
-### Build di produzione
+### Production build
 
-Il bundle può essere generato usando lo script Vite già configurato:
+The bundle can be generated with the existing Vite script:
 
 ```bash
 npm run build
 npm run preview
 ```
 
-L'output viene scritto in `dist/` e la preview usa `http://localhost:4173/`.
+Output is written to `dist/`, and the preview runs at `http://localhost:4173/`.
 
-### Deploy su Firebase Hosting
+### Deploy to Firebase Hosting
 
-Firebase Hosting pubblica il contenuto di `dist/`. La configurazione in `firebase.json` include inoltre una rewrite verso `/index.html`, necessaria affinché React Router possa gestire direttamente URL come `/exercises` e `/exercise/breathing-section-1`.
+Firebase Hosting publishes the contents of `dist/`. The `firebase.json` configuration also includes a rewrite to `/index.html`, allowing React Router to handle direct requests to URLs such as `/exercises` and `/exercise/breathing-section-1`.
 
-Il sito di produzione è disponibile all'indirizzo:
+The production site is available at:
 
 ```text
 https://medit-active.web.app/
 ```
 
-#### Prima inizializzazione
+#### First-time setup
 
-La Firebase CLI deve essere disponibile e autenticata:
+The Firebase CLI must be installed and authenticated:
 
 ```bash
 npm install -g firebase-tools
@@ -713,25 +724,25 @@ firebase login
 firebase projects:list
 ```
 
-Dalla root del repository si inizializza Hosting con:
+Initialize Hosting from the repository root:
 
 ```bash
 firebase init hosting
 ```
 
-Risposte previste durante la configurazione:
+Expected configuration choices:
 
-- progetto: `Use an existing project` e selezione del progetto MeditActive;
+- project: `Use an existing project`, then select the MeditActive project;
 - public directory: `dist`;
 - single-page application: `Yes`;
-- build e deploy automatici con GitHub: `No`, finché il deploy resta manuale;
-- sovrascrittura di `dist/index.html`: `No`, perché il file è generato da Vite.
+- automatic GitHub builds and deployments: `No`, while deployment remains manual;
+- overwrite `dist/index.html`: `No`, because Vite generates that file.
 
-L'inizializzazione crea `firebase.json` e `.firebaserc`. L'`index.html` nella root del repository è invece l'entry point sorgente di Vite e non deve essere eliminato.
+Initialization creates `firebase.json` and `.firebaserc`. The root-level `index.html` is Vite's source entry point and must not be deleted.
 
-#### Deploy manuale
+#### Manual deployment
 
-Prima della pubblicazione:
+Before publishing:
 
 ```bash
 nvm use
@@ -740,20 +751,20 @@ npm run test
 npm run build
 ```
 
-La build può essere verificata localmente con:
+The build can be checked locally with:
 
 ```bash
 npm run preview
 ```
 
-Controllare quindi il progetto Firebase attivo e distribuire solamente Hosting:
+Then confirm the active Firebase project and deploy Hosting only:
 
 ```bash
 firebase use
 firebase deploy --only hosting
 ```
 
-Dopo il deploy vanno verificati almeno:
+After deployment, verify at least:
 
 ```text
 https://medit-active.web.app/
@@ -761,13 +772,13 @@ https://medit-active.web.app/robots.txt
 https://medit-active.web.app/sitemap.xml
 ```
 
-Per i deploy successivi non è necessario ripetere `firebase init hosting`: è sufficiente eseguire nuovamente controlli, build e `firebase deploy --only hosting`.
+There is no need to repeat `firebase init hosting` for later deployments. Run the checks and build again, then use `firebase deploy --only hosting`.
 
 ---
 
-## 17. Flussi applicativi
+## 17. Application flows
 
-### Avvio
+### Startup
 
 ```text
 main.tsx
@@ -781,7 +792,7 @@ BrowserRouter
 App
 ```
 
-### Navigazione
+### Navigation
 
 ```text
 Navbar
@@ -790,10 +801,10 @@ Routes
   ↓
 Home / Exercises / Exercise / Error
   ↓
-Footer condiviso
+Shared footer
 ```
 
-### Progresso utente
+### User progress
 
 ```text
 learningContent.ts
@@ -809,67 +820,67 @@ trainingProgressStorage
 localStorage
 ```
 
-### Completamento
+### Completion
 
 ```text
-video completato
+video completed
   ↓
-pratica avviata
+practice started
   ↓
-timer raggiunto
+required time reached
   ↓
 readyToComplete
   ↓
-conferma utente
+user confirmation
   ↓
 completed
   ↓
-sblocco nextSectionId
+unlock nextSectionId
 ```
 
 ---
 
-## 18. Note tecniche e possibili miglioramenti
+## 18. Technical notes and possible improvements
 
-### Script di build
+### Build script
 
-Lo script `build` esegue `vite build` e genera il bundle frontend in `dist/`. Il typecheck resta un controllo separato incluso in `npm run check` e deve essere eseguito prima della pubblicazione.
+The `build` script runs `vite build` and generates the frontend bundle in `dist/`. Type checking remains a separate check included in `npm run check` and should be run before publishing.
 
-### Dipendenze
+### Dependencies
 
-Il manifest include librerie non ancora importate dal codice corrente. Una revisione periodica può ridurre dimensione dell'installazione e superficie di manutenzione.
+The manifest includes libraries that are not yet imported by the current code. A periodic review could reduce installation size and maintenance surface.
 
-### Durata della pratica
+### Practice duration
 
-La durata richiesta è attualmente configurata con un valore breve, utile durante sviluppo e test. Per un rilascio pubblico dovrebbe essere definita in base alla durata reale di ogni esercizio.
+The required duration is currently configured with a short value that is useful during development and testing. For a public release, it should be defined according to the actual duration of each exercise.
 
-### Sincronizzazione
+### Synchronization
 
-La sincronizzazione tra schede può essere ulteriormente protetta con controlli espliciti contro aggiornamenti esterni equivalenti e cicli di riscrittura non necessari.
+Cross-tab synchronization could be further protected with explicit checks against equivalent external updates and unnecessary rewrite cycles.
 
 ---
 
-## Appendice: effetto Canvas
+## Appendix: Canvas effect
 
-`CursorWake` usa un canvas a schermo intero per generare brevi increspature dietro al puntatore. React monta solamente il canvas; aggiornamento, disegno e cleanup sono gestiti direttamente tramite Canvas 2D API e `requestAnimationFrame`.
+`CursorWake` uses a full-screen canvas to generate short-lived ripples behind the pointer. React only mounts the canvas; updates, drawing, and cleanup are handled directly through the Canvas 2D API and `requestAnimationFrame`.
 
-Il flusso corrente è:
+The current flow is:
 
 ```text
 pointermove
   ↓
-calcolo distanza, direzione e velocità
+calculate distance, direction, and speed
   ↓
-creazione ripple
+create ripple
   ↓
 requestAnimationFrame
   ↓
-aggiornamento età, raggio e opacità
+update age, radius, and opacity
   ↓
-rimozione ripple scaduti
+remove expired ripples
 ```
 
-Il diagramma seguente documenta uno studio geometrico precedente usato durante la calibrazione dell'effetto:
+The following diagram documents an earlier geometric study used while calibrating the effect:
 
 ```text
 x →
@@ -877,38 +888,39 @@ y ↓
 
         P ●  (leftX, leftY)
            ╲
-            ╲     ramo sinistro della scia
+            ╲     left trail branch
              ╲
         C × · · ╲
-          punto   ╲
-          di       ● S  (leftTipX, leftTipY)
-          controllo│
-                   │ tipGap
-                   └──────── ● T  (tipX, tipY)
-                              │
-                              │ tipDistance
-                              │
-                              ● O  (wave.x, wave.y)
-                              ↓
-                       movimento del mouse
+          control ╲
+          point     ● S  (leftTipX, leftTipY)
+                    │
+                    │ tipGap
+                    └──────── ● T  (tipX, tipY)
+                               │
+                               │ tipDistance
+                               │
+                               ● O  (wave.x, wave.y)
+                               ↓
+                         mouse movement
 ```
 
-![Regolazione della curvatura dell'effetto Canvas](./docs/curvature_regulation.png)
+![Canvas effect curvature calibration](./docs/curvature_regulation.png)
 
 ---
 
-## Riepilogo
+## Summary
 
-MeditActive è una SPA React orientata alla pratica progressiva della consapevolezza corporea. Il progetto combina:
+MeditActive is a React SPA focused on the progressive practice of body awareness. The project combines:
 
-- routing con lezioni dinamiche;
-- stato globale Redux tipizzato;
-- timer con pausa e ripresa;
-- video e verifica del tempo riprodotto;
-- progressione sequenziale;
-- persistenza locale e sincronizzazione tra schede;
+- routing with dynamic lessons;
+- typed global Redux state;
+- a timer with pause and resume support;
+- video playback-time verification;
+- a one-time video attention animation;
+- sequential progression;
+- local persistence and cross-tab synchronization;
 - responsive design;
-- metadata e accessibilità;
-- unit test e test end-to-end.
+- metadata and accessibility;
+- unit and end-to-end tests.
 
-La struttura mantiene separati contenuti statici, stato utente, componenti visuali e logica di persistenza, offrendo una base estendibile per futuri percorsi di meditazione e crescita personale.
+The structure keeps static content, user state, visual components, and persistence logic separate, providing an extensible foundation for future meditation and personal-growth paths.
