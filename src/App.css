@@ -12627,7 +12627,7 @@ ul {
   }
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen and (min-width: 767px) {
   .fs-lg-x-2_5vw {
     font-size: calc(1.6rem + 2.5vw) !important;
   }
