@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { exerciseSections } from '../data/learningContent';
 import trainingProgressReducer, {
   startVideoPlayback,
-  //stopVideoPlayback,
+  stopVideoPlayback,
   completeTraining,
   pauseTraining,
   resetTraining,
@@ -219,6 +219,22 @@ describe('trainingProgressSlice video progress', () => {
       videoDurationSeconds: 60.75,
       videoCompleted: true,
     });
+  });
+
+  it('disables the video blink after the first playback and keeps it disabled', () => {
+    const sectionId = exerciseSections[0].id;
+    let state = createInitialState();
+
+    expect(state.progressBySectionId[sectionId].videoBlink).toBe(true);
+
+    state = trainingProgressReducer(state, startVideoPlayback({ sectionId }));
+
+    expect(state.progressBySectionId[sectionId].videoBlink).toBe(false);
+
+    state = trainingProgressReducer(state, stopVideoPlayback({ sectionId }));
+    state = trainingProgressReducer(state, startVideoPlayback({ sectionId }));
+
+    expect(state.progressBySectionId[sectionId].videoBlink).toBe(false);
   });
 
   it('does not start a second video section while another video section is being played', () => {
