@@ -199,7 +199,7 @@ export default function ExerciseView({ section, isLocked, videoBlink }: Exercise
         <div className="col d-flex justify-content-center">
           <div className="row w-100 d-flex justify-content-center">
             <div className="col-12 d-flex justify-content-center text-justify mt-5">
-              <p className="secondary-color fs-2">{formatDuration(totalElapsedMs)}</p>
+              <p className="secondary-color fs-md-x-3_5vw fs-lg-x-2_5vw">{formatDuration(totalElapsedMs)}</p>
             </div>
             <div className="col-6 col-sm-4 d-flex  justify-content-center m-3 mx-md-0">
               <div className="row w-100 d-flex justify-content-center">
