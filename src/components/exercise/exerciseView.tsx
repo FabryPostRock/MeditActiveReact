@@ -152,6 +152,9 @@ export default function ExerciseView({ section, isLocked, videoBlink }: Exercise
   const status = progress?.status ?? 'idle';
   const videoCompleted = progress?.videoCompleted ?? false;
   const trainingCompleted = progress?.trainingCompleted ?? false;
+  const canReset = status === 'completed' || status === 'readyToComplete';
+  const canComplete = status === 'readyToComplete' && !trainingCompleted;
+  const canStart = videoCompleted && status !== 'readyToComplete';
   // console.log(`ExerciseView - currentSessionMs: ${currentSessionMs}   totalElapsedMs: ${totalElapsedMs}`);
   return !isLocked ? (
     <article>
@@ -205,8 +208,9 @@ export default function ExerciseView({ section, isLocked, videoBlink }: Exercise
               <div className="row w-100 d-flex justify-content-center">
                 <div className="col-12 col-sm-12 col-lg-9 p-0">
                   <button
-                    className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${videoCompleted && status !== 'readyToComplete' ? '' : 'disabled'}`}
-                    aria-disabled={videoCompleted && status !== 'readyToComplete' ? undefined : true}
+                    className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${!canStart ? 'disabled' : ''}`}
+                    aria-disabled={!canStart ? true : undefined}
+                    disabled={!canStart}
                     onClick={
                       status === 'running'
                         ? () =>
@@ -238,8 +242,9 @@ export default function ExerciseView({ section, isLocked, videoBlink }: Exercise
               <div className="row w-100 d-flex justify-content-center">
                 <div className="col-12 col-sm-12 col-lg-9 p-0">
                   <button
-                    className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${status === 'completed' || status === 'readyToComplete' ? '' : 'disabled'}`}
-                    aria-disabled={status === 'completed' || status === 'readyToComplete' ? undefined : true}
+                    className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${!canReset ? 'disabled' : ''}`}
+                    aria-disabled={!canReset ? true : undefined}
+                    disabled={!canReset}
                     onClick={() =>
                       dispatch(
                         resetTraining({
@@ -260,8 +265,9 @@ export default function ExerciseView({ section, isLocked, videoBlink }: Exercise
               <div className="row w-100 d-flex justify-content-center">
                 <div className="col-12 col-sm-12 col-lg-9 p-0">
                   <button
-                    className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${status === 'readyToComplete' && !progress.trainingCompleted ? '' : 'disabled'}`}
-                    aria-disabled={status === 'readyToComplete' && !progress.trainingCompleted ? undefined : true}
+                    className={`btn-min-h btn btn-secondary btn-icons-secondary h-100 w-100 d-flex align-items-center justify-content-center rounded-5 ${!canComplete ? 'disabled' : ''}`}
+                    aria-disabled={!canComplete ? true : undefined}
+                    disabled={!canComplete}
                     onClick={() =>
                       dispatch(
                         completeTraining({

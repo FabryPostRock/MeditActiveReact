@@ -302,6 +302,7 @@ test.describe('Exercise lesson page', () => {
 
     await checkProgressBar(page, '0%');
     await expect(startTrainingButton).toHaveAttribute('aria-disabled', 'true');
+    await expect(startTrainingButton).toBeDisabled();
 
     /**
      * `dispatchEvent()` sends the DOM event directly, bypassing Playwright's
@@ -311,6 +312,7 @@ test.describe('Exercise lesson page', () => {
     await startTrainingButton.dispatchEvent('click');
 
     await expect(startTrainingButton).toHaveAttribute('aria-disabled', 'true');
+    await expect(startTrainingButton).toBeDisabled();
   });
 
   test('enables training after the video has been fully played', async ({ page }) => {
@@ -359,6 +361,7 @@ test.describe('Exercise lesson page', () => {
     });
     await checkProgressBar(page, '33%');
     await expect(startTrainingButton).not.toHaveAttribute('aria-disabled', 'true');
+    await expect(startTrainingButton).toBeEnabled();
 
     await startTrainingButton.click();
   });
@@ -439,6 +442,7 @@ test.describe('Timer startup and stop', () => {
     const startTrainingButton = page.locator('main article button').first();
     await startTrainingButton.click();
     await expect(startTrainingButton).not.toHaveAttribute('aria-disabled', 'true');
+    await expect(startTrainingButton).toBeEnabled();
 
     const timer = page.locator('main article').getByText(/^\d{2}:\d{2}$/);
 
