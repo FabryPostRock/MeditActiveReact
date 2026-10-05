@@ -1,14 +1,6 @@
 {
-  "languageDemo": {
-    "eyebrow": "Demo react-i18next",
-    "title": "Una pausa consapevole",
-    "description": "Fermati per qualche istante e porta l’attenzione al respiro. Questa sezione cambia lingua senza ricaricare la pagina.",
-    "activeLanguage": "Lingua attiva: {{language}}",
-    "detectedLanguage": "La lingua iniziale viene rilevata dalle impostazioni del browser.",
-    "languageSelector": "Seleziona la lingua della sezione",
-    "languages": {
-      "it": "Italiano",
-      "en": "Inglese"
-    }
+  "navigation": {
+    "home": "Home",
+    "exercises": "Esercizi"
   }
 }

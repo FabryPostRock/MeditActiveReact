@@ -1,7 +1,10 @@
 import { NavLink, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import logo from '../assets/img/logo.png';
 
 export default function Navbar() {
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="min-vw-100 position-fixed nav-wrapper">
@@ -24,7 +27,7 @@ export default function Navbar() {
                   aria-current="page": is automatically added when isActive is true.
                   */}
                   <NavLink className={({ isActive }) => `fs-5 nav-link ${isActive ? 'active' : ''}`} to="/" end>
-                    <span className="nav-label">Home</span>
+                    <span className="nav-label">{t('navigation.home')}</span>
 
                     <span className="material-symbols-outlined g-icon-2em nav-icon g-icon-primary" aria-hidden="true">
                       home
@@ -34,7 +37,7 @@ export default function Navbar() {
                 {/**flex-fill : keeps an equal spacing between the two icons with view changing. */}
                 <li className="nav-item flex-fill flex-sm-grow-0 lh-1 me-5">
                   <NavLink className={({ isActive }) => `fs-5 nav-link ${isActive ? 'active' : ''}`} to="/exercises">
-                    <span className="nav-label">Exercises</span>
+                    <span className="nav-label">{t('navigation.exercises')}</span>
 
                     <span className="material-symbols-outlined g-icon-2em nav-icon g-icon-primary" aria-hidden="true">
                       self_improvement
