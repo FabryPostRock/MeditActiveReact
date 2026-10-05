@@ -1,0 +1,14 @@
+{
+  "languageDemo": {
+    "eyebrow": "react-i18next demo",
+    "title": "A mindful pause",
+    "description": "Pause for a moment and bring your attention to your breath. This section changes language without reloading the page.",
+    "activeLanguage": "Active language: {{language}}",
+    "detectedLanguage": "The initial language is detected from your browser settings.",
+    "languageSelector": "Select the section language",
+    "languages": {
+      "it": "Italian",
+      "en": "English"
+    }
+  }
+}
