@@ -1,6 +1,7 @@
 import logo_936x905 from '../assets/img/logo_936x905.png';
 import { homeConceptsData } from '../data/homeConcepts';
 import { HomeConcept } from '../components/homeConcept';
+import { LanguageDemo } from '../components/languageDemo';
 import { PerspectiveWalls } from '../components/perspectiveWalls';
 import { CursorWake } from '../components/cursorWake';
 import { PageMetadata } from '../components/pageMetadata';
@@ -100,6 +101,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <LanguageDemo />
 
       <div ref={conceptsContainerRef}>
         {homeConceptsData.map((concept, index) => {
