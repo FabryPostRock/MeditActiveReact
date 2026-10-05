@@ -2,5 +2,9 @@
   "navigation": {
     "home": "Home",
     "exercises": "Esercizi"
+  },
+  "footer": {
+    "contacts": "Contatti",
+    "followUs": "Seguici sui social"
   }
 }

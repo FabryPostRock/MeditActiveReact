@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next';
+
 export function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="container-fluid px-3 px-md-0 mt-auto">
       <div className="container">
@@ -6,7 +10,7 @@ export function Footer() {
           <div className="col-11 col-sm-6 p-0 flex-fill">
             <div className="row my-4 ms-lg-5">
               <div className="col-12">
-                <h3>Contatti</h3>
+                <h3>{t('footer.contacts')}</h3>
               </div>
               <div className="col-12 my-2 d-flex align-items-start flex-md-row justify-content-md-start align-items-md-center">
                 <span className="material-symbols-outlined g-icon-footer-color d-inline me-2">mail</span>
@@ -25,7 +29,7 @@ export function Footer() {
           <div className="col-11 col-sm-6 p-0 flex-fill">
             <div className="row my-4 d-flex justify-content-end">
               <div className="col-12 col-md-8">
-                <h3>Seguici sui social</h3>
+                <h3>{t('footer.followUs')}</h3>
               </div>
               <div className="col-12 col-md-8">
                 <div className="row">
