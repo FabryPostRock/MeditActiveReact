@@ -248,7 +248,7 @@ test.describe('localStorage persistence', () => {
     expect(writeAttempts).toBeGreaterThan(0);
     await expect(page.getByRole('heading', { name: firstSection.title, exact: true })).toBeVisible();
 
-    await page.getByRole('link', { name: 'Exercises', exact: true }).click();
+    await page.getByRole('link', { name: 'Esercizi', exact: true }).click();
 
     await expect(page).toHaveURL(/\/exercises$/);
     await expect(page.getByRole('heading', { name: 'Corso base di consapevolezza del corpo' })).toBeVisible();

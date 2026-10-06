@@ -26,10 +26,10 @@ test.describe('Navigation and routing', () => {
     expect(pageErrors).toEqual([]);
   });
 
-  test('opens the exercises page from the Exercises link', async ({ page }) => {
+  test('opens the exercises page from the Esercizi link', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByRole('link', { name: 'Exercises' }).click();
+    await page.getByRole('link', { name: 'Esercizi' }).click();
 
     await expect(page).toHaveURL(/\/exercises$/);
   });
@@ -46,7 +46,7 @@ test.describe('Navigation and routing', () => {
     await page.goto('/');
 
     const homeLink = page.getByRole('link', { name: 'Home' });
-    const exercisesLink = page.getByRole('link', { name: 'Exercises' });
+    const exercisesLink = page.getByRole('link', { name: 'Esercizi' });
 
     await expect(homeLink).toHaveAttribute('aria-current', 'page');
     await expect(exercisesLink).not.toHaveAttribute('aria-current', 'page');

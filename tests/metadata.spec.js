@@ -39,7 +39,7 @@ test.describe('Page metadata', () => {
 
   test('updates metadata and removes Organization data after client-side navigation', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('link', { name: 'Exercises' }).click();
+    await page.getByRole('link', { name: 'Esercizi' }).click();
 
     await expect(page).toHaveURL(/\/exercises$/);
     await expect(page).toHaveTitle('Corso di consapevolezza del corpo | MeditActive');
