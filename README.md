@@ -35,11 +35,12 @@ MeditActive is a responsive **Single Page Application** that provides progressiv
 12. [Main pages](#12-main-pages)
 13. [Styling, responsive design, and animations](#13-styling-responsive-design-and-animations)
 14. [Metadata and accessibility](#14-metadata-and-accessibility)
-15. [Testing](#15-testing)
-16. [Installation and commands](#16-installation-and-commands)
-17. [Application flows](#17-application-flows)
-18. [Technical notes and possible improvements](#18-technical-notes-and-possible-improvements)
-19. [Appendix: Canvas effect](#appendix-canvas-effect)
+15. [Internationalization](#15-internationalization)
+16. [Testing](#16-testing)
+17. [Installation and commands](#17-installation-and-commands)
+18. [Application flows](#18-application-flows)
+19. [Technical notes and possible improvements](#19-technical-notes-and-possible-improvements)
+20. [Appendix: Canvas effect](#appendix-canvas-effect)
 
 ---
 
@@ -57,6 +58,7 @@ The application allows users to:
 - check lesson status through a progress bar;
 - preserve progress across reloads and browser sessions;
 - synchronize state across multiple tabs in the same browser;
+- read the localized navigation, Home, and lesson content in Italian or English according to the browser preferences;
 - see a dedicated error page for unknown routes or locked lessons.
 
 The project is also a practical exercise in:
@@ -68,6 +70,7 @@ The project is also a practical exercise in:
 - browser persistence;
 - TypeScript and typed data;
 - responsive layouts with Bootstrap and Sass;
+- internationalization with browser-language detection;
 - unit, integration, and end-to-end testing;
 - accessibility, social metadata, and structured data.
 
@@ -75,21 +78,24 @@ The project is also a practical exercise in:
 
 ## 2. Technology stack
 
-| Technology       | Role in the project                                      |
-| ---------------- | -------------------------------------------------------- |
-| React 19         | Functional components and UI rendering                   |
-| TypeScript       | Typing for components, data, Redux, and utilities        |
-| Vite             | Development server and frontend tooling                  |
-| React Router DOM | SPA navigation and dynamic routes                        |
-| Redux Toolkit    | Shared state for the training path                       |
-| React Redux      | Typed connection between the store and components        |
-| Bootstrap 5      | Grid, responsive utilities, and visual components        |
-| Sass / CSS       | Variables, media queries, animations, and customization  |
-| Canvas 2D API    | Decorative effect associated with pointer movement       |
-| Web Storage API  | Local persistence and cross-tab synchronization          |
-| Vitest           | Unit tests in a `jsdom` environment                      |
-| Testing Library  | Rendering and interaction in component and hook tests    |
-| Playwright       | End-to-end tests across multiple browsers                |
+| Technology                        | Role in the project                                      |
+| -------------------------------- | -------------------------------------------------------- |
+| React 19                          | Functional components and UI rendering                   |
+| TypeScript                        | Typing for components, data, Redux, and utilities        |
+| Vite                              | Development server and frontend tooling                  |
+| React Router DOM                  | SPA navigation and dynamic routes                        |
+| Redux Toolkit                     | Shared state for the training path                       |
+| React Redux                       | Typed connection between the store and components        |
+| i18next                           | Translation resources, fallback, and language resolution |
+| react-i18next                     | React hooks and rich translated content                  |
+| i18next-browser-languagedetector  | Browser-language detection                               |
+| Bootstrap 5                       | Grid, responsive utilities, and visual components        |
+| Sass / CSS                        | Variables, media queries, animations, and customization  |
+| Canvas 2D API                     | Decorative effect associated with pointer movement       |
+| Web Storage API                   | Local persistence and cross-tab synchronization          |
+| Vitest                            | Unit tests in a `jsdom` environment                      |
+| Testing Library                   | Rendering and interaction in component and hook tests    |
+| Playwright                        | End-to-end tests across multiple browsers                |
 
 The `package.json` file also contains dependencies intended for future development. This table lists only the technologies currently used by the application.
 
@@ -146,6 +152,10 @@ On small screens, the application uses a shell as tall as the viewport:
 - the central content area handles vertical scrolling;
 - the layout adapts through the Bootstrap grid and dedicated media queries.
 
+### Multilingual interface
+
+The navigation, footer, Home content, course and lesson content, related accessibility labels, and selected page metadata are available in Italian and English. The initial language is selected from the browser preferences, with Italian used as the fallback for unsupported languages.
+
 ---
 
 ## 4. High-level architecture
@@ -155,6 +165,9 @@ The frontend architecture is organized around pages, components, data, and share
 ```mermaid
 flowchart TD
     A[main.tsx] --> B[StrictMode]
+    A --> U[i18n initialization]
+    U --> V[Browser language detector]
+    U --> W[Italian and English dictionaries]
     B --> C[Redux Provider]
     C --> D[BrowserRouter]
     D --> E[App.tsx]
@@ -188,10 +201,11 @@ flowchart TD
 | Layer                  | Responsibility                                                |
 | ---------------------- | ------------------------------------------------------------- |
 | `main.tsx`             | Mounts React, Redux, and React Router                         |
+| `i18n/`                | Initializes language detection and exposes translation resources |
 | `App.tsx`              | Defines the shell, decorations, navigation, routes, and footer |
 | `pages/`               | Composes the pages associated with routes                     |
 | `components/`          | Contains reusable UI and behavior                             |
-| `data/`                | Contains static lessons, Home content, and metadata           |
+| `data/`                | Contains static lesson structure, assets, and metadata        |
 | `store/`               | Manages state, timers, persistence, and typed Redux hooks     |
 | `public/videos/`       | Exposes lesson videos as public assets                        |
 | `public/robots.txt`    | Defines crawler rules                                         |
@@ -235,6 +249,15 @@ MeditActiveReact/
 │   │   ├── homeConcepts.tsx
 │   │   ├── learningContent.ts
 │   │   └── pageMetadata.ts
+│   ├── i18n/
+│   │   ├── locales/
+│   │   │   ├── en/
+│   │   │   │   └── translation.json
+│   │   │   └── it/
+│   │   │       └── translation.json
+│   │   ├── config.test.js
+│   │   ├── config.ts
+│   │   └── index.ts
 │   ├── pages/
 │   │   ├── error.tsx
 │   │   ├── exercise.tsx
@@ -609,7 +632,203 @@ Current accessibility features include:
 
 ---
 
-## 15. Testing
+## 15. Internationalization
+
+Internationalization is implemented with `i18next`, `react-i18next`, and `i18next-browser-languagedetector`.
+
+The application currently supports:
+
+| Language | Base code | Example browser locale |
+| -------- | --------- | ---------------------- |
+| Italian  | `it`      | `it-IT`                |
+| English  | `en`      | `en-US`                |
+
+Italian is the fallback language. The currently localized areas are:
+
+- the navbar and footer;
+- the Home introduction, concepts, images, and metadata;
+- the course title;
+- lesson titles and descriptions;
+- lesson links, preview-image alternatives, and video labels;
+- individual lesson metadata.
+
+Other UI strings can be migrated incrementally using the same dictionary structure.
+
+### Initialization
+
+`main.tsx` imports `src/i18n/index.ts` before React renders the application. The initialization flow is:
+
+```text
+main.tsx
+  ↓
+import ./i18n
+  ↓
+i18next.use(LanguageDetector)
+  ↓
+i18next.use(initReactI18next)
+  ↓
+i18next.init(i18nOptions)
+```
+
+`initReactI18next` connects the i18next instance to React. Components can then access the active translation function and language through `useTranslation()`, while `Trans` can render translations containing React elements.
+
+### Browser-language detection
+
+The detector configuration is defined in `src/i18n/config.ts`:
+
+```ts
+detection: {
+  order: ['navigator'],
+  caches: [],
+}
+```
+
+The browser exposes preferred locale tags through `navigator.languages` and `navigator.language`. These values commonly include a regional suffix, such as `it-IT` or `en-US`.
+
+The configuration resolves them to the available base-language dictionaries:
+
+```ts
+nonExplicitSupportedLngs: true,
+load: 'languageOnly',
+```
+
+The resulting mappings are:
+
+```text
+it-IT → it
+en-US → en
+fr-FR → it (fallback)
+```
+
+Language detection runs when i18next is initialized. If the browser preference changes while the application is already open, the page must be reloaded, or the browser restarted when required by that browser, so the detector can read the new value.
+
+The current interface does not expose a manual language selector. Its language source is the browser preference.
+
+The selected language is intentionally not stored in `localStorage`:
+
+```ts
+caches: [],
+```
+
+This prevents a stale cached value from overriding a later browser-setting change. The browser's optional Google Translate prompt is separate from i18next: it does not select the application language and does not update an i18next cache.
+
+Whenever i18next selects a language, `src/i18n/index.ts` synchronizes the document language:
+
+```ts
+i18n.on('languageChanged', updateDocumentLanguage);
+```
+
+As a result, the root element exposes the resolved base language:
+
+```html
+<html lang="it">
+```
+
+or:
+
+```html
+<html lang="en">
+```
+
+This gives assistive technologies and browsers the correct document-language information.
+
+### Translation resources
+
+Translation dictionaries are stored in:
+
+```text
+src/i18n/locales/it/translation.json
+src/i18n/locales/en/translation.json
+```
+
+Both dictionaries must contain the same key structure. For example:
+
+```json
+{
+  "exercises": {
+    "openLesson": "Open lesson {{title}}",
+    "sections": {
+      "breathing-section-1": {
+        "title": "Lying-down breathing with hands on the abdomen",
+        "description": "..."
+      }
+    }
+  }
+}
+```
+
+Static data files retain stable IDs, assets, durations, and relationships. Components use those IDs to construct translation keys dynamically:
+
+```tsx
+const title = t(`exercises.sections.${section.id}.title`);
+```
+
+This keeps language-independent lesson configuration in `learningContent.ts` and translated UI content in the dictionaries.
+
+### `t()`, interpolation, and `Trans`
+
+Simple strings use the translation function returned by `useTranslation()`:
+
+```tsx
+const { t } = useTranslation();
+
+<h3>{t('home.tagline')}</h3>
+```
+
+Dynamic values use interpolation. Given this dictionary entry:
+
+```json
+{
+  "openLesson": "Open lesson {{title}}"
+}
+```
+
+the component supplies the value for `{{title}}`:
+
+```tsx
+aria-label={t('exercises.openLesson', { title })}
+```
+
+`Trans` is reserved for translations that contain React elements or text formatting. Home descriptions use named translation tags:
+
+```json
+{
+  "description": "<paragraph>Text with <emphasis>important content</emphasis>.</paragraph>"
+}
+```
+
+The component explicitly maps each named tag to an allowed React HTML element:
+
+```tsx
+<Trans
+  i18nKey={`${translationKey}.description`}
+  components={{
+    paragraph: <p />,
+    emphasis: <strong />,
+    citation: <i />,
+    linebreak: <br />,
+  }}
+/>
+```
+
+For example, `<emphasis>` from the dictionary is rendered as a semantic `<strong>` element. This preserves translated rich-text structure without using `dangerouslySetInnerHTML`.
+
+### Adding another language
+
+To add a language:
+
+1. create `src/i18n/locales/<language>/translation.json` with the same keys as the existing dictionaries;
+2. import the dictionary in `src/i18n/config.ts`;
+3. add the base code to `supportedLanguages` and `resources`;
+4. add the corresponding Open Graph locale mapping where localized metadata is created;
+5. extend the unit-test locale cases and add a Playwright locale scenario;
+6. run the dictionary-parity, type, build, and end-to-end checks.
+
+The unit tests verify that Italian and English expose the same keys, that every lesson and Home concept has translated content, and that Home rich-text tags have matching structures. Playwright verifies browser detection, `<html lang>`, translated content, accessibility labels, and localized metadata.
+
+---
+
+## 16. Testing
 
 ### Unit tests with Vitest
 
@@ -623,6 +842,9 @@ Tests under `src/**/*.test.js` cover:
 - pause, resume, reset, and completion behavior;
 - sequential unlocking;
 - `useTrainingTimer` behavior;
+- browser-language detection and fallback behavior;
+- dictionary-key parity and translated-content completeness;
+- rich-text tag parity between the Home dictionaries;
 - the decorative canvas lifecycle and preferences.
 
 The environment is `jsdom`, with shared setup in `vitest.setup.js`.
@@ -640,13 +862,15 @@ Tests under `tests/` verify:
 - progression across sections;
 - `localStorage` persistence;
 - synchronization and reload behavior;
+- Italian and English rendering for the navbar, footer, Home, and exercises;
+- the resolved `<html lang>` value and localized metadata;
 - metadata and decorative layers.
 
 The configuration runs tests on Chromium, Firefox, and WebKit against `http://localhost:5173`.
 
 ---
 
-## 16. Installation and commands
+## 17. Installation and commands
 
 ### Prerequisites
 
@@ -776,7 +1000,7 @@ There is no need to repeat `firebase init hosting` for later deployments. Run th
 
 ---
 
-## 17. Application flows
+## 18. Application flows
 
 ### Startup
 
@@ -840,7 +1064,7 @@ unlock nextSectionId
 
 ---
 
-## 18. Technical notes and possible improvements
+## 19. Technical notes and possible improvements
 
 ### Build script
 
@@ -919,8 +1143,9 @@ MeditActive is a React SPA focused on the progressive practice of body awareness
 - a one-time video attention animation;
 - sequential progression;
 - local persistence and cross-tab synchronization;
+- Italian and English localization based on browser preferences;
 - responsive design;
 - metadata and accessibility;
 - unit and end-to-end tests.
 
-The structure keeps static content, user state, visual components, and persistence logic separate, providing an extensible foundation for future meditation and personal-growth paths.
+The structure keeps language-independent data, translated content, user state, visual components, and persistence logic separate, providing an extensible foundation for future meditation and personal-growth paths.
