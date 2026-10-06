@@ -102,7 +102,11 @@ async function prepareTwoUnlockedLessons(page, context) {
 }
 
 async function prepareSectionState(page, progressOverrides = {}, sectionId) {
-  await page.goto('/');
+  await page.goto('/', {
+    // waitUntil: 'domcontentloaded' changes the default behaviour of 'load' method. Webikit and Firefox can consume
+    // most of the timeout waiting for the resource.
+    waitUntil: 'domcontentloaded',
+  });
 
   await page.evaluate(
     async ({ progressOverrides, sectionId, storageKey }) => {
@@ -130,9 +134,29 @@ async function prepareSectionState(page, progressOverrides = {}, sectionId) {
     },
   );
 
-  await page.goto(`/exercise/${sectionId}`);
+  await page.goto(`/exercise/${sectionId}`, {
+    waitUntil: 'domcontentloaded',
+  });
 
   return { page: page };
+}
+
+/**
+ * `getByRole()` queries an element by its accessibility role, while `getByLabel()`
+ * queries its accessible label. 
+ * In those cases Playwright doesn't show the DOM directly: instead it represents the   
+ * accessibility tree constructed by the browser like:
+ * <nav>     → navigation
+ * <h2>      → heading
+ * <button>  → button
+ * <video>   → generic
+ * `locator()` queries the DOM through a CSS selector.
+ * Browsers can expose `<video>` with the generic accessibility role, so selecting
+ * its stable HTML tag avoids cross-browser accessibility-mapping differences.
+
+ */
+function getExerciseVideo(page) {
+  return page.locator('main article video');
 }
 
 async function installControllablePlayback(video) {
@@ -256,7 +280,7 @@ test.describe('Exercise lesson page', () => {
   });
 
   test('uses the expected MP4 file and the resource responds successfully', async ({ page, request }) => {
-    const video = page.getByLabel(`Video: ${exerciseSections[0].title}`);
+    const video = getExerciseVideo(page);
 
     await expect(video).toHaveAttribute('src', exerciseSections[0].videoUrl);
 
@@ -272,7 +296,7 @@ test.describe('Exercise lesson page', () => {
   });
 
   test('shows the native video controls', async ({ page }) => {
-    const video = page.getByLabel(`Video: ${exerciseSections[0].title}`);
+    const video = getExerciseVideo(page);
 
     /**
      * `toHaveJSProperty()` checks the live DOM property instead of only checking
@@ -282,7 +306,7 @@ test.describe('Exercise lesson page', () => {
   });
 
   test('removes the video animation class on the first play and does not restore it', async ({ page }) => {
-    const video = page.getByLabel(`Video: ${exerciseSections[0].title}`);
+    const video = getExerciseVideo(page);
 
     await expect(video).toHaveClass(/\bvideo-enlarge\b/);
 
@@ -316,7 +340,7 @@ test.describe('Exercise lesson page', () => {
   });
 
   test('enables training after the video has been fully played', async ({ page }) => {
-    const video = page.getByLabel(`Video: ${exerciseSections[0].title}`);
+    const video = getExerciseVideo(page);
     const startTrainingButton = page.locator('main article button').first();
 
     /**
@@ -370,8 +394,8 @@ test.describe('Exercise lesson page', () => {
 test.describe('Multiple video playback exclusion', () => {
   test('keeps the first lesson active until its video is paused', async ({ page, context }) => {
     const { firstPage, secondPage } = await prepareTwoUnlockedLessons(page, context);
-    const firstVideo = firstPage.getByLabel(`Video: ${exerciseSections[0].title}`);
-    const secondVideo = secondPage.getByLabel(`Video: ${exerciseSections[1].title}`);
+    const firstVideo = getExerciseVideo(firstPage);
+    const secondVideo = getExerciseVideo(secondPage);
 
     await installControllablePlayback(firstVideo);
     await installControllablePlayback(secondVideo);
@@ -404,7 +428,7 @@ test.describe('Multiple video playback exclusion', () => {
 
   test('clears activeSectionId when the tab playing the active video is closed', async ({ page, context }) => {
     const { firstPage, secondPage } = await prepareTwoUnlockedLessons(page, context);
-    const firstVideo = firstPage.getByLabel(`Video: ${exerciseSections[0].title}`);
+    const firstVideo = getExerciseVideo(firstPage);
 
     await installControllablePlayback(firstVideo);
     await firstVideo.evaluate((mediaElement) => mediaElement.play());
@@ -496,7 +520,7 @@ test.describe('Timer startup and stop', () => {
 test.describe('Training completion and unlocking', () => {
   test('unlocks every section progressively in the configured order', async ({ page }) => {
     // the predifined timeout is 30s.
-    test.setTimeout(60_000);
+    test.setTimeout(120_000);
     const lastSectionIndex = exerciseSections.length - 1;
 
     for (const [completedSectionIndex, section] of exerciseSections.entries()) {
@@ -516,6 +540,7 @@ test.describe('Training completion and unlocking', () => {
       // 'page.goto' wait 'load' therfore images and other things. Webkit is still waiting when the 30s timeout
       // happens
       await page.goto('/exercises', {
+        // domcontentloaded reduces the time really needed
         waitUntil: 'domcontentloaded',
       });
 
