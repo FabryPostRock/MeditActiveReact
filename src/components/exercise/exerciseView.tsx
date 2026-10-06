@@ -1,7 +1,6 @@
 import { Title } from '../title';
-import { Link } from 'react-router-dom';
 import type ExerciseSection from '../../data/learningContent';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useAppDispatch } from '../../store/hooks';
 import useTrainingTimer from '../../store/timerHooks';
 import Error from '../../pages/error';
 import {
@@ -18,6 +17,7 @@ import {
 import { useRef, useEffect, type SyntheticEvent } from 'react';
 import { store } from '../../store/store';
 import { ProgressBar } from '../progressBar';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Definizione props con le caratteristiche statiche passate dal padre
@@ -58,7 +58,10 @@ function getPlayedSeconds(video: HTMLVideoElement) {
 }
 
 export default function ExerciseView({ section, isLocked, videoBlink }: ExerciseCardProps) {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const title = t(`exercises.sections.${section.id}.title`);
+  const description = t(`exercises.sections.${section.id}.description`);
 
   useEffect(() => {
     const releaseActiveSection = () => {
@@ -161,7 +164,7 @@ export default function ExerciseView({ section, isLocked, videoBlink }: Exercise
       <div className="row">
         <div className="col-12 d-flex justify-content-center">
           <Title
-            title={section.title}
+            title={title}
             txtColor={'var(--bs-secondary)'}
             txtSize={['fs-2']}
             headlineType={'h2'}
@@ -186,11 +189,11 @@ export default function ExerciseView({ section, isLocked, videoBlink }: Exercise
                 onEnded={handleVideoEnded}
                 onPlay={handleVideoPlay}
                 onPause={handleVideoPause}
-                aria-label={`Video: ${section.title}`}
+                aria-label={t('exercises.videoLabel', { title })}
               />
             </div>
             <div className="col-12 d-flex justify-content-center text-justify mt-3">
-              <p>{section.description}</p>
+              <p>{description}</p>
             </div>
           </div>
         </div>

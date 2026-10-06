@@ -2,6 +2,7 @@ import type ExerciseSection from '../../data/learningContent';
 import { Title } from '../title';
 import type { TrainingStatus } from '../../store/trainingProgressSlice';
 import { ProgressBar } from '../progressBar';
+import { useTranslation } from 'react-i18next';
 
 interface ExerciseArticleProps {
   section: ExerciseSection;
@@ -18,6 +19,9 @@ export default function Article({
   isLocked,
   trainingCompleted,
 }: ExerciseArticleProps) {
+  const { t } = useTranslation();
+  const title = t(`exercises.sections.${section.id}.title`);
+
   return (
     <article
       inert={isLocked}
@@ -34,7 +38,7 @@ export default function Article({
         <div className="d-flex flex-column justify-content-center flex-grow-1">
           <div className="col-12">
             <Title
-              title={section.title}
+              title={title}
               txtColor={'var(--bs-secondary)'}
               txtSize={['fs-3', 'fs-md-3', 'fs-lg-3']}
               headlineType={'h2'}
@@ -45,7 +49,11 @@ export default function Article({
             />
           </div>
           <div className="col-12 d-flex justify-content-center mt-auto">
-            <img className="h-auto w-40 rounded" src={section.thumbnailUrl} alt={`Anteprima di ${section.title}`} />
+            <img
+              className="h-auto w-40 rounded"
+              src={section.thumbnailUrl}
+              alt={t('exercises.thumbnailAlt', { title })}
+            />
           </div>
         </div>
         <div className="row d-flex justify-content-center mt-auto">

@@ -3,6 +3,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { fallbackLanguage, i18nOptions, resources, supportedLanguages } from './config';
+import { exerciseSections } from '../data/learningContent';
 
 function mockNavigatorLanguage(language) {
   vi.spyOn(window.navigator, 'language', 'get').mockReturnValue(language);
@@ -65,5 +66,16 @@ describe('i18n dictionaries', () => {
     const englishKeys = getTranslationKeys(resources.en.translation).sort();
 
     expect(englishKeys).toEqual(italianKeys);
+  });
+
+  it('contains a title and description for every exercise section in each language', () => {
+    supportedLanguages.forEach((language) => {
+      const translatedSections = resources[language].translation.exercises.sections;
+
+      exerciseSections.forEach((section) => {
+        expect(translatedSections[section.id].title.trim()).not.toBe('');
+        expect(translatedSections[section.id].description.trim()).not.toBe('');
+      });
+    });
   });
 });

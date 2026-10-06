@@ -5,8 +5,10 @@ import Error from './error';
 import { exerciseSectionById, isSectionId } from '../data/learningContent';
 import { PageMetadata } from '../components/pageMetadata';
 import { createExercisePageMetadata } from '../data/pageMetadata';
+import { useTranslation } from 'react-i18next';
 
 export default function Exercise() {
+  const { t, i18n } = useTranslation();
   const { sectionId } = useParams();
 
   if (!sectionId || !isSectionId(sectionId)) {
@@ -19,7 +21,14 @@ export default function Exercise() {
       return <Error />;
     }
 
-    const pageMetadata = createExercisePageMetadata(section);
+    const title = t(`exercises.sections.${section.id}.title`);
+    const description = t(`exercises.sections.${section.id}.description`);
+    const pageMetadata = createExercisePageMetadata(section, {
+      title,
+      description,
+      imageAlt: t('exercises.exercisePreviewAlt', { title }),
+      locale: i18n.resolvedLanguage === 'en' ? 'en_US' : 'it_IT',
+    });
 
     return (
       <>

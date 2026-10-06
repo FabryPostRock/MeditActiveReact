@@ -6,5 +6,34 @@
   "footer": {
     "contacts": "Contacts",
     "followUs": "Follow us on social media"
+  },
+  "exercises": {
+    "courseTitle": "Basic body awareness course",
+    "openLesson": "Open lesson {{title}}",
+    "thumbnailAlt": "Preview of {{title}}",
+    "videoLabel": "Video: {{title}}",
+    "exercisePreviewAlt": "Preview of exercise {{title}}",
+    "sections": {
+      "breathing-section-1": {
+        "title": "Lying-down breathing with hands on the abdomen",
+        "description": "Lie down comfortably and place your hands on your abdomen. Bring your attention to the movement of your abdomen as you breathe, without forcing it: feel your hands rise as you inhale and fall as you exhale. The goal is to become aware of your breath and learn to let it flow naturally."
+      },
+      "breathing-section-2": {
+        "title": "Lying-down breathing with a book on the abdomen",
+        "description": "Lie down and place a light book on your abdomen. Notice how your breath makes it rise as you inhale and fall as you exhale. The slight weight provides a visual and tactile reference that helps you perceive abdominal movement more clearly and make your breathing more mindful and regular."
+      },
+      "breathing-section-3": {
+        "title": "Standing breathing",
+        "description": "Now bring the breathing you practised while lying down into a standing position. Keep your body relaxed, your knees soft, and your torso natural. Breathe while observing the movement of your abdomen without tensing up. The goal is to maintain calm, mindful breathing even when your body has to support itself against gravity."
+      },
+      "feet-position-section-1": {
+        "title": "Breathing with the earth",
+        "description": "While standing, bring your attention to both your breath and the contact between your feet and the ground. During each breathing cycle, feel your body relax and your weight move down toward the earth. Do not try to push: allow your breathing, posture, and foot support to gradually begin working together."
+      },
+      "feet-position-section-2": {
+        "title": "Feeling how your weight is distributed on the ground",
+        "description": "Bring your attention beneath your feet and notice where you feel most of your weight: your heels, forefeet, inner edges, or outer edges. Shift it slowly to explore the different sensations, then find a stable, centred position. Breathe without tension and notice how small changes in foot support affect the balance of your whole body."
+      }
+    }
   }
 }

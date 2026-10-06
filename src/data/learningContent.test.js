@@ -10,8 +10,6 @@ describe('learningContent lesson data', () => {
 
   it('contains valid required content for every section', () => {
     exerciseSections.forEach((section) => {
-      expect(section.title.trim()).not.toBe('');
-      expect(section.description.trim()).not.toBe('');
       expect(section.videoUrl.trim()).not.toBe('');
       expect(section.thumbnailUrl.trim()).not.toBe('');
       expect(Number.isFinite(section.requiredTrainingMs)).toBe(true);

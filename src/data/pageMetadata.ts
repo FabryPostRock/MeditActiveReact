@@ -5,7 +5,7 @@ import type ExerciseSection from './learningContent';
 export interface OpenGraphMetadataData {
   type: 'website';
   siteName: string;
-  locale: 'it_IT';
+  locale: 'it_IT' | 'en_US';
   image: string;
   imageAlt: string;
 }
@@ -89,16 +89,27 @@ export const errorPageMetadata: PageMetadataData = {
   },
 };
 
-export function createExercisePageMetadata(section: ExerciseSection): PageMetadataData {
+interface ExercisePageMetadataContent {
+  title: string;
+  description: string;
+  imageAlt: string;
+  locale: OpenGraphMetadataData['locale'];
+}
+
+export function createExercisePageMetadata(
+  section: ExerciseSection,
+  content: ExercisePageMetadataContent,
+): PageMetadataData {
   return {
-    title: `${section.title} | MeditActive`,
-    description: section.description,
+    title: `${content.title} | MeditActive`,
+    description: content.description,
     canonicalPath: `/exercise/${section.id}`,
     robots: 'index, follow',
     openGraph: {
       ...sharedOpenGraphMetadata,
+      locale: content.locale,
       image: section.thumbnailUrl,
-      imageAlt: `Anteprima dell’esercizio ${section.title}`,
+      imageAlt: content.imageAlt,
     },
   };
 }
