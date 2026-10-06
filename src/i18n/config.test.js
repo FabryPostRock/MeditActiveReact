@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { fallbackLanguage, i18nOptions, resources, supportedLanguages } from './config';
 import { exerciseSections } from '../data/learningContent';
+import { homeConceptsData } from '../data/homeConcepts';
 
 function mockNavigatorLanguage(language) {
   vi.spyOn(window.navigator, 'language', 'get').mockReturnValue(language);
@@ -28,6 +29,10 @@ function getTranslationKeys(value, parentKey = '') {
 
     return translationKey;
   });
+}
+
+function getRichTextTags(value) {
+  return [...value.matchAll(/<\/?([A-Za-z]+)(?:\s*\/)?\s*>/g)].map((match) => match[1]);
 }
 
 afterEach(() => {
@@ -76,6 +81,27 @@ describe('i18n dictionaries', () => {
         expect(translatedSections[section.id].title.trim()).not.toBe('');
         expect(translatedSections[section.id].description.trim()).not.toBe('');
       });
+    });
+  });
+
+  it('contains complete translations for every Home concept', () => {
+    supportedLanguages.forEach((language) => {
+      const translatedConcepts = resources[language].translation.home.concepts;
+
+      homeConceptsData.forEach((concept) => {
+        expect(translatedConcepts[concept.id].title.trim()).not.toBe('');
+        expect(translatedConcepts[concept.id].description.trim()).not.toBe('');
+        expect(translatedConcepts[concept.id].imageAlt.trim()).not.toBe('');
+      });
+    });
+  });
+
+  it('uses the same rich-text tag structure in both Home dictionaries', () => {
+    homeConceptsData.forEach((concept) => {
+      const italianDescription = resources.it.translation.home.concepts[concept.id].description;
+      const englishDescription = resources.en.translation.home.concepts[concept.id].description;
+
+      expect(getRichTextTags(englishDescription)).toEqual(getRichTextTags(italianDescription));
     });
   });
 });

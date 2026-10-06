@@ -35,10 +35,8 @@ const sharedOpenGraphMetadata = {
   locale: 'it_IT',
 } as const;
 
-const organizationMetadata: OrganizationMetadataData = {
+const sharedOrganizationMetadata: Omit<OrganizationMetadataData, 'description'> = {
   name: 'MeditActive',
-  description:
-    'MeditActive combina meditazione, consapevolezza e strumenti di crescita personale per aiutare le persone a costruire abitudini sostenibili e raggiungere i propri obiettivi.',
   urlPath: '/',
   logo: organizationLogo,
   email: 'info@meditactive.com',
@@ -51,19 +49,32 @@ const organizationMetadata: OrganizationMetadataData = {
   ],
 };
 
-export const homePageMetadata: PageMetadataData = {
-  title: 'MeditActive | Meditazione e crescita personale',
-  description:
-    'MeditActive unisce meditazione, consapevolezza e strumenti di crescita personale per aiutarti a costruire abitudini e raggiungere i tuoi obiettivi.',
-  canonicalPath: '/',
-  robots: 'index, follow',
-  openGraph: {
-    ...sharedOpenGraphMetadata,
-    image: defaultOpenGraphImage,
-    imageAlt: 'Logo MeditActive',
-  },
-  organization: organizationMetadata,
-};
+interface HomePageMetadataContent {
+  title: string;
+  description: string;
+  organizationDescription: string;
+  imageAlt: string;
+  locale: OpenGraphMetadataData['locale'];
+}
+
+export function createHomePageMetadata(content: HomePageMetadataContent): PageMetadataData {
+  return {
+    title: content.title,
+    description: content.description,
+    canonicalPath: '/',
+    robots: 'index, follow',
+    openGraph: {
+      ...sharedOpenGraphMetadata,
+      locale: content.locale,
+      image: defaultOpenGraphImage,
+      imageAlt: content.imageAlt,
+    },
+    organization: {
+      ...sharedOrganizationMetadata,
+      description: content.organizationDescription,
+    },
+  };
+}
 
 export const exercisesPageMetadata: PageMetadataData = {
   title: 'Corso di consapevolezza del corpo | MeditActive',

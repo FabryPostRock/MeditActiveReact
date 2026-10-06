@@ -1,11 +1,16 @@
 import type { HomeConceptData } from '../data/homeConcepts';
 import { Title } from './title';
+import { Trans, useTranslation } from 'react-i18next';
+
 interface HomeConceptProps {
   concept: HomeConceptData;
   imageOnLeft: boolean;
 }
 
 export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
+  const { t } = useTranslation();
+  const translationKey = `home.concepts.${concept.id}`;
+
   return (
     <section className="reveal">
       <div className="container-fluid mb-5">
@@ -21,8 +26,8 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
                   <div className="col-12 col-lg-10">
                     <img
                       className="img-fluid d-block mx-auto concept-image-shadow rounded p-0 h-auto"
-                      src={concept.image.src}
-                      alt={concept.image.alt}
+                      src={concept.imageSrc}
+                      alt={t(`${translationKey}.imageAlt`)}
                     />
                   </div>
                 </div>
@@ -30,7 +35,7 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
 
               <div className="text-justify mb-4">
                 <Title
-                  title={concept.title}
+                  title={t(`${translationKey}.title`)}
                   txtColor={imageOnLeft ? 'var(--bs-dark-green)' : 'var(--bs-secondary)'}
                   txtSize={['fs-2']}
                   headlineType={'h2'}
@@ -39,7 +44,22 @@ export function HomeConcept({ concept, imageOnLeft }: HomeConceptProps) {
                   scaleOnHover={false}
                   underlineTxtFit={true}
                 />
-                {concept.description}
+                {/**
+                 * `Trans` is used instead of `t()` because these descriptions contain React elements, not only text.
+                 * `i18nKey` selects the translated description for the current concept.
+                 * Each entry in `components` maps a named tag from the translation string to a real React HTML element.
+                 * For example, `<emphasis>text</emphasis>` becomes `<strong>text</strong>` in the rendered DOM.
+                 */}
+                <Trans
+                  i18nKey={`${translationKey}.description`}
+                  components={{
+                    // Named translation tags are converted into these safe React HTML elements.
+                    paragraph: <p />,
+                    emphasis: <strong />,
+                    citation: <i />,
+                    linebreak: <br />,
+                  }}
+                />
               </div>
             </div>
           </div>

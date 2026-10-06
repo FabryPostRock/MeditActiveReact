@@ -4,10 +4,20 @@ import { HomeConcept } from '../components/homeConcept';
 import { PerspectiveWalls } from '../components/perspectiveWalls';
 import { CursorWake } from '../components/cursorWake';
 import { PageMetadata } from '../components/pageMetadata';
-import { homePageMetadata } from '../data/pageMetadata';
+import { createHomePageMetadata } from '../data/pageMetadata';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
+  const { t, i18n } = useTranslation();
+  const pageMetadata = createHomePageMetadata({
+    title: t('home.metadata.title'),
+    description: t('home.metadata.description'),
+    organizationDescription: t('home.metadata.organizationDescription'),
+    imageAlt: t('home.logoAlt'),
+    locale: i18n.resolvedLanguage === 'en' ? 'en_US' : 'it_IT',
+  });
+
   /*
   useRef creates { current: null }
               ↓
@@ -80,23 +90,24 @@ export default function Home() {
 
       <div className="page__content">*/
     <>
-      <PageMetadata metadata={homePageMetadata} />
+      <PageMetadata metadata={pageMetadata} />
 
       <section>
         <div className="container mb-5">
           <div className="row flex-row d-flex justify-content-center mb-3">
             <div className="col-12 col-md-4 col-lg-3 text-center text-md-end">
-              <img className="h-auto w-sm-40 w-md-30 w-lg-40" src={logo_936x905} alt="Logo MeditActive" />
+              <img
+                className="h-auto w-sm-40 w-md-30 w-lg-40"
+                src={logo_936x905}
+                alt={t('home.logoAlt')}
+              />
             </div>
             <div className="col-12 col-md-4 col-lg-3 align-content-center text-center text-md-start">
               <h1 className="fw-bold secondary-color mb-0 ms-md-3 ">MeditActive</h1>
             </div>
           </div>
           <div className="col">
-            <h3 className="fs-4 text-center">
-              L’app per combinare i benefici della meditazione con strumenti di crescita personale, aiutando gli utenti
-              a raggiungere obiettivi di breve, medio e lungo termine.
-            </h3>
+            <h3 className="fs-4 text-center">{t('home.tagline')}</h3>
           </div>
         </div>
       </section>
