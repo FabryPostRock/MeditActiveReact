@@ -31,6 +31,9 @@ dist-ssr
 **/*.txt
 !public/robots.txt
 **/*.xlsx
+
+# CSS
+**/*.css
 **/*.css.map
 
 
